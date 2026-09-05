@@ -1,97 +1,102 @@
 <!doctype html>
-<html lang="zh-CN">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>coder-app-name</title>
+    <title>Corehaus — Specialty Laptops | Gaming, Creator &amp; Business Notebooks</title>
+    <meta name="description" content="Corehaus is a specialty laptop outfitter: benchmarked gaming rigs, calibrated creator notebooks and enterprise ultrabooks from ASUS ROG, Apple, Lenovo, Dell, Razer, MSI, Framework, LG, HP and Gigabyte. Free 48-hour shipping over $1,500, 2-year warranty, 30-day returns." />
+    <meta name="keywords" content="specialty laptop, gaming laptop, creator laptop, business ultrabook, RTX 4090 laptop, MacBook Pro M4, ThinkPad X1 Carbon, ROG Zephyrus G14, Razer Blade 16, Framework Laptop 16, laptop specs comparison, buy laptop online" />
+    <meta name="author" content="Corehaus Supply Co." />
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1" />
+    <link rel="canonical" href="https://corehaus.tech/laptops" />
+    <meta name="theme-color" content="#0C0F15" />
+
+    <!-- Open Graph / Facebook / LinkedIn -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Corehaus" />
+    <meta property="og:url" content="https://corehaus.tech/laptops" />
+    <meta property="og:title" content="Corehaus — Specialty Laptops, Benchmarked &amp; Calibrated" />
+    <meta property="og:description" content="Gaming rigs, creator notebooks and enterprise ultrabooks — every unit stress-tested, display-calibrated and shipped in 48 hours. Compare full technical specifications side by side." />
+    <meta property="og:image" content="https://image.qwenlm.ai/generated-images/c9ffa312-56ee-45c2-bc4c-009641d97292/_result.png" />
+    <meta property="og:image:alt" content="Razer Blade 16 gaming laptop featured at Corehaus" />
+    <meta property="og:locale" content="en_US" />
+
+    <!-- Twitter / X -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="@corehaus" />
+    <meta name="twitter:title" content="Corehaus — Specialty Laptops, Benchmarked &amp; Calibrated" />
+    <meta name="twitter:description" content="Gaming, creator and business notebooks with complete technical specifications, side-by-side comparison and secure checkout." />
+    <meta name="twitter:image" content="https://image.qwenlm.ai/generated-images/c9ffa312-56ee-45c2-bc4c-009641d97292/_result.png" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
+      href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap"
       rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
     />
-    <style>
-      /* 内联样式确保主题色立即生效，避免闪烁 */
-      html,
-      body {
-        margin: 0;
-        padding: 0;
-        width: 100%;
-        height: 100%;
-      }
-      html.light,
-      html.light body {
-        background-color: #ffffff !important;
-        color: #000000;
-      }
-      html.dark,
-      html.dark body {
-        background-color: #1a1a1a !important;
-        color: #ffffff;
-      }
-    </style>
-    <script>
-      // 在 React 加载前立即设置主题，避免闪烁
-      (function () {
-        const isInIframe = window.self !== window.top;
 
-        function applyThemeToDOM(theme) {
-          document.documentElement.classList.remove("light", "dark");
-          document.documentElement.classList.add(theme);
-          document.documentElement.setAttribute("data-theme", theme);
-        }
-
-        if (isInIframe) {
-          // 监听父窗口主动推送的主题消息
-          window.addEventListener("message", function (event) {
-            if (event.data && typeof event.data.theme === "string") {
-              const theme = event.data.theme;
-              if (theme === "light" || theme === "dark") {
-                applyThemeToDOM(theme);
-              }
-            }
-          });
-        } else {
-          // 非 iframe 环境，使用默认 light 主题
-          applyThemeToDOM("light");
-        }
-      })();
-    </script>
-      <script>
-      (function () {
-        if (window.self === window.top) return;
-        var reported = {};
-        window.addEventListener("error", function (event) {
-          // 资源加载失败的 error 事件没有 message，此处仅上报 JS 运行时错误
-          if (!event || !event.message) return;
-          var key =
-            event.message + "|" + (event.filename || "") + "|" + (event.lineno || 0);
-          if (reported[key]) return; // 相同错误只上报一次，避免渲染循环刷屏
-          reported[key] = true;
-          try {
-            window.parent.postMessage(
-              {
-                type: "sandbox-runtime-error",
-                payload: {
-                  message: String(event.message).slice(0, 500),
-                  filename: event.filename || "",
-                  lineno: event.lineno || 0,
-                  colno: event.colno || 0,
-                  stack:
-                    event.error && event.error.stack
-                      ? String(event.error.stack).slice(0, 2000)
-                      : ""
-                }
-              },
-              "*"
-            );
-          } catch (e) {
-            /* 上报失败不影响页面运行 */
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "Organization",
+          "@id": "https://corehaus.tech/#org",
+          "name": "Corehaus Supply Co.",
+          "url": "https://corehaus.tech/",
+          "description": "Specialty laptop outfitter — gaming, creator and business notebooks, benchmarked in-house.",
+          "sameAs": [
+            "https://twitter.com/corehaus",
+            "https://instagram.com/corehaus",
+            "https://youtube.com/@corehaus"
+          ]
+        },
+        {
+          "@type": "WebSite",
+          "@id": "https://corehaus.tech/#website",
+          "url": "https://corehaus.tech/",
+          "name": "Corehaus",
+          "publisher": { "@id": "https://corehaus.tech/#org" },
+          "potentialAction": {
+            "@type": "SearchAction",
+            "target": "https://corehaus.tech/laptops?q={search_term_string}",
+            "query-input": "required name=search_term_string"
           }
-        });
-      })();
+        },
+        {
+          "@type": "ItemList",
+          "name": "Specialty Laptops in stock at Corehaus",
+          "itemListOrder": "https://schema.org/ItemListOrderAscending",
+          "numberOfItems": 10,
+          "itemListElement": [
+            { "@type": "ListItem", "position": 1, "item": { "@type": "Product", "name": "ASUS ROG Zephyrus G14 (2024) — Ryzen 9 8945HS / RTX 4070 / 32GB / 1TB / 14\" OLED 120Hz", "sku": "CH-ASU-G14-01", "brand": { "@type": "Brand", "name": "ASUS" }, "image": "https://image.qwenlm.ai/generated-images/5de97a10-ddc3-4152-bcab-c97cbffef0a3/_result.png", "description": "14-inch OLED gaming ultrabook with Ryzen AI 9-class silicon and a 105 W RTX 4070.", "offers": { "@type": "Offer", "price": "1999.00", "priceCurrency": "USD", "availability": "https://schema.org/InStock" }, "aggregateRating": { "@type": "AggregateRating", "ratingValue": "4.8", "reviewCount": "214" } } },
+            { "@type": "ListItem", "position": 2, "item": { "@type": "Product", "name": "Apple MacBook Pro 14 (M4 Pro) — 12-core CPU / 16-core GPU / 24GB / 512GB / Liquid Retina XDR", "sku": "CH-APL-MBP14-02", "brand": { "@type": "Brand", "name": "Apple" }, "image": "https://image.qwenlm.ai/generated-images/8dd519b5-f437-4086-9c54-c5ccd27c1919/_result.png", "description": "M4 Pro workstation with Liquid Retina XDR display and Thunderbolt 5.", "offers": { "@type": "Offer", "price": "2399.00", "priceCurrency": "USD", "availability": "https://schema.org/InStock" }, "aggregateRating": { "@type": "AggregateRating", "ratingValue": "4.9", "reviewCount": "388" } } },
+            { "@type": "ListItem", "position": 3, "item": { "@type": "Product", "name": "Lenovo ThinkPad X1 Carbon Gen 12 — Core Ultra 7 155H / 32GB / 1TB / 14\" 2.8K OLED", "sku": "CH-LEN-X1C-03", "brand": { "@type": "Brand", "name": "Lenovo" }, "image": "https://image.qwenlm.ai/generated-images/71449d80-a863-4702-8155-1b614caec9bb/_result.png", "description": "Enterprise flagship ultrabook, 1.09 kg carbon chassis, 3-year onsite warranty.", "offers": { "@type": "Offer", "price": "1849.00", "priceCurrency": "USD", "availability": "https://schema.org/InStock" }, "aggregateRating": { "@type": "AggregateRating", "ratingValue": "4.7", "reviewCount": "162" } } },
+            { "@type": "ListItem", "position": 4, "item": { "@type": "Product", "name": "Dell XPS 13 (9345) — Snapdragon X Elite / 16GB / 512GB / 13.4\" InfinityEdge", "sku": "CH-DEL-XPS13-04", "brand": { "@type": "Brand", "name": "Dell" }, "image": "https://image.qwenlm.ai/generated-images/4a3cc636-1ba3-4965-9218-aa5abc272010/_result.png", "description": "Arm-based Copilot+ PC with 45 TOPS NPU and multi-day battery life.", "offers": { "@type": "Offer", "price": "1299.00", "priceCurrency": "USD", "availability": "https://schema.org/InStock" }, "aggregateRating": { "@type": "AggregateRating", "ratingValue": "4.5", "reviewCount": "97" } } },
+            { "@type": "ListItem", "position": 5, "item": { "@type": "Product", "name": "Razer Blade 16 — i9-14900HX / RTX 4080 / 32GB / 1TB / 16\" OLED 240Hz", "sku": "CH-RZR-B16-05", "brand": { "@type": "Brand", "name": "Razer" }, "image": "https://image.qwenlm.ai/generated-images/c9ffa312-56ee-45c2-bc4c-009641d97292/_result.png", "description": "CNC aluminum flagship with 240 Hz OLED panel and 175 W RTX 4080.", "offers": { "@type": "Offer", "price": "3299.00", "priceCurrency": "USD", "availability": "https://schema.org/InStock" }, "aggregateRating": { "@type": "AggregateRating", "ratingValue": "4.6", "reviewCount": "74" } } },
+            { "@type": "ListItem", "position": 6, "item": { "@type": "Product", "name": "MSI Raider GE78 HX — i9-14900HX / RTX 4090 / 64GB / 2TB / 17.3\" QHD 240Hz", "sku": "CH-MSI-GE78-06", "brand": { "@type": "Brand", "name": "MSI" }, "image": "https://image.qwenlm.ai/generated-images/22d2b52b-b71b-46ad-9b5b-b039b0470b06/_result.png", "description": "Desktop-replacement esports machine with 175 W RTX 4090 and 64 GB DDR5.", "offers": { "@type": "Offer", "price": "3999.00", "priceCurrency": "USD", "availability": "https://schema.org/LimitedAvailability" }, "aggregateRating": { "@type": "AggregateRating", "ratingValue": "4.7", "reviewCount": "58" } } },
+            { "@type": "ListItem", "position": 7, "item": { "@type": "Product", "name": "Framework Laptop 16 — Ryzen 7 7840HS / 32GB / 1TB / 16\" 165Hz modular", "sku": "CH-FRW-L16-07", "brand": { "@type": "Brand", "name": "Framework" }, "image": "https://image.qwenlm.ai/generated-images/cc227e49-7661-4fed-8b02-c7887669a30d/_result.png", "description": "Fully modular, repairable 16-inch notebook with hot-swap battery and expansion bays.", "offers": { "@type": "Offer", "price": "1769.00", "priceCurrency": "USD", "availability": "https://schema.org/InStock" }, "aggregateRating": { "@type": "AggregateRating", "ratingValue": "4.8", "reviewCount": "143" } } },
+            { "@type": "ListItem", "position": 8, "item": { "@type": "Product", "name": "LG Gram 17 — Core Ultra 7 155H / 16GB / 1TB / 17\" WQXGA 1.35 kg", "sku": "CH-LGG-17-08", "brand": { "@type": "Brand", "name": "LG" }, "image": "https://image.qwenlm.ai/generated-images/e064a396-6a12-46c5-a44b-005876bc7f3e/_result.png", "description": "Featherweight 17-inch magnesium notebook with 80 Wh battery.", "offers": { "@type": "Offer", "price": "1499.00", "priceCurrency": "USD", "availability": "https://schema.org/InStock" }, "aggregateRating": { "@type": "AggregateRating", "ratingValue": "4.6", "reviewCount": "121" } } },
+            { "@type": "ListItem", "position": 9, "item": { "@type": "Product", "name": "HP Spectre x360 14 — Core Ultra 7 155H / 16GB / 1TB / 14\" 2.8K OLED Touch", "sku": "CH-HPS-SPX-09", "brand": { "@type": "Brand", "name": "HP" }, "image": "https://image.qwenlm.ai/generated-images/22705440-bebe-468c-8245-42a01bce3d4c/_result.png", "description": "Gem-cut 2-in-1 convertible with 120 Hz OLED touch display and pen support.", "offers": { "@type": "Offer", "price": "1549.00", "priceCurrency": "USD", "availability": "https://schema.org/InStock" }, "aggregateRating": { "@type": "AggregateRating", "ratingValue": "4.7", "reviewCount": "89" } } },
+            { "@type": "ListItem", "position": 10, "item": { "@type": "Product", "name": "Gigabyte Aorus 16X — i7-14650HX / RTX 4070 / 16GB / 1TB / 16\" 165Hz", "sku": "CH-GBY-A16-10", "brand": { "@type": "Brand", "name": "Gigabyte" }, "image": "https://image.qwenlm.ai/generated-images/248160ed-9015-41f2-9152-87181460597d/_result.png", "description": "WQXGA 165 Hz esports notebook with Windforce Infinity cooling.", "offers": { "@type": "Offer", "price": "1799.00", "priceCurrency": "USD", "availability": "https://schema.org/InStock" }, "aggregateRating": { "@type": "AggregateRating", "ratingValue": "4.5", "reviewCount": "66" } } }
+          ]
+        },
+        {
+          "@type": "FAQPage",
+          "mainEntity": [
+            { "@type": "Question", "name": "How fast is shipping?", "acceptedAnswer": { "@type": "Answer", "text": "Orders placed before 3 PM ET ship the same business day. Delivery is free within 48 hours on orders over $1,500; standard delivery takes 2–4 business days." } },
+            { "@type": "Question", "name": "What is the return policy?", "acceptedAnswer": { "@type": "Answer", "text": "Every laptop carries a 30-day, no-questions return window with prepaid shipping labels. Refunds are issued to the original payment method within 3 business days of arrival at our lab." } },
+            { "@type": "Question", "name": "Do Corehaus units come with a warranty?", "acceptedAnswer": { "@type": "Answer", "text": "Yes — every machine includes the manufacturer warranty plus Corehaus 2-year cover on chassis, hinge and battery at no extra cost. Accidental-damage protection can be added at checkout." } },
+            { "@type": "Question", "name": "Which payment methods are accepted?", "acceptedAnswer": { "@type": "Answer", "text": "We accept Visa, Mastercard, American Express, PayPal and SEPA/instant bank transfer through our PCI-DSS Level 1 encrypted payment portal. Financing is available on orders over $999." } },
+            { "@type": "Question", "name": "Are the laptops benchmarked before shipping?", "acceptedAnswer": { "@type": "Answer", "text": "Every unit passes a 42-point inspection: Cinebench and 3DMark stress runs, per-zone display calibration to Delta-E < 2, thermal soak and battery cycle verification. The report ships in the box." } }
+          ]
+        }
+      ]
+    }
     </script>
   </head>
   <body>
     <div id="root"></div>
-    <script type="module" src="/src/main.jsx"></script>
+    <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
