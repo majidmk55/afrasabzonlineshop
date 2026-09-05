@@ -53,6 +53,11 @@ export const IArrowR = (p: P) => <svg {...base(p)}><path d="M4 12h16m-6-6 6 6-6 
 export const IInfo = (p: P) => <svg {...base(p)}><circle cx="12" cy="12" r="9" /><path d="M12 11v5.5M12 7.6v.2" /></svg>;
 export const IPin = (p: P) => <svg {...base(p)}><path d="M12 21s-7-6.2-7-11a7 7 0 0 1 14 0c0 4.8-7 11-7 11Z" /><circle cx="12" cy="10" r="2.5" /></svg>;
 export const IMail = (p: P) => <svg {...base(p)}><rect x="3" y="5" width="18" height="14" rx="1.5" /><path d="m3.5 7 8.5 6 8.5-6" /></svg>;
+export const IGear = (p: P) => <svg {...base(p)}><circle cx="12" cy="12" r="3.2" /><path d="M12 2.8v2.4M12 18.8v2.4M2.8 12h2.4M18.8 12h2.4M5.5 5.5l1.7 1.7M16.8 16.8l1.7 1.7M18.5 5.5l-1.7 1.7M7.2 16.8l-1.7 1.7" /></svg>;
+export const IPencil = (p: P) => <svg {...base(p)}><path d="m14.5 5 4.5 4.5L8.5 20H4v-4.5L14.5 5Z" /><path d="m12.5 7 4.5 4.5" /></svg>;
+export const IChart = (p: P) => <svg {...base(p)}><path d="M4 4v16h16" /><path d="M8 16v-5M12 16V7M16 16v-8M20 16v-3" /></svg>;
+export const IBox = (p: P) => <svg {...base(p)}><path d="m12 3 8 4v10l-8 4-8-4V7l8-4Z" /><path d="M4 7l8 4 8-4M12 11v10" /></svg>;
+export const IUpload = (p: P) => <svg {...base(p)}><path d="M12 16V4m0 0L7.5 8.5M12 4l4.5 4.5" /><path d="M4 15v4a1.5 1.5 0 0 0 1.5 1.5h13A1.5 1.5 0 0 0 20 19v-4" /></svg>;
 
 export const SPEC_ICONS: Record<string, (p: P) => JSX.Element> = {
   cpu: ICpu, gpu: IGpu, ram: IRam, display: IDisplay, wifi: IWifi, battery: IBattery, scale: IScale, shield: IShield,

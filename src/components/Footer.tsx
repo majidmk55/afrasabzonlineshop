@@ -10,11 +10,13 @@ const SEO_PILLARS: [string, string[]][] = [
 ];
 
 interface FooterProps {
+  count: number;
   onCategory: (cat: string) => void;
   onBrand: (brand: string) => void;
+  onAdmin: () => void;
 }
 
-export default function Footer({ onCategory, onBrand }: FooterProps) {
+export default function Footer({ count, onCategory, onBrand, onAdmin }: FooterProps) {
   const [openFaq, setOpenFaq] = useState<number | null>(0);
   const [email, setEmail] = useState("");
   const [subscribed, setSubscribed] = useState(false);
@@ -172,8 +174,15 @@ export default function Footer({ onCategory, onBrand }: FooterProps) {
           </div>
 
           <div className="mt-8 flex flex-wrap items-center justify-between gap-3 border-t border-white/10 pt-6">
-            <p className="text-[11px] text-skywash/60">© {toFa(1404)} کورهِوس — کلیه حقوق محفوظ است. قیمت‌ها به ریال و شامل مالیات بر ارزش افزوده.</p>
-            <p className="font-mono text-[9px] tracking-[0.25em] text-skywash/40" dir="ltr">COREHAUS · BENCH-TESTED · CALIBRATED · SEALED</p>
+            <p className="text-[11px] text-skywash/60">
+              © {toFa(1404)} کورهِوس — کلیه حقوق محفوظ است. قیمت‌ها به ریال و شامل مالیات بر ارزش افزوده. · {count.toLocaleString("fa-IR")} دستگاه فعال روی ویترین
+            </p>
+            <div className="flex items-center gap-4">
+              <button onClick={onAdmin} className="text-[11px] font-bold text-skywash/60 underline-offset-4 transition-colors hover:text-sea hover:underline">
+                پنل مدیریت فروشگاه
+              </button>
+              <p className="font-mono text-[9px] tracking-[0.25em] text-skywash/40" dir="ltr">COREHAUS · BENCH-TESTED · CALIBRATED · SEALED</p>
+            </div>
           </div>
         </div>
       </div>

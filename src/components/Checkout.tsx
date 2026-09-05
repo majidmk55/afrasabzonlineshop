@@ -1,6 +1,7 @@
 import { useMemo, useRef, useState, type ReactNode } from "react";
 import { WARRANTY_PRICE, cartTotals, cardBrand, fmt, luhn, toFa, type CartLine } from "../data/laptops";
 import { useEscape, useLockBody } from "../lib/motion";
+import type { OrderRecord } from "../lib/store";
 import { IArrowR, ICheck, IClose, ILock, ITruck } from "./icons";
 
 const STEPS = ["اطلاعات ارسال", "روش پرداخت", "بازبینی سفارش", "تأیید"];
@@ -52,7 +53,7 @@ interface CheckoutProps {
   promo: string | null;
   onApplyPromo: (code: string) => string | null;
   onClose: () => void;
-  onComplete: () => void;
+  onComplete: (order: OrderRecord) => void;
 }
 
 export default function Checkout({ lines, promo, onApplyPromo, onClose, onComplete }: CheckoutProps) {
@@ -99,13 +100,25 @@ export default function Checkout({ lines, promo, onApplyPromo, onClose, onComple
     if (!validatePay()) return;
     setProcessing(true);
     timer.current = setTimeout(() => {
-      setOrder({
-        id: `CH-${Math.floor(1000 + Math.random() * 9000)}`,
-        ref: `RR-${Math.floor(100000 + Math.random() * 899999)}`,
-      });
+      const faDigits = (n: number) => String(n).replace(/\d/g, (d) => "۰۱۲۳۴۵۶۷۸۹"[+d]);
+      const id = `CH-${faDigits(1404)}-${faDigits(Math.floor(1000 + Math.random() * 9000))}`;
+      setOrder({ id, ref: `RR-${faDigits(Math.floor(100000 + Math.random() * 899999))}` });
+      const record: OrderRecord = {
+        id,
+        date: new Date().toISOString(),
+        customer: address.name.trim(),
+        city: address.city.trim(),
+        pay: method === "card" ? "کارت شتاب" : method === "wallet" ? "کیف پول" : "پرداخت در محل",
+        items: lines.map((l) => ({ id: l.laptop.id, name: l.laptop.name, category: l.laptop.category, qty: l.qty, price: l.laptop.price + (l.warranty ? WARRANTY_PRICE : 0) })),
+        subtotal: t.subtotal,
+        discount: t.discount,
+        shipping: t.shipping,
+        tax: t.tax,
+        total: t.total,
+      };
       setProcessing(false);
       setStep(3);
-      onComplete();
+      onComplete(record);
     }, 1900);
   };
 

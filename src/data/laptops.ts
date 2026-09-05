@@ -26,6 +26,8 @@ export interface Laptop {
   brief: [string, string][];
   specs: SpecGroup[];
   inBox: string[];
+  /** آیا کالا در سایت نمایش داده شود؟ (پنل مدیریت) */
+  active?: boolean;
 }
 
 export interface CartLine {
