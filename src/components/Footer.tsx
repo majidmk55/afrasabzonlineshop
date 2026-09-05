@@ -1,138 +1,180 @@
 import { useState } from "react";
-import { BRANDS, CATEGORIES } from "../data/laptops";
-import { AmexMark, BankMark, ICheck, McMark, PaypalMark, SocialIg, SocialX, SocialYt, VisaMark, LogoMark } from "./icons";
+import { BRANDS, CATEGORIES, FAQS, toFa } from "../data/laptops";
+import { Reveal } from "../lib/motion";
+import { IChevron, IShield, ITruck, IReturn, ILock, LogoMark } from "./icons";
 
-const FAQS = [
-  ["How fast is shipping?", "Orders before 3 PM ET ship same day from our Ohio lab. Free 48-hour delivery over $1,500; standard is 2–4 business days ($29 flat)."],
-  ["What's the return policy?", "30 days, no questions, prepaid label. Refund lands within 3 business days of the unit reaching our bench."],
-  ["How does the warranty work?", "Manufacturer warranty runs first. After that, Corehaus 2-year cover handles chassis, hinge and battery faults. Accidental-damage cover can be added in cart."],
-  ["Which payment methods do you take?", "Visa, Mastercard, Amex, PayPal and instant bank transfer through our PCI-DSS Level 1 portal. Financing over $999 at checkout."],
-  ["Do you take trade-ins?", "Yes — quote your old notebook in chat and get up to $600 credit, applied instantly to your order."],
+const SEO_PILLARS: [string, string[]][] = [
+  ["خرید بر اساس کاربرد", ["لپ‌تاپ گیمینگ", "لپ‌تاپ مهندسی و رندر", "لپ‌تاپ دانشجویی", "لپ‌تاپ اداری و بیزنس", "اولترابوک سبک", "لپ‌تاپ طراحی و گرافیک"]],
+  ["بر اساس پردازنده و گرافیک", ["لپ‌تاپ با RTX 5090", "لپ‌تاپ با RTX 4090", "لپ‌تاپ Apple M4", "لپ‌تاپ Snapdragon X Elite", "لپ‌تاپ Ryzen AI", "لپ‌تاپ Intel Core Ultra"]],
+  ["سوالات پرتکرار", ["قیمت لپ‌تاپ به ریال", "لپ‌تاپ با کالیبراسیون نمایشگر", "لپ‌تاپ با گارانتی ۲ ساله", "لپ‌تاپ قابل تعمیر و ماژولار", "خرید اقساطی لپ‌تاپ", "لپ‌تاپ با ارسال ۴۸ ساعته"]],
 ];
 
 interface FooterProps {
-  onCategory: (c: string) => void;
-  onBrand: (b: string) => void;
+  onCategory: (cat: string) => void;
+  onBrand: (brand: string) => void;
 }
 
 export default function Footer({ onCategory, onBrand }: FooterProps) {
+  const [openFaq, setOpenFaq] = useState<number | null>(0);
   const [email, setEmail] = useState("");
-  const [subbed, setSubbed] = useState(false);
-  const [subErr, setSubErr] = useState(false);
-
-  const subscribe = () => {
-    if (!/^\S+@\S+\.\S+$/.test(email)) {
-      setSubErr(true);
-      return;
-    }
-    setSubErr(false);
-    setSubbed(true);
-  };
+  const [subscribed, setSubscribed] = useState(false);
 
   return (
-    <footer className="dark-panel border-t border-panel" aria-label="Footer">
-      <div className="mx-auto max-w-7xl px-4 py-14 sm:px-6">
-        {/* newsletter strip */}
-        <div className="flex flex-col gap-5 border border-panel bg-slab/50 p-6 lg:flex-row lg:items-center lg:justify-between">
-          <div>
-            <h2 className="font-display text-xl font-bold tracking-tight text-paper sm:text-2xl">RESTOCK SIGNALS, WEEKLY.</h2>
-            <p className="mt-1 text-sm text-mist">One email every Friday: new benches, price drops, flash units. Unsubscribe anytime.</p>
-          </div>
-          {subbed ? (
-            <p className="flex items-center gap-2 border border-moss/50 bg-moss/10 px-4 py-3 font-mono text-xs tracking-wider text-moss">
-              <ICheck size={15} /> YOU'RE ON THE LIST — FIRST SIGNAL FRIDAY 07:00 ET
-            </p>
-          ) : (
-            <div className="w-full max-w-md">
-              <div className="flex">
-                <input
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  onKeyDown={(e) => e.key === "Enter" && subscribe()}
-                  placeholder="you@studio.dev"
-                  aria-label="Email for newsletter"
-                  className="min-w-0 flex-1 border border-panel bg-coal px-4 py-3 font-mono text-xs tracking-wider text-paper outline-none placeholder:text-mist/50 focus:border-ember"
-                />
-                <button onClick={subscribe} className="bg-ember px-5 font-mono text-xs font-semibold tracking-wider text-paper transition-colors hover:bg-emberdim">
-                  SUBSCRIBE
-                </button>
+    <footer className="relative">
+      {/* wave into footer */}
+      <div className="dark-panel">
+        <svg viewBox="0 0 1440 70" preserveAspectRatio="none" className="block h-12 w-full rotate-180 text-card" aria-hidden="true">
+          <path d="M0 40 C 240 70, 480 10, 720 32 C 960 54, 1200 16, 1440 42 L 1440 70 L 0 70 Z" fill="currentColor" />
+        </svg>
+
+        <div className="mx-auto max-w-7xl px-4 pb-10 pt-6 sm:px-6">
+          <div className="grid gap-10 lg:grid-cols-[1.2fr_0.8fr_1fr_1.1fr]">
+            {/* brand + newsletter */}
+            <div>
+              <div className="flex items-center gap-2.5">
+                <LogoMark size={34} className="text-sea" />
+                <span className="flex flex-col leading-none">
+                  <span className="font-display text-3xl text-white">کورهِوس</span>
+                  <span className="font-mono text-[9px] tracking-[0.3em] text-skywash/60">COREHAUS · SPECIALTY LAPTOPS</span>
+                </span>
               </div>
-              {subErr && <p className="mt-1.5 font-mono text-[10px] tracking-wider text-ember">▲ THAT EMAIL DOESN'T PARSE — TRY AGAIN</p>}
+              <p className="mt-4 max-w-xs text-xs leading-7 text-skywash/70">
+                بورس تخصصی لپ‌تاپ در تهران؛ هر دستگاه با کارنامه آزمایشگاه، کالیبراسیون نمایشگر
+                و گارانتی ۲ ساله. از ۱۳۹۸ تا امروز، ۴٬۲۱۸ دستگاه بنچمارک‌شده تحویل داده‌ایم.
+              </p>
+              <p className="mt-5 text-[11px] font-extrabold tracking-wide text-white">عضویت در خبرنامه ویترین هفتگی</p>
+              {subscribed ? (
+                <p className="rise-in mt-2 rounded-full bg-moss/20 px-4 py-2.5 text-xs font-bold text-moss">ایمیل شما ثبت شد — هفته آینده اولین خبرنامه می‌رسد ✓</p>
+              ) : (
+                <form
+                  className="mt-2 flex max-w-sm gap-2"
+                  onSubmit={(e) => {
+                    e.preventDefault();
+                    if (email.includes("@")) setSubscribed(true);
+                  }}
+                >
+                  <input
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    type="email"
+                    required
+                    placeholder="you@example.com"
+                    dir="ltr"
+                    aria-label="ایمیل برای خبرنامه"
+                    className="min-w-0 flex-1 rounded-full border border-white/15 bg-white/5 px-4 py-2.5 text-xs text-white outline-none transition-colors placeholder:text-skywash/40 focus:border-sea"
+                  />
+                  <button className="rounded-full bg-sea px-5 py-2.5 text-xs font-extrabold text-white transition-all hover:bg-seadark active:scale-95">عضویت</button>
+                </form>
+              )}
+              <div className="mt-6 flex flex-wrap gap-2">
+                {[["اینستاگرام", "@corehaus.ir"], ["تلگرام", "@corehaus_ir"], ["یوتیوب", "Corehaus"]].map(([n, h]) => (
+                  <a key={n} href="#catalog" aria-label={n} className="rounded-full border border-white/15 px-3.5 py-1.5 text-[10px] font-bold text-skywash/80 transition-colors hover:border-sea hover:text-white">
+                    {n} <span dir="ltr" className="font-mono font-normal text-skywash/50">{h}</span>
+                  </a>
+                ))}
+              </div>
             </div>
-          )}
-        </div>
 
-        <div className="mt-12 grid gap-10 md:grid-cols-[1.2fr_1fr_1fr_1.4fr]">
-          <div>
-            <p className="flex items-center gap-2.5">
-              <LogoMark size={28} className="text-paper" />
-              <span className="font-display text-lg font-bold tracking-tight text-paper">COREHAUS<span className="text-ember">.</span></span>
+            {/* دسته‌بندی و برند */}
+            <nav aria-label="دسته‌بندی‌ها">
+              <p className="text-[11px] font-extrabold tracking-wide text-white">دسته‌بندی‌ها</p>
+              <ul className="mt-3 space-y-2">
+                {CATEGORIES.map((c) => (
+                  <li key={c}>
+                    <button onClick={() => onCategory(c)} className="text-xs text-skywash/70 transition-colors hover:text-sea">لپ‌تاپ {c}</button>
+                  </li>
+                ))}
+              </ul>
+              <p className="mt-6 text-[11px] font-extrabold tracking-wide text-white">برندها</p>
+              <ul className="mt-3 grid grid-cols-2 gap-x-4 gap-y-2">
+                {BRANDS.map((b) => (
+                  <li key={b}>
+                    <button onClick={() => onBrand(b)} className="text-xs text-skywash/70 transition-colors hover:text-sea">لپ‌تاپ {b}</button>
+                  </li>
+                ))}
+              </ul>
+            </nav>
+
+            {/* services */}
+            <nav aria-label="خدمات">
+              <p className="text-[11px] font-extrabold tracking-wide text-white">خدمات کورهِوس</p>
+              <ul className="mt-3 space-y-2.5 text-xs text-skywash/70">
+                <li className="flex items-center gap-2"><ITruck size={14} className="text-sea" /> ارسال ۴۸ ساعته به سراسر ایران</li>
+                <li className="flex items-center gap-2"><IReturn size={14} className="text-sea" /> ۷ روز مرجوعی بدون قیدوشرط</li>
+                <li className="flex items-center gap-2"><IShield size={14} className="text-sea" /> گارانتی ۲ ساله + پوشش حوادث</li>
+                <li className="flex items-center gap-2"><ILock size={14} className="text-sea" /> درگاه امن شتاب و خرید اقساطی</li>
+              </ul>
+              <p className="mt-6 text-[11px] font-extrabold tracking-wide text-white">تماس با آزمایشگاه</p>
+              <ul className="mt-3 space-y-2 text-xs text-skywash/70">
+                <li>تهران، خیابان ولیعصر، مرکز خرید پایتخت، پلاک ۱۲۸</li>
+                <li dir="ltr" className="font-mono text-start">021-9100-4820 · 7 روزه، ۹ تا ۲۱</li>
+                <li dir="ltr" className="font-mono text-start">hello@corehaus.ir</li>
+              </ul>
+            </nav>
+
+            {/* FAQ */}
+            <div>
+              <p className="text-[11px] font-extrabold tracking-wide text-white">سوالات پرتکرار</p>
+              <div className="mt-3 space-y-2">
+                {FAQS.map((f, i) => (
+                  <div key={i} className="overflow-hidden rounded-xl border border-white/10 bg-white/5">
+                    <button
+                      onClick={() => setOpenFaq(openFaq === i ? null : i)}
+                      aria-expanded={openFaq === i}
+                      className="flex w-full items-center justify-between gap-3 px-3.5 py-2.5 text-start text-xs font-bold text-white transition-colors hover:text-sea"
+                    >
+                      {f.q}
+                      <IChevron size={14} className={`shrink-0 transition-transform duration-300 ${openFaq === i ? "rotate-180 text-sea" : ""}`} />
+                    </button>
+                    {openFaq === i && <p className="rise-in border-t border-white/10 px-3.5 py-3 text-[11px] leading-6 text-skywash/70">{f.a}</p>}
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* trust badges */}
+          <div className="mt-10 flex flex-wrap items-center justify-center gap-3 border-t border-white/10 pt-7">
+            {[
+              ["نماد اعتماد الکترونیکی", "eNamad"],
+              ["نشان ملی ثبت", "ساماندهی"],
+              ["درگاه پرداخت امن", "PCI-DSS"],
+            ].map(([t, s]) => (
+              <span key={t} className="flex items-center gap-2.5 rounded-xl border border-white/10 bg-white/5 px-4 py-2.5 transition-colors hover:border-sea/60">
+                <IShield size={20} className="text-sea" />
+                <span className="text-[11px] font-bold text-white">{t}<span className="block font-mono text-[9px] font-normal tracking-wider text-skywash/50" dir="ltr">{s}</span></span>
+              </span>
+            ))}
+            <span className="rounded-xl border border-white/10 bg-white/5 px-4 py-2.5 text-[11px] font-bold text-white">
+              پرداخت با <span className="text-sea">شتاب</span> · <span dir="ltr" className="font-mono font-normal text-skywash/60">VISA · MC</span>
+            </span>
+          </div>
+
+          {/* SEO paragraph + keyword index */}
+          <div className="mt-8 rounded-2xl border border-white/10 bg-white/5 p-5">
+            <p className="text-[11px] leading-7 text-skywash/60">
+              فروشگاه اینترنتی کورهِوس، بورس تخصصی خرید لپ‌تاپ در ایران؛ از لپ‌تاپ گیمینگ با گرافیک
+              RTX 5090 و RTX 4090 برای گیمرها و استریمرها، تا مک‌بوک پرو و ورک‌استیشن‌های سبک برای
+              تدوین، رندر سه‌بعدی و طراحی. لپ‌تاپ‌های مهندسی با پردازنده‌های Intel Core Ultra و
+              Ryzen AI برای نرم‌افزارهای سالیدورکس، کتیا و متلب؛ اولترابوک‌های زیر ۱.۵ کیلوگرم
+              برای دانشجویان و مدیران؛ و لپ‌تاپ‌های ماژولار و قابل‌تعمیر برای طرفداران سخت‌افزار
+              پایدار. همه دستگاه‌ها پیش از ارسال بنچمارک و کالیبره می‌شوند، قیمت‌ها به ریال و به‌روز
+              است و خرید اقساطی، پرداخت در محل و ارسال ۴۸ ساعته به تهران، اصفهان، شیراز، مشهد و
+              همه شهرهای ایران فراهم است.
             </p>
-            <p className="mt-4 max-w-xs text-xs leading-relaxed text-mist">
-              A specialty laptop outfitter in Columbus, Ohio. Ten machines on the floor,
-              a 42-point bench in the back, and zero patience for uncalibrated panels.
-            </p>
-            <div className="mt-5 flex gap-2">
-              <a href="https://twitter.com/corehaus" target="_blank" rel="noreferrer" aria-label="Corehaus on X" className="flex h-9 w-9 items-center justify-center border border-panel text-mist transition-colors hover:border-ember hover:text-ember"><SocialX /></a>
-              <a href="https://instagram.com/corehaus" target="_blank" rel="noreferrer" aria-label="Corehaus on Instagram" className="flex h-9 w-9 items-center justify-center border border-panel text-mist transition-colors hover:border-ember hover:text-ember"><SocialIg /></a>
-              <a href="https://youtube.com/@corehaus" target="_blank" rel="noreferrer" aria-label="Corehaus on YouTube" className="flex h-9 w-9 items-center justify-center border border-panel text-mist transition-colors hover:border-ember hover:text-ember"><SocialYt /></a>
-            </div>
-          </div>
-
-          <nav aria-label="Shop by category">
-            <h3 className="font-mono text-[11px] tracking-[0.22em] text-mist">SHOP</h3>
-            <ul className="mt-3.5 space-y-2">
-              {CATEGORIES.map((c) => (
-                <li key={c}>
-                  <button onClick={() => onCategory(c)} className="text-sm text-paper/80 transition-colors hover:text-ember">
-                    {c} laptops
-                  </button>
-                </li>
-              ))}
-              <li>
-                <button onClick={() => onCategory("Gaming")} className="text-sm text-paper/80 transition-colors hover:text-ember">RTX graphics machines</button>
-              </li>
-              <li>
-                <button onClick={() => onCategory("Ultrabook")} className="text-sm text-paper/80 transition-colors hover:text-ember">Sub-1.4 kg ultrabooks</button>
-              </li>
-            </ul>
-          </nav>
-
-          <nav aria-label="Shop by brand">
-            <h3 className="font-mono text-[11px] tracking-[0.22em] text-mist">BRANDS</h3>
-            <ul className="mt-3.5 grid grid-cols-2 gap-x-3 gap-y-2">
-              {BRANDS.map((b) => (
-                <li key={b}>
-                  <button onClick={() => onBrand(b)} className="text-sm text-paper/80 transition-colors hover:text-ember">{b}</button>
-                </li>
-              ))}
-            </ul>
-          </nav>
-
-          <div>
-            <h3 className="font-mono text-[11px] tracking-[0.22em] text-mist">SUPPORT / FAQ</h3>
-            <div className="mt-3 divide-y divide-panel border-y border-panel">
-              {FAQS.map(([q, a]) => (
-                <details key={q} className="group">
-                  <summary className="flex cursor-pointer list-none items-center justify-between gap-3 py-2.5 text-sm text-paper/85 transition-colors hover:text-ember [&::-webkit-details-marker]:hidden">
-                    {q}
-                    <span className="font-mono text-ember transition-transform duration-300 group-open:rotate-45">+</span>
-                  </summary>
-                  <p className="pb-3 text-xs leading-relaxed text-mist">{a}</p>
-                </details>
+            <div className="mt-4 flex flex-wrap gap-2">
+              {SEO_PILLARS.flatMap(([, items]) => items).map((k) => (
+                <a key={k} href="#catalog" className="rounded-full border border-white/10 px-3 py-1 text-[10px] text-skywash/60 transition-colors hover:border-sea hover:text-white">
+                  {k}
+                </a>
               ))}
             </div>
           </div>
-        </div>
 
-        <div className="mt-12 flex flex-col gap-5 border-t border-panel pt-6 lg:flex-row lg:items-center lg:justify-between">
-          <div className="flex flex-wrap items-center gap-2">
-            <VisaMark /><McMark /><AmexMark /><PaypalMark /><BankMark />
+          <div className="mt-8 flex flex-wrap items-center justify-between gap-3 border-t border-white/10 pt-6">
+            <p className="text-[11px] text-skywash/60">© {toFa(1404)} کورهِوس — کلیه حقوق محفوظ است. قیمت‌ها به ریال و شامل مالیات بر ارزش افزوده.</p>
+            <p className="font-mono text-[9px] tracking-[0.25em] text-skywash/40" dir="ltr">COREHAUS · BENCH-TESTED · CALIBRATED · SEALED</p>
           </div>
-          <p className="font-mono text-[10px] leading-relaxed tracking-wider text-mist/70">
-            © 2026 COREHAUS SUPPLY CO. · COLUMBUS, OH · <span className="text-ember">PCI-DSS L1</span> CHECKOUT · PRICES IN USD
-          </p>
         </div>
       </div>
     </footer>

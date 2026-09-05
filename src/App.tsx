@@ -53,7 +53,7 @@ export default function App() {
         warranty: warranty || c[id]?.warranty || false,
       },
     }));
-    notify(`${l.shortName.toUpperCase()} → CART`);
+    notify(`«${l.shortName}» به سبد خرید اضافه شد`);
   };
 
   const setQty = (id: string, qty: number) => {
@@ -80,7 +80,7 @@ export default function App() {
     setCompareIds((ids) => {
       if (ids.includes(id)) return ids.filter((x) => x !== id);
       if (ids.length >= 3) {
-        notify("COMPARE TRAY FULL — 3 MAX");
+        notify("سینی مقایسه پر است — حداکثر ۳ دستگاه");
         return ids;
       }
       return [...ids, id];
@@ -96,7 +96,7 @@ export default function App() {
       setPromo(code);
       return null;
     }
-    return "INVALID CODE — TRY VOLT10";
+    return "کد نامعتبر است؛ CORE10 یا RAYEGAN را امتحان کنید";
   };
 
   const openProduct = (id: string) => {
@@ -111,8 +111,8 @@ export default function App() {
 
   return (
     <div className="min-h-screen">
-      <a href="#catalog" className="sr-only focus:not-sr-only focus:absolute focus:left-2 focus:top-2 focus:z-[100] focus:bg-ember focus:px-3 focus:py-2 focus:font-mono focus:text-xs focus:text-paper">
-        Skip to catalog
+      <a href="#catalog" className="sr-only focus:not-sr-only focus:absolute focus:right-2 focus:top-2 focus:z-[100] focus:rounded-full focus:bg-sea focus:px-4 focus:py-2 focus:text-xs focus:font-bold focus:text-white">
+        پرش به فهرست محصولات
       </a>
 
       <Header
@@ -221,23 +221,11 @@ export default function App() {
       )}
 
       {toast && (
-        <div key={toast.id} className="rise-in fixed bottom-5 left-5 z-[80] flex items-center gap-2.5 border border-panel bg-coal px-4 py-3 shadow-xl" role="status">
-          <span className="flex h-6 w-6 items-center justify-center rounded-full bg-moss text-paper"><ICheck size={13} /></span>
-          <span className="font-mono text-[11px] tracking-wider text-paper">{toast.msg}</span>
+        <div key={toast.id} className="rise-in fixed bottom-5 right-5 z-[80] flex items-center gap-2.5 rounded-full border border-line bg-deep py-2.5 pe-5 ps-3 shadow-2xl" role="status">
+          <span className="flex h-6 w-6 items-center justify-center rounded-full bg-moss text-white"><ICheck size={13} /></span>
+          <span className="text-[11px] font-bold text-white">{toast.msg}</span>
         </div>
       )}
-
-      <section className="border-t border-line bg-paper" aria-label="About Corehaus inventory">
-        <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6">
-          <p className="max-w-4xl font-mono text-[10px] leading-relaxed tracking-wider text-smoke">
-            COREHAUS INDEX — SPECIALTY LAPTOPS FOR GAMING, CONTENT CREATION AND ENTERPRISE WORK:
-            RTX 4090 / RTX 4080 GAMING NOTEBOOKS, OLED CREATOR MACHINES, SNAPDRAGON X ELITE
-            ULTRABOOKS AND MIL-STD BUSINESS LAPTOPS FROM ASUS ROG, APPLE, LENOVO THINKPAD, DELL
-            XPS, RAZER, MSI, FRAMEWORK, LG GRAM, HP SPECTRE AND GIGABYTE AORUS — COMPARED
-            SIDE-BY-SIDE WITH COMPLETE TECHNICAL SPECIFICATIONS, LAB BENCHMARKS AND SECURE CHECKOUT.
-          </p>
-        </div>
-      </section>
     </div>
   );
 }
