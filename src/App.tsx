@@ -1,6 +1,6 @@
 import { lazy, Suspense, useMemo, useState } from "react";
 import Header from "./components/Header";
-import Showroom from "./components/Showroom";
+import Home from "./components/Home";
 import Catalog, { DEFAULT_FILTERS, type Filters } from "./components/Catalog";
 import ProductModal from "./components/ProductModal";
 import CartDrawer from "./components/CartDrawer";
@@ -192,7 +192,14 @@ export default function App() {
       />
 
       <main>
-        <Showroom products={visible} onAdd={addToCart} onSpecs={openProduct} onExplore={() => scrollToId("catalog")} />
+        <Home
+          products={visible}
+          onBrand={(b) => setFiltersAndScroll({ brands: [b] })}
+          onCategory={(c) => setFiltersAndScroll({ cats: [c] })}
+          onPrice={(min, max) => setFiltersAndScroll({ minPrice: min, maxPrice: max })}
+          onExplore={() => scrollToId("catalog")}
+          onSpecs={openProduct}
+        />
         <Catalog
           products={visible}
           filters={filters}

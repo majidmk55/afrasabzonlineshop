@@ -8,11 +8,12 @@ export interface Filters {
   q: string;
   cats: string[];
   brands: string[];
+  minPrice: number;
   maxPrice: number;
   inStockOnly: boolean;
   sort: SortKey;
 }
-export const DEFAULT_FILTERS: Filters = { q: "", cats: [], brands: [], maxPrice: 400_000_000, inStockOnly: false, sort: "featured" };
+export const DEFAULT_FILTERS: Filters = { q: "", cats: [], brands: [], minPrice: 0, maxPrice: 400_000_000, inStockOnly: false, sort: "featured" };
 
 const BASE_CATEGORIES = ["گیمینگ", "خلاقیت و رندر", "بیزنس و اداری", "اولترابوک"];
 const BASE_BRANDS = ["ایسوس", "اپل", "لنوو", "دل", "ریزر", "ام‌اس‌آی", "فریم‌ورک", "ال‌جی", "اچ‌پی", "گیگابایت"];
@@ -25,6 +26,7 @@ function matches(l: Laptop, f: Filters): boolean {
   }
   if (f.cats.length && !f.cats.includes(l.category)) return false;
   if (f.brands.length && !f.brands.includes(l.brand)) return false;
+  if (f.minPrice > 0 && l.price < f.minPrice) return false;
   if (l.price > f.maxPrice) return false;
   if (f.inStockOnly && l.stock <= 0) return false;
   return true;
@@ -169,7 +171,7 @@ export default function Catalog({ products, filters, patch, reset, compareIds, o
     }
   }, [products, filters]);
 
-  const activeCount = filters.cats.length + filters.brands.length + (filters.maxPrice < 400_000_000 ? 1 : 0) + (filters.inStockOnly ? 1 : 0) + (filters.q ? 1 : 0);
+  const activeCount = filters.cats.length + filters.brands.length + (filters.minPrice > 0 || filters.maxPrice < 400_000_000 ? 1 : 0) + (filters.inStockOnly ? 1 : 0) + (filters.q ? 1 : 0);
 
   const sidebar = (
     <div className="space-y-6">
@@ -287,6 +289,17 @@ export default function Catalog({ products, filters, patch, reset, compareIds, o
         <p className="mt-4 flex items-center gap-2 text-xs text-mist">
           نتایج جست‌وجوی <span className="rounded-full bg-ink px-2.5 py-0.5 font-bold text-white">«{filters.q}»</span>
           <button onClick={() => patch({ q: "" })} aria-label="حذف جست‌وجو" className="text-sea"><IClose size={13} /></button>
+        </p>
+      )}
+
+      {(filters.minPrice > 0 || filters.maxPrice < 400_000_000) && (
+        <p className="mt-2 flex items-center gap-2 text-xs text-mist">
+          محدوده قیمت:
+          <span className="rounded-full bg-sea/10 px-2.5 py-0.5 font-bold text-sea">
+            {filters.minPrice > 0 ? `${Math.round(filters.minPrice / 1_000_000).toLocaleString("fa-IR")} تا ` : "تا "}
+            {Math.round(filters.maxPrice / 1_000_000).toLocaleString("fa-IR")} میلیون ریال
+          </span>
+          <button onClick={() => patch({ minPrice: 0, maxPrice: 400_000_000 })} aria-label="حذف محدوده قیمت" className="text-sea"><IClose size={13} /></button>
         </p>
       )}
 
