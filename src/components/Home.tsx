@@ -3,25 +3,26 @@ import { fmt, toFa, type Laptop } from "../data/laptops";
 import { Reveal, useCountdown } from "../lib/motion";
 import { IArrowR, IBolt, IDisplay, IShield, ITruck, LogoMark } from "./icons";
 
-/* ---------- برندها ---------- */
+/* ---------- برندها (لوگوی رسمی) ---------- */
 
-const BRAND_META: { fa: string; en: string; cls: string }[] = [
-  { fa: "اپل", en: "apple", cls: "text-sm font-semibold" },
-  { fa: "ایسوس", en: "ASUS", cls: "text-xs font-extrabold tracking-widest" },
-  { fa: "لنوو", en: "Lenovo", cls: "text-[11px] font-bold italic" },
-  { fa: "دل", en: "DELL", cls: "text-xs font-extrabold tracking-[0.2em]" },
-  { fa: "ریزر", en: "RAZER", cls: "text-[11px] font-extrabold italic tracking-wider" },
-  { fa: "ام‌اس‌آی", en: "MSI", cls: "text-sm font-extrabold tracking-widest" },
-  { fa: "فریم‌ورک", en: "framework", cls: "text-[10px] font-bold lowercase tracking-tight" },
-  { fa: "ال‌جی", en: "LG", cls: "text-sm font-extrabold tracking-[0.25em]" },
-  { fa: "اچ‌پی", en: "HP", cls: "text-sm font-extrabold italic" },
-  { fa: "گیگابایت", en: "GIGABYTE", cls: "text-[9px] font-extrabold tracking-wider" },
+const BRAND_LOGOS: { fa: string; en: string; src?: string; msft?: boolean }[] = [
+  { fa: "اپل", en: "Apple", src: "https://cdn.simpleicons.org/apple/000000" },
+  { fa: "ایسوس", en: "ASUS", src: "https://cdn.simpleicons.org/asus/00539B" },
+  { fa: "لنوو", en: "Lenovo", src: "https://cdn.simpleicons.org/lenovo/E2231A" },
+  { fa: "دل", en: "Dell", src: "https://cdn.simpleicons.org/dell/0672CB" },
+  { fa: "اچ‌پی", en: "HP", src: "https://cdn.simpleicons.org/hp/0096D6" },
+  { fa: "مایکروسافت", en: "Microsoft", msft: true },
+  { fa: "ایسر", en: "Acer", src: "https://cdn.simpleicons.org/acer/83B81A" },
+  { fa: "ام‌اس‌آی", en: "MSI", src: "https://cdn.simpleicons.org/msi/FF0000" },
 ];
 
-function AppleGlyph({ className = "" }: { className?: string }) {
+function MsLogo({ className = "" }: { className?: string }) {
   return (
-    <svg viewBox="0 0 24 24" className={className} fill="currentColor" aria-hidden="true">
-      <path d="M16.6 12.9c0-2 1.6-3 1.7-3-1-1.4-2.4-1.6-2.9-1.6-1.2-.1-2.4.7-3 .7-.6 0-1.6-.7-2.6-.7-1.3 0-2.6.8-3.3 2-1.4 2.4-.4 6 1 8 .7 1 1.5 2.1 2.5 2 1 0 1.4-.6 2.6-.6s1.6.6 2.6.6c1.1 0 1.8-1 2.4-2 .8-1.1 1.1-2.2 1.1-2.3 0 0-2.1-.8-2.1-3.1ZM14.7 6.6c.5-.7.9-1.6.8-2.6-.8 0-1.8.6-2.3 1.2-.5.6-1 1.6-.8 2.5.9.1 1.8-.4 2.3-1.1Z" />
+    <svg viewBox="0 0 23 23" className={className} aria-hidden="true">
+      <rect width="10.6" height="10.6" fill="#F25022" />
+      <rect x="12.4" width="10.6" height="10.6" fill="#7FBA00" />
+      <rect y="12.4" width="10.6" height="10.6" fill="#00A4EF" />
+      <rect x="12.4" y="12.4" width="10.6" height="10.6" fill="#FFB900" />
     </svg>
   );
 }
@@ -77,11 +78,7 @@ export default function Home({ products, onBrand, onCategory, onPrice, onExplore
   const countdown = useCountdown(useMemo(() => nextSunday(), []));
   const pad = (n: number) => toFa(String(n).padStart(2, "0"));
 
-  const brands = useMemo(() => {
-    const map = new Map<string, number>();
-    products.forEach((p) => map.set(p.brand, (map.get(p.brand) ?? 0) + 1));
-    return BRAND_META.map((b) => ({ ...b, count: map.get(b.fa) ?? 0 })).filter((b) => b.count > 0);
-  }, [products]);
+
 
   const cats = useMemo(() => {
     const order = ["گیمینگ", "خلاقیت و رندر", "بیزنس و اداری", "اولترابوک"];
@@ -179,25 +176,26 @@ export default function Home({ products, onBrand, onCategory, onPrice, onExplore
           </div>
         </Reveal>
         <Reveal delay={80}>
-          <ul className="mt-6 grid grid-cols-5 gap-3 sm:gap-4">
-            {brands.map((b) => (
+          <ul className="mt-8 flex flex-wrap items-center justify-center gap-x-10 gap-y-8 md:justify-between lg:gap-x-6">
+            {BRAND_LOGOS.map((b) => (
               <li key={b.fa}>
                 <button
                   onClick={() => onBrand(b.fa)}
-                  className="group flex w-full flex-col items-center gap-2"
-                  aria-label={`لپ‌تاپ‌های ${b.fa}`}
+                  title={`لپ‌تاپ‌های ${b.fa}`}
+                  aria-label={`نمایش لپ‌تاپ‌های برند ${b.en} (${b.fa})`}
+                  className="group flex items-center transition-transform duration-300 hover:-translate-y-1.5 active:translate-y-0"
                 >
-                  <span className="flex h-16 w-16 items-center justify-center rounded-full border border-line bg-white shadow-sm transition-all duration-300 group-hover:-translate-y-1.5 group-hover:border-sea group-hover:shadow-lg group-hover:shadow-sea/15 sm:h-20 sm:w-20">
-                    {b.en === "apple" ? (
-                      <AppleGlyph className="h-7 w-7 text-ink transition-colors group-hover:text-sea" />
-                    ) : (
-                      <span dir="ltr" className={`text-ink transition-colors group-hover:text-sea ${b.cls}`}>{b.en}</span>
-                    )}
-                  </span>
-                  <span className="text-center leading-tight">
-                    <span className="block text-xs font-bold transition-colors group-hover:text-sea">{b.fa}</span>
-                    <span className="block text-[10px] text-mist">{toFa(b.count)} دستگاه</span>
-                  </span>
+                  {b.msft ? (
+                    <MsLogo className="h-7 w-7 opacity-85 transition-all duration-300 group-hover:scale-110 md:h-8 md:w-8" />
+                  ) : (
+                    <img
+                      src={b.src}
+                      alt={b.en}
+                      loading="lazy"
+                      decoding="async"
+                      className="h-6 w-auto max-w-[120px] object-contain opacity-60 grayscale transition-all duration-300 group-hover:opacity-100 group-hover:grayscale-0 md:h-8"
+                    />
+                  )}
                 </button>
               </li>
             ))}
