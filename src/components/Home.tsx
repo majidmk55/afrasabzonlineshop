@@ -5,14 +5,14 @@ import { IArrowR, IBolt, IBriefGear, ICap, ICode, IDisplay, IGamepad, IPenNib, I
 
 /* ---------- برندها (لوگوی رسمی) ---------- */
 
-const BRAND_LOGOS: { fa: string; en: string; src?: string; msft?: boolean; msi?: boolean }[] = [
+const BRAND_LOGOS: { fa: string; en: string; src?: string; msft?: boolean; msi?: boolean; big?: boolean }[] = [
   { fa: "اپل", en: "Apple", src: "https://cdn.simpleicons.org/apple/000000" },
-  { fa: "ایسوس", en: "ASUS", src: "https://cdn.simpleicons.org/asus/00539B" },
-  { fa: "لنوو", en: "Lenovo", src: "https://cdn.simpleicons.org/lenovo/E2231A" },
+  { fa: "ایسوس", en: "ASUS", src: "https://cdn.simpleicons.org/asus/00539B", big: true },
+  { fa: "لنوو", en: "Lenovo", src: "https://cdn.simpleicons.org/lenovo/E2231A", big: true },
   { fa: "دل", en: "Dell", src: "https://cdn.simpleicons.org/dell/0672CB" },
   { fa: "اچ‌پی", en: "HP", src: "https://cdn.simpleicons.org/hp/0096D6" },
   { fa: "مایکروسافت", en: "Microsoft", msft: true },
-  { fa: "ایسر", en: "Acer", src: "https://cdn.simpleicons.org/acer/83B81A" },
+  { fa: "ایسر", en: "Acer", src: "https://cdn.simpleicons.org/acer/83B81A", big: true },
   { fa: "ام‌اس‌آی", en: "MSI", msi: true },
 ];
 
@@ -110,34 +110,30 @@ export default function Home({ products, onBrand, onCategory, onPrice, onExplore
   return (
     <>
       {/* ── بیلبورد اصلی ── */}
-      <section className="relative w-full overflow-hidden bg-deep" aria-label="بیلبورد اصلی">
+      <section className="relative w-full overflow-hidden bg-deeplit" aria-label="بیلبورد اصلی">
         {/* هاله نور اقیانوسی پشت تصویر */}
-        <div className="pointer-events-none absolute -left-24 top-1/2 h-[440px] w-[440px] -translate-y-1/2 rounded-full bg-sea/18 blur-3xl" aria-hidden="true" />
+        <div className="pointer-events-none absolute -left-32 top-1/2 h-[620px] w-[620px] -translate-y-1/2 rounded-full bg-sea/20 blur-3xl" aria-hidden="true" />
         {/* تصویر بیلبورد — خانواده لپ‌تاپ‌های لنوو IdeaPad Pro */}
         <img
           src={BILLBOARD_IMG}
           alt="خانواده لپ‌تاپ‌های لنوو IdeaPad Pro"
-          className="pointer-events-none absolute bottom-0 left-0 hidden h-[86%] w-auto max-w-[54%] select-none object-contain object-bottom drop-shadow-[0_25px_45px_rgba(2,20,35,0.65)] md:block lg:h-[95%]"
+          className="pointer-events-none absolute bottom-0 left-0 hidden h-[96%] w-auto max-w-[75%] select-none object-contain object-bottom drop-shadow-[0_30px_55px_rgba(2,20,35,0.55)] md:block lg:h-full"
           fetchPriority="high"
           decoding="async"
         />
-        <div className="absolute inset-0 bg-gradient-to-l from-deep via-deep/60 to-deep/5" aria-hidden="true" />
+        <div className="absolute inset-0 bg-gradient-to-l from-deeplit via-deeplit/60 to-deeplit/5" aria-hidden="true" />
         <div className="pointer-events-none absolute inset-x-0 top-0 h-20 overflow-hidden" aria-hidden="true">
           <div className="scanline h-20 w-full bg-gradient-to-b from-transparent via-sea/20 to-transparent" />
         </div>
 
         <div className="relative mx-auto flex min-h-[280px] max-w-7xl flex-col justify-center px-4 py-10 sm:min-h-[340px] sm:px-6 lg:min-h-[400px]">
-          <p className="flex w-fit items-center gap-2 rounded-full border border-sea/50 bg-deep/60 px-4 py-1.5 text-[11px] font-bold tracking-wider text-skywash backdrop-blur-sm">
+          <p className="flex w-fit items-center gap-2 rounded-full border border-sea/50 bg-deeplit/70 px-4 py-1.5 text-[11px] font-bold tracking-wider text-skywash backdrop-blur-sm">
             <LogoMark size={16} className="text-sea" /> بورس تخصصی لپ‌تاپ — از ۱۳۹۸
           </p>
 
           <h1 className="mt-5 max-w-2xl text-4xl font-bold leading-[1.25] text-white sm:text-5xl lg:text-6xl" style={{ fontFamily: "var(--font-nazanin)" }}>
             لپ‌تاپ را با <span className="text-sea" style={{ textShadow: "0 0 28px rgba(4,119,179,0.55)" }}>کارنامه</span> بخرید.
           </h1>
-          <p className="mt-3 max-w-xl text-sm leading-8 text-skywash/85 sm:text-base">
-            هر دستگاه پیش از ارسال، ۴۲ مرحله تست آزمایشگاهی، کالیبراسیون نمایشگر و بنچمارک واقعی را
-            می‌گذراند — گزارش امضاشده داخل جعبه، قیمت به ریال و به‌روز.
-          </p>
 
           <div className="mt-6 flex flex-wrap items-center gap-3">
             <button
@@ -203,7 +199,9 @@ export default function Home({ products, onBrand, onCategory, onPrice, onExplore
                       alt={b.en}
                       loading="lazy"
                       decoding="async"
-                      className="logo-navy h-9 w-auto max-w-[170px] object-contain opacity-85 group-hover:opacity-100 md:h-12"
+                      className={`logo-navy w-auto object-contain opacity-85 group-hover:opacity-100 ${
+                        b.big ? "h-[54px] max-w-[230px] md:h-18" : "h-9 max-w-[170px] md:h-12"
+                      }`}
                     />
                   )}
                 </button>
