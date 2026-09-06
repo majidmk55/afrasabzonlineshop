@@ -50,15 +50,15 @@ function MainSpecs({ laptop }: { laptop: Laptop }) {
     ["کارت گرافیک", brief("گرافیک")],
   ];
   return (
-    <section aria-label="مشخصات اصلی" className="overflow-hidden rounded-2xl border-2 border-sea/40 bg-sea/5">
-      <h4 className="flex items-center gap-2 border-b border-line/70 bg-white/60 px-4 py-3 font-body text-[15px] font-extrabold text-sea">
+    <section aria-label="مشخصات اصلی" className="overflow-hidden rounded-2xl border-2 border-sea/60 bg-sea/25 shadow-sm">
+      <h4 className="flex items-center gap-2 border-b border-sea/25 bg-white/45 px-4 py-3.5 font-body text-[16.5px] font-extrabold text-seadark">
         مشخصات اصلی در یک نگاه
       </h4>
-      <dl className="divide-y divide-line/60 px-4">
+      <dl className="divide-y divide-sea/15 px-4">
         {items.map(([k, v]) => (
-          <div key={k} className="flex flex-col gap-0.5 py-2.5 sm:flex-row sm:gap-4">
-            <dt className="w-48 shrink-0 text-[12px] font-bold text-mist">{k}</dt>
-            <dd className="font-spec text-[13px] font-semibold text-ink" dir="auto">{v}</dd>
+          <div key={k} className="flex flex-col gap-0.5 py-3 sm:flex-row sm:gap-4">
+            <dt className="w-48 shrink-0 text-[13px] font-extrabold text-ink">{k}</dt>
+            <dd className="font-spec text-[14.5px] font-semibold text-ink" dir="auto">{v}</dd>
           </div>
         ))}
       </dl>
@@ -66,11 +66,36 @@ function MainSpecs({ laptop }: { laptop: Laptop }) {
   );
 }
 
+/* ترتیب استاندارد بخش‌های مشخصات فنی */
+const SPEC_ORDER = [
+  "طراحی",
+  "پردازنده",
+  "حافظه رم",
+  "ذخیره‌سازی",
+  "گرافیک",
+  "صفحه نمایش",
+  "صدا",
+  "دوربین",
+  "پورت‌ها و اتصالات",
+  "شبکه",
+  "کیبورد",
+  "باتری",
+  "نرم‌افزار",
+  "تغذیه و شارژ",
+  "وزن و ابعاد",
+  "امنیت",
+];
+
 function SpecTable({ laptop }: { laptop: Laptop }) {
+  const sorted = [...laptop.specs].sort((a, b) => {
+    const ia = SPEC_ORDER.indexOf(a.title);
+    const ib = SPEC_ORDER.indexOf(b.title);
+    return (ia === -1 ? 99 : ia) - (ib === -1 ? 99 : ib);
+  });
   return (
     <div className="space-y-5">
       <MainSpecs laptop={laptop} />
-      {laptop.specs.map((group) => {
+      {sorted.map((group) => {
         const Icon = SPEC_ICONS[group.icon];
         return (
           <section
