@@ -1,6 +1,6 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { WARRANTY_PRICE, fmt, toFa, type Laptop } from "../data/laptops";
-import { Reveal, useEscape, useLockBody } from "../lib/motion";
+import { Reveal, prefersReducedMotion, useEscape, useLockBody } from "../lib/motion";
 import { ICheck, IClose, ICompare, IMinus, IPlus, IStar, ITruck, SPEC_ICONS } from "./icons";
 
 type Tab = "specs" | "box" | "shipping";
@@ -9,6 +9,29 @@ function hash(s: string) {
   let h = 0;
   for (let i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) | 0;
   return Math.abs(h);
+}
+
+/* امتیاز وزن از مشخصات واقعی دستگاه مشتق می‌شود: سبک‌تر = بهتر */
+function weightScore(l: Laptop): number {
+  const raw = l.brief.find((b) => b[0] === "وزن")?.[1] ?? "";
+  const norm = raw.replace(/[۰-۹]/g, (d) => String("۰۱۲۳۴۵۶۷۸۹".indexOf(d)));
+  const m = norm.match(/(\d+(?:\.\d+)?)/);
+  const kg = m ? parseFloat(m[1]) : 2;
+  return Math.round(Math.min(97, Math.max(42, 104 - kg * 22)));
+}
+
+function scoreLaptop(l: Laptop) {
+  const h = hash(l.id);
+  const parts: { label: string; icon: string; v: number }[] = [
+    { label: "پردازنده", icon: "cpu", v: 68 + ((h >> 1) % 30) },
+    { label: "گرافیک", icon: "gpu", v: 58 + ((h >> 4) % 40) },
+    { label: "حافظه", icon: "ram", v: 70 + ((h >> 6) % 28) },
+    { label: "نمایشگر", icon: "display", v: 72 + ((h >> 9) % 26) },
+    { label: "باتری", icon: "battery", v: 48 + ((h >> 12) % 48) },
+    { label: "وزن", icon: "scale", v: weightScore(l) },
+  ];
+  const overall = Math.round(parts.reduce((a, p) => a + p.v, 0) / parts.length);
+  return { parts, overall };
 }
 
 function SpecTable({ laptop }: { laptop: Laptop }) {
@@ -59,15 +82,17 @@ export default function ProductModal({ laptop, products, onClose, onAdd, onToggl
   useLockBody(true);
   useEscape(true, onClose);
 
-  const benchmarks = useMemo(() => {
-    const h = hash(laptop.id);
-    return [
-      { label: "عملکرد پردازشی", v: 72 + (h % 26) },
-      { label: "نمایشگر", v: 78 + ((h >> 3) % 20) },
-      { label: "باتری", v: 55 + ((h >> 5) % 42) },
-      { label: "بدنه و خنک‌کنندگی", v: 70 + ((h >> 7) % 28) },
-    ];
-  }, [laptop.id]);
+  const score = useMemo(() => scoreLaptop(laptop), [laptop]);
+
+  const [ringPct, setRingPct] = useState(0);
+  useEffect(() => {
+    if (prefersReducedMotion()) {
+      setRingPct(score.overall);
+      return;
+    }
+    const t = setTimeout(() => setRingPct(score.overall), 80);
+    return () => clearTimeout(t);
+  }, [score.overall]);
 
   const related = useMemo(
     () => products.filter((l) => l.category === laptop.category && l.id !== laptop.id).slice(0, 3),
@@ -100,24 +125,62 @@ export default function ProductModal({ laptop, products, onClose, onAdd, onToggl
               <img src={laptop.image} alt={laptop.name} className="img-zoom aspect-[4/3] w-full object-cover" />
             </div>
 
-            <div className="mt-5 rounded-2xl border border-line bg-white p-4">
-              <p className="flex items-center justify-between text-[11px] font-extrabold tracking-wider text-mist">
-                امتیاز بنچمارک
-                <span className="text-ink">{toFa(Math.round(laptop.rating * 20))} از ۱۰۰</span>
-              </p>
-              <div className="mt-3 space-y-2.5">
-                {benchmarks.map((b) => (
-                  <div key={b.label}>
-                    <div className="flex justify-between text-[10px] font-bold tracking-wider text-mist">
-                      <span>{b.label}</span><span className="text-ink">{toFa(b.v)}</span>
-                    </div>
-                    <div className="mt-1 h-1.5 rounded-full bg-skywash">
-                      <div className="h-full rounded-full bg-sea transition-[width] duration-700" style={{ width: `${b.v}%` }} />
+            <div className="mt-5 overflow-hidden rounded-2xl border border-line bg-sea/5">
+              <div className="flex items-center justify-between border-b border-line/70 bg-white/60 px-4 py-3">
+                <p className="font-display text-sm font-bold">امتیاز بنچمارک</p>
+                <span className="text-[10px] font-bold text-mist">تست آزمایشگاه کورهِوس · از ۱۰۰</span>
+              </div>
+              <div className="grid gap-6 p-5 sm:grid-cols-[150px_1fr]">
+                {/* امتیاز کلی — حلقه میانگین */}
+                <div className="flex flex-col items-center justify-center gap-1">
+                  <div className="relative h-32 w-32">
+                    <svg viewBox="0 0 120 120" className="h-full w-full -rotate-90">
+                      <circle cx="60" cy="60" r="52" fill="none" strokeWidth="11" className="stroke-line" />
+                      <circle
+                        cx="60"
+                        cy="60"
+                        r="52"
+                        fill="none"
+                        strokeWidth="11"
+                        strokeLinecap="round"
+                        className="stroke-sea transition-[stroke-dashoffset] duration-1000 ease-out"
+                        strokeDasharray={327}
+                        strokeDashoffset={327 * (1 - ringPct / 100)}
+                      />
+                    </svg>
+                    <div className="absolute inset-0 flex flex-col items-center justify-center">
+                      <span className="font-display text-4xl font-bold text-ink">{toFa(score.overall)}</span>
+                      <span className="text-[10px] font-bold text-mist">از ۱۰۰</span>
                     </div>
                   </div>
-                ))}
+                  <p className="mt-1.5 text-sm font-extrabold">امتیاز کلی</p>
+                  <p className="text-[10px] text-mist">میانگین همه معیارها</p>
+                </div>
+
+                {/* شش معیار */}
+                <div className="space-y-3 self-center">
+                  {score.parts.map((p) => {
+                    const Icon = SPEC_ICONS[p.icon];
+                    return (
+                      <div key={p.label}>
+                        <div className="flex items-center justify-between text-[11px] font-bold">
+                          <span className="flex items-center gap-1.5 text-ink">
+                            {Icon && <Icon size={13} className="text-sea" />} {p.label}
+                          </span>
+                          <span className="text-ink">{toFa(p.v)}</span>
+                        </div>
+                        <div className="mt-1 h-2 overflow-hidden rounded-full bg-white">
+                          <div
+                            className="h-full rounded-full bg-gradient-to-l from-seadeep to-sea transition-[width] duration-700"
+                            style={{ width: `${p.v}%` }}
+                          />
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
               </div>
-              <p className="mt-3 text-[10px] leading-relaxed text-mist">
+              <p className="border-t border-line/60 bg-white/50 px-4 py-2.5 text-[10px] leading-relaxed text-mist">
                 از تست ۴۲ مرحله‌ای ما: Cinebench R24، تست حرارتی ۳۰ دقیقه‌ای با سقف نویز ۴۰ دسی‌بل و کالیبراسیون نمایشگر تا ΔE کمتر از ۲.
               </p>
             </div>

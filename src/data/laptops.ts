@@ -74,7 +74,7 @@ const SOFT = (rows: [string, string][]): SpecGroup => ({ title: "نرم‌افز
 
 /* ---------- products ---------- */
 
-export const LAPTOPS: Laptop[] = [
+const LAPTOPS_BASE: Laptop[] = [
   {
     id: "razer-blade-16",
     sku: "CH-RZ16-5090",
@@ -958,6 +958,31 @@ export const LAPTOPS: Laptop[] = [
     inBox: ["شارژر ۶۵ وات USB-C", "کابل برق", "گزارش بنچمارک و کالیبراسیون کورهِوس", "دفترچه راهنما"],
   },
 ];
+
+/* ---------- سیستم صوتی هر دستگاه (تزریق به جدول مشخصات) ---------- */
+const SPEAKERS: Record<string, string> = {
+  "razer-blade-16": "۶ بلندگو با Dolby Atmos و تقویت‌کننده هوشمند",
+  "macbook-pro-14": "۶ بلندگو با ووفرهای force-cancelling و صدای فضایی Dolby Atmos",
+  "asus-zephyrus-g14": "۴ بلندگو با Dolby Atmos و آمپلی‌فایر هوشمند",
+  "thinkpad-x1-carbon": "۴ بلندگو Dolby Voice (2×2 وات) با آرایه ۴ میکروفونه",
+  "dell-xps-13": "۴ بلندگو QuadSpeaker با پردازش Waves MaxxAudio Pro",
+  "msi-prestige-16": "۲ بلندگو ۲ وات با Hi-Res Audio و DTS Audio Processing",
+  "framework-16": "ماژول بلندگوی قابل‌تعویض — ۲ اسپیکر استریو ۲ وات",
+  "lg-gram-17": "۲ بلندگو ۱.۵ وات با DTS:X Ultra",
+  "hp-spectre-x360": "۴ بلندگو Bang & Olufsen با HP Audio Boost",
+  "gigabyte-aorus-17x": "۲ بلندگو ۲.۵ وات با Dolby Atmos",
+  "surface-laptop-7": "بلندگوهای Omnisonic با Dolby Atmos",
+  "acer-swift-go-14": "۲ بلندگو استریو با DTS Audio",
+};
+
+export const LAPTOPS: Laptop[] = LAPTOPS_BASE.map((l) => ({
+  ...l,
+  specs: l.specs.map((g) =>
+    g.title === "اتصالات و پورت‌ها"
+      ? { ...g, rows: [...g.rows.filter((r) => r[0] !== "صدا"), ["بلندگو", SPEAKERS[l.id] ?? "۲ بلندگوی استریو"] as [string, string]] }
+      : g
+  ),
+}));
 
 /* ---------- editorial content ---------- */
 
