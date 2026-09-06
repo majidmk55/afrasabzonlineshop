@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { WARRANTY_PRICE, fmt, toFa, type Laptop } from "../data/laptops";
 import { Reveal, prefersReducedMotion, useEscape, useLockBody } from "../lib/motion";
-import { ICheck, IClose, ICompare, IMinus, IPlus, IStar, ITruck, SPEC_ICONS } from "./icons";
+import { IBox, ICheck, IClose, ICompare, IMinus, IPlus, IStar, ITruck, SPEC_ICONS } from "./icons";
 
 type Tab = "specs" | "box" | "shipping";
 
@@ -79,12 +79,155 @@ const SPEC_ORDER = [
   "پورت‌ها و اتصالات",
   "شبکه",
   "کیبورد",
-  "باتری",
+  "باتری و شارژ",
   "نرم‌افزار",
-  "تغذیه و شارژ",
   "وزن و ابعاد",
   "امنیت",
 ];
+
+/* ---------- نقاط قوت و ضعف ---------- */
+function ProsCons({ laptop }: { laptop: Laptop }) {
+  return (
+    <div className="grid gap-5 sm:grid-cols-2">
+      <section aria-label="نقاط قوت" className="overflow-hidden rounded-2xl border border-moss/40 bg-moss/10">
+        <h4 className="flex items-center gap-2.5 border-b border-moss/25 bg-white/60 px-4 py-3 font-body text-[15px] font-extrabold text-moss">
+          <ICheck size={20} className="shrink-0" />
+          نقاط قوت
+        </h4>
+        <ul className="divide-y divide-moss/15 px-4">
+          {laptop.pros.map((p) => (
+            <li key={p} className="flex items-start gap-2.5 py-2.5 text-[13px] leading-6 text-ink">
+              <ICheck size={15} className="mt-1 shrink-0 text-moss" />
+              {p}
+            </li>
+          ))}
+        </ul>
+      </section>
+      <section aria-label="نقاط ضعف" className="overflow-hidden rounded-2xl border border-red-300/60 bg-red-50">
+        <h4 className="flex items-center gap-2.5 border-b border-red-200 bg-white/60 px-4 py-3 font-body text-[15px] font-extrabold text-red-700">
+          <IClose size={20} className="shrink-0" />
+          نقاط ضعف
+        </h4>
+        <ul className="divide-y divide-red-200/60 px-4">
+          {laptop.cons.map((c) => (
+            <li key={c} className="flex items-start gap-2.5 py-2.5 text-[13px] leading-6 text-ink">
+              <IClose size={15} className="mt-1 shrink-0 text-red-500" />
+              {c}
+            </li>
+          ))}
+        </ul>
+      </section>
+    </div>
+  );
+}
+
+/* ---------- نمای انفجاری سخت‌افزار (شماتیک آزمایشگاه) ---------- */
+const PARTS = [
+  { n: "۱", label: "درب و نمایشگر OLED" },
+  { n: "۲", label: "لولا و کابل تصویر" },
+  { n: "۳", label: "دک کیبورد و تاچ‌پد" },
+  { n: "۴", label: "لوله‌های حرارتی مسی" },
+  { n: "۵", label: "دو فن خنک‌کننده" },
+  { n: "۶", label: "برد اصلی، پردازنده و گرافیک" },
+  { n: "۷", label: "ماژول رم و SSD" },
+  { n: "۸", label: "باتری لیتیوم‌پلیمر" },
+  { n: "۹", label: "بلندگوها و برد پورت‌ها" },
+  { n: "۱۰", label: "پوشش پایینی آلومینیومی" },
+];
+
+function HardwareExploded({ laptop }: { laptop: Laptop }) {
+  const [hi, setHi] = useState<number | null>(null);
+  return (
+    <section aria-label="نمای انفجاری سخت‌افزار" className="overflow-hidden rounded-2xl border border-line bg-deep">
+      <h4 className="flex items-center gap-2.5 border-b border-panel px-4 py-3 font-body text-[15px] font-extrabold text-white">
+        <IBox size={21} className="shrink-0 text-sea" />
+        نمای انفجاری سخت‌افزار — داخل {laptop.shortName}
+      </h4>
+      <div className="grid gap-6 p-5 sm:p-6 lg:grid-cols-[1.3fr_1fr]">
+        {/* شمای لایه‌ها */}
+        <div className="relative overflow-hidden rounded-xl bg-slab/60" dir="ltr">
+          <svg viewBox="0 0 520 430" className="h-auto w-full" role="img" aria-label="شمای انفجاری قطعات داخلی لپ‌تاپ">
+            <defs>
+              <linearGradient id="slabGrad" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0%" stopColor="#16496e" />
+                <stop offset="100%" stopColor="#0c3350" />
+              </linearGradient>
+            </defs>
+            {PARTS.map((p, i) => {
+              const y = 24 + i * 40;
+              const w = i === 0 || i === 9 ? 400 : i === 7 ? 340 : 300;
+              const x = 70;
+              const active = hi === i;
+              return (
+                <g
+                  key={p.n}
+                  onMouseEnter={() => setHi(i)}
+                  onMouseLeave={() => setHi(null)}
+                  style={{ cursor: "pointer", transition: "opacity .25s ease" }}
+                  opacity={hi === null || active ? 1 : 0.35}
+                >
+                  <polygon
+                    points={`${x},${y + 12} ${x + 46},${y} ${x + 46 + w},${y} ${x + w},${y + 12} ${x + w},${y + 24} ${x},${y + 24}`}
+                    fill={active ? "#0477b3" : "url(#slabGrad)"}
+                    stroke={active ? "#7cc7ec" : "#2c5c80"}
+                    strokeWidth="1.2"
+                    style={{ transition: "fill .25s ease" }}
+                  />
+                  {i === 5 && (
+                    <>
+                      <rect x={x + 90} y={y + 3} width="34" height="7" fill="#0c0f15" opacity="0.85" />
+                      <rect x={x + 132} y={y + 3} width="26" height="7" fill="#0c0f15" opacity="0.6" />
+                    </>
+                  )}
+                  {i === 4 && (
+                    <>
+                      <circle cx={x + 120} cy={y + 12} r="8" fill="none" stroke="#7cc7ec" strokeWidth="1.4" />
+                      <circle cx={x + 168} cy={y + 12} r="8" fill="none" stroke="#7cc7ec" strokeWidth="1.4" />
+                    </>
+                  )}
+                  {i === 3 && (
+                    <path d={`M ${x + 60} ${y + 12} q 70 -8 150 0 t 90 0`} fill="none" stroke="#e08d5a" strokeWidth="2.4" strokeLinecap="round" />
+                  )}
+                  {i === 7 && (
+                    <rect x={x + 40} y={y + 4} width={w - 90} height="14" rx="3" fill="#0a2a43" stroke="#2c5c80" strokeWidth="1" />
+                  )}
+                  <line x1={x + w + 12} y1={y + 12} x2={x + w + 34} y2={y + 12} stroke="#7cc7ec" strokeWidth="1" strokeDasharray="3 3" />
+                  <circle cx={x + w + 44} cy={y + 12} r="9" fill={active ? "#0477b3" : "#07293f"} stroke="#7cc7ec" strokeWidth="1.2" />
+                  <text x={x + w + 44} y={y + 16} textAnchor="middle" fontSize="10" fill="#bfe3f5" fontFamily="IBM Plex Mono, monospace">
+                    {p.n.replace(/[۰-۹]/g, (d) => String("۰۱۲۳۴۵۶۷۸۹".indexOf(d)))}
+                  </text>
+                </g>
+              );
+            })}
+          </svg>
+        </div>
+
+        {/* راهنمای قطعات */}
+        <ol className="self-center space-y-1.5">
+          {PARTS.map((p, i) => (
+            <li key={p.n}>
+              <button
+                onMouseEnter={() => setHi(i)}
+                onMouseLeave={() => setHi(null)}
+                className={`flex w-full items-center gap-3 rounded-lg px-3 py-1.5 text-right text-[13px] transition-all ${
+                  hi === i ? "bg-sea/25 text-white" : "text-skywash/85 hover:bg-slab"
+                }`}
+              >
+                <span className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-full border text-[11px] font-bold ${hi === i ? "border-sea bg-sea text-white" : "border-panel text-skywash"}`}>
+                  {p.n}
+                </span>
+                {p.label}
+              </button>
+            </li>
+          ))}
+        </ol>
+      </div>
+      <p className="border-t border-panel bg-coal/40 px-4 py-2.5 text-[10px] leading-relaxed text-skywash/70">
+        شمای شماتیک آزمایشگاه کورهِوس — چیدمان قطعات ممکن است در هر مدل کمی متفاوت باشد. همه دستگاه‌ها پیش از ارسال باز، تست و دوباره پلمپ می‌شوند و گزارش ۴۲ مرحله‌ای همراه جعبه است.
+      </p>
+    </section>
+  );
+}
 
 function SpecTable({ laptop }: { laptop: Laptop }) {
   const sorted = [...laptop.specs].sort((a, b) => {
@@ -334,7 +477,13 @@ export default function ProductModal({ laptop, products, onClose, onAdd, onToggl
           </div>
 
           <div className="py-7">
-            {tab === "specs" && <SpecTable laptop={laptop} />}
+            {tab === "specs" && (
+              <div className="space-y-5">
+                <SpecTable laptop={laptop} />
+                <ProsCons laptop={laptop} />
+                <HardwareExploded laptop={laptop} />
+              </div>
+            )}
             {tab === "box" && (
               <ul className="grid gap-2 sm:grid-cols-2">
                 {laptop.inBox.map((item) => (
