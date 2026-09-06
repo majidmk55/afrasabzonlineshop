@@ -13,18 +13,22 @@ function hash(s: string) {
 
 function SpecTable({ laptop }: { laptop: Laptop }) {
   return (
-    <div className="space-y-6">
+    <div className="space-y-5">
       {laptop.specs.map((group) => {
         const Icon = SPEC_ICONS[group.icon];
         return (
-          <section key={group.title} aria-label={group.title}>
-            <h4 className="flex items-center gap-2 border-b-2 border-ink pb-2 font-display text-sm font-bold tracking-wide">
+          <section
+            key={group.title}
+            aria-label={group.title}
+            className="overflow-hidden rounded-2xl border border-line bg-sea/5 transition-colors hover:border-sea/40"
+          >
+            <h4 className="flex items-center gap-2 border-b border-line/70 bg-white/60 px-4 py-3 font-display text-sm font-bold tracking-wide">
               {Icon && <Icon size={16} className="text-sea" />}
               {group.title}
             </h4>
-            <dl>
+            <dl className="divide-y divide-line/60 px-4">
               {group.rows.map(([k, v]) => (
-                <div key={k} className="flex flex-col gap-0.5 border-b border-line py-2 sm:flex-row sm:gap-4">
+                <div key={k} className="flex flex-col gap-0.5 py-2.5 sm:flex-row sm:gap-4">
                   <dt className="w-48 shrink-0 text-[11px] font-bold text-mist">{k}</dt>
                   <dd className="font-mono text-[13px] text-ink" dir="auto">{v}</dd>
                 </div>
@@ -98,7 +102,7 @@ export default function ProductModal({ laptop, products, onClose, onAdd, onToggl
 
             <div className="mt-5 rounded-2xl border border-line bg-white p-4">
               <p className="flex items-center justify-between text-[11px] font-extrabold tracking-wider text-mist">
-                امتیاز آزمایشگاه کورهِوس
+                امتیاز بنچمارک
                 <span className="text-ink">{toFa(Math.round(laptop.rating * 20))} از ۱۰۰</span>
               </p>
               <div className="mt-3 space-y-2.5">
