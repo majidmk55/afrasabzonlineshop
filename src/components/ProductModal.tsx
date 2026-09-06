@@ -51,14 +51,14 @@ function MainSpecs({ laptop }: { laptop: Laptop }) {
   ];
   return (
     <section aria-label="مشخصات اصلی" className="overflow-hidden rounded-2xl border-2 border-sea/40 bg-sea/5">
-      <h4 className="flex items-center gap-2 border-b border-line/70 bg-white/60 px-4 py-3 font-display text-sm font-bold tracking-wide text-sea">
+      <h4 className="flex items-center gap-2 border-b border-line/70 bg-white/60 px-4 py-3 font-body text-[15px] font-extrabold text-sea">
         مشخصات اصلی در یک نگاه
       </h4>
       <dl className="divide-y divide-line/60 px-4">
         {items.map(([k, v]) => (
           <div key={k} className="flex flex-col gap-0.5 py-2.5 sm:flex-row sm:gap-4">
-            <dt className="w-48 shrink-0 text-[11px] font-bold text-mist">{k}</dt>
-            <dd className="font-mono text-[13px] font-semibold text-ink" dir="auto">{v}</dd>
+            <dt className="w-48 shrink-0 text-[12px] font-bold text-mist">{k}</dt>
+            <dd className="font-spec text-[13px] font-semibold text-ink" dir="auto">{v}</dd>
           </div>
         ))}
       </dl>
@@ -78,15 +78,15 @@ function SpecTable({ laptop }: { laptop: Laptop }) {
             aria-label={group.title}
             className="overflow-hidden rounded-2xl border border-line bg-sea/5 transition-colors hover:border-sea/40"
           >
-            <h4 className="flex items-center gap-2 border-b border-line/70 bg-white/60 px-4 py-3 font-display text-sm font-bold tracking-wide">
-              {Icon && <Icon size={16} className="text-sea" />}
+            <h4 className="flex items-center gap-2.5 border-b border-line/70 bg-white/60 px-4 py-3 font-body text-[15px] font-extrabold">
+              {Icon && <Icon size={21} className="shrink-0 text-sea" />}
               {group.title}
             </h4>
             <dl className="divide-y divide-line/60 px-4">
               {group.rows.map(([k, v]) => (
                 <div key={k} className="flex flex-col gap-0.5 py-2.5 sm:flex-row sm:gap-4">
-                  <dt className="w-48 shrink-0 text-[11px] font-bold text-mist">{k}</dt>
-                  <dd className="font-mono text-[13px] text-ink" dir="auto">{v}</dd>
+                  <dt className="w-48 shrink-0 text-[12px] font-bold text-mist">{k}</dt>
+                  <dd className="font-spec text-[13px] text-ink" dir="auto">{v}</dd>
                 </div>
               ))}
             </dl>
@@ -160,7 +160,7 @@ export default function ProductModal({ laptop, products, onClose, onAdd, onToggl
 
             <div className="mt-5 overflow-hidden rounded-2xl border border-line bg-sea/5">
               <div className="flex items-center justify-between border-b border-line/70 bg-white/60 px-4 py-3">
-                <p className="font-display text-sm font-bold">امتیاز بنچمارک</p>
+                <p className="font-body text-[15px] font-extrabold">امتیاز بنچمارک</p>
                 <span className="text-[10px] font-bold text-mist">تست آزمایشگاه کورهِوس · از ۱۰۰</span>
               </div>
               <div className="grid gap-6 p-5 sm:grid-cols-[150px_1fr]">
@@ -198,7 +198,7 @@ export default function ProductModal({ laptop, products, onClose, onAdd, onToggl
                       <div key={p.label}>
                         <div className="flex items-center justify-between text-[11px] font-bold">
                           <span className="flex items-center gap-1.5 text-ink">
-                            {Icon && <Icon size={13} className="text-sea" />} {p.label}
+                            {Icon && <Icon size={17} className="text-sea" />} {p.label}
                           </span>
                           <span className="text-ink">{toFa(p.v)}</span>
                         </div>

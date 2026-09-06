@@ -153,6 +153,14 @@ input[type="range"] {
   accent-color: var(--color-sea);
 }
 
+/* مقادیر مشخصات فنی: متن انگلیسی با فونت انگلیسی، واژه‌های فارسی با وزیرمتن */
+.font-spec {
+  font-family: "IBM Plex Sans", "Vazirmatn", "Segoe UI", sans-serif;
+}
+.font-spec-mono {
+  font-family: "IBM Plex Mono", "Vazirmatn", monospace;
+}
+
 /* لوگوی برندها با رنگ سرمه‌ای سازمانی */
 .logo-navy {
   filter: brightness(0) saturate(100%) invert(9%) sepia(45%) saturate(3200%) hue-rotate(193deg) brightness(95%) contrast(92%);
