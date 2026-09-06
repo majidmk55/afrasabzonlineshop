@@ -50,11 +50,11 @@ function MainSpecs({ laptop }: { laptop: Laptop }) {
     ["کارت گرافیک", brief("گرافیک")],
   ];
   return (
-    <section aria-label="مشخصات اصلی" className="overflow-hidden rounded-2xl border-2 border-sea/60 bg-sea/25 shadow-sm">
-      <h4 className="flex items-center gap-2 border-b border-sea/25 bg-white/45 px-4 py-3.5 font-body text-[16.5px] font-extrabold text-seadark">
+    <section aria-label="مشخصات اصلی" className="overflow-hidden rounded-2xl border-2 border-purple-300/80 bg-purple-100/70 shadow-sm">
+      <h4 className="flex items-center gap-2 border-b border-purple-200 bg-white/50 px-4 py-3.5 font-body text-[16.5px] font-extrabold text-purple-800">
         مشخصات اصلی در یک نگاه
       </h4>
-      <dl className="divide-y divide-sea/15 px-4">
+      <dl className="divide-y divide-purple-200/70 px-4">
         {items.map(([k, v]) => (
           <div key={k} className="flex flex-col gap-0.5 py-3 sm:flex-row sm:gap-4">
             <dt className="w-48 shrink-0 text-[13px] font-extrabold text-ink">{k}</dt>
