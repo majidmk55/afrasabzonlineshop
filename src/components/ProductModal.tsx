@@ -34,9 +34,42 @@ function scoreLaptop(l: Laptop) {
   return { parts, overall };
 }
 
+/* خلاصه «مشخصات اصلی» — شش ردیف کلیدی مانند برگه فنی استاندارد */
+function MainSpecs({ laptop }: { laptop: Laptop }) {
+  const brief = (key: string) => laptop.brief.find((b) => b[0] === key)?.[1] ?? "—";
+  const row = (groupTitle: string, rowKey: string) => {
+    const g = laptop.specs.find((s) => s.title === groupTitle);
+    return g?.rows.find((r) => r[0] === rowKey)?.[1] ?? "—";
+  };
+  const items: [string, string][] = [
+    ["پردازنده", brief("پردازنده")],
+    ["صفحه نمایش", brief("نمایشگر")],
+    ["هارد", row("ذخیره‌سازی", "ظرفیت کل ذخیره‌سازی")],
+    ["رم", row("حافظه رم", "حافظه داخلی رم") || brief("رم / حافظه")],
+    ["سیستم‌عامل", row("نرم‌افزار", "سیستم‌عامل نصب‌شده")],
+    ["کارت گرافیک", brief("گرافیک")],
+  ];
+  return (
+    <section aria-label="مشخصات اصلی" className="overflow-hidden rounded-2xl border-2 border-sea/40 bg-sea/5">
+      <h4 className="flex items-center gap-2 border-b border-line/70 bg-white/60 px-4 py-3 font-display text-sm font-bold tracking-wide text-sea">
+        مشخصات اصلی در یک نگاه
+      </h4>
+      <dl className="divide-y divide-line/60 px-4">
+        {items.map(([k, v]) => (
+          <div key={k} className="flex flex-col gap-0.5 py-2.5 sm:flex-row sm:gap-4">
+            <dt className="w-48 shrink-0 text-[11px] font-bold text-mist">{k}</dt>
+            <dd className="font-mono text-[13px] font-semibold text-ink" dir="auto">{v}</dd>
+          </div>
+        ))}
+      </dl>
+    </section>
+  );
+}
+
 function SpecTable({ laptop }: { laptop: Laptop }) {
   return (
     <div className="space-y-5">
+      <MainSpecs laptop={laptop} />
       {laptop.specs.map((group) => {
         const Icon = SPEC_ICONS[group.icon];
         return (
