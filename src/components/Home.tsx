@@ -38,6 +38,9 @@ function MsiLogo({ className = "" }: { className?: string }) {
   );
 }
 
+/* تصویر بیلبورد — Lenovo IdeaPad Pro 5i Hero Family */
+const BILLBOARD_IMG = "https://www.ballicom.co.uk/bp-assets/uploads/2023/12/16_Ideapad_Pro_5i_Hero_Family.png";
+
 /* ---------- بازه‌های قیمت ---------- */
 
 interface Band { id: string; title: string; desc: string; min: number; max: number; range: string; dark?: boolean }
@@ -85,10 +88,6 @@ interface HomeProps {
 
 export default function Home({ products, onBrand, onCategory, onPrice, onExplore, onSpecs }: HomeProps) {
   const flash = useMemo(() => products.find((p) => p.oldPrice) ?? products[0] ?? null, [products]);
-  const billboard = useMemo(
-    () => products.find((p) => p.id === "razer-blade-16")?.image ?? products[0]?.image ?? "",
-    [products]
-  );
   const countdown = useCountdown(useMemo(() => nextSunday(), []));
   const pad = (n: number) => toFa(String(n).padStart(2, "0"));
 
@@ -112,9 +111,17 @@ export default function Home({ products, onBrand, onCategory, onPrice, onExplore
     <>
       {/* ── بیلبورد اصلی ── */}
       <section className="relative w-full overflow-hidden bg-deep" aria-label="بیلبورد اصلی">
-        <img src={billboard} alt="لپ‌تاپ تخصصی کورهِوس روی میز آزمایشگاه" className="absolute inset-0 h-full w-full object-cover opacity-90" fetchPriority="high" />
-        <div className="absolute inset-0 bg-gradient-to-l from-deep via-deep/70 to-deep/10" aria-hidden="true" />
-        <div className="absolute inset-0 bg-gradient-to-t from-deep/80 via-transparent to-transparent" aria-hidden="true" />
+        {/* هاله نور اقیانوسی پشت تصویر */}
+        <div className="pointer-events-none absolute -left-24 top-1/2 h-[440px] w-[440px] -translate-y-1/2 rounded-full bg-sea/18 blur-3xl" aria-hidden="true" />
+        {/* تصویر بیلبورد — خانواده لپ‌تاپ‌های لنوو IdeaPad Pro */}
+        <img
+          src={BILLBOARD_IMG}
+          alt="خانواده لپ‌تاپ‌های لنوو IdeaPad Pro"
+          className="pointer-events-none absolute bottom-0 left-0 hidden h-[86%] w-auto max-w-[54%] select-none object-contain object-bottom drop-shadow-[0_25px_45px_rgba(2,20,35,0.65)] md:block lg:h-[95%]"
+          fetchPriority="high"
+          decoding="async"
+        />
+        <div className="absolute inset-0 bg-gradient-to-l from-deep via-deep/60 to-deep/5" aria-hidden="true" />
         <div className="pointer-events-none absolute inset-x-0 top-0 h-20 overflow-hidden" aria-hidden="true">
           <div className="scanline h-20 w-full bg-gradient-to-b from-transparent via-sea/20 to-transparent" />
         </div>
