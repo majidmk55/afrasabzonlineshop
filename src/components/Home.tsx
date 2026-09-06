@@ -1,11 +1,11 @@
-import { useMemo } from "react";
+import { useMemo, type ComponentType } from "react";
 import { fmt, toFa, type Laptop } from "../data/laptops";
 import { Reveal, useCountdown } from "../lib/motion";
-import { IArrowR, IBolt, IDisplay, IShield, ITruck, LogoMark } from "./icons";
+import { IArrowR, IBolt, IBriefGear, ICap, ICode, IDisplay, IGamepad, IPenNib, IShield, ITruck, LogoMark } from "./icons";
 
 /* ---------- برندها (لوگوی رسمی) ---------- */
 
-const BRAND_LOGOS: { fa: string; en: string; src?: string; msft?: boolean }[] = [
+const BRAND_LOGOS: { fa: string; en: string; src?: string; msft?: boolean; msi?: boolean }[] = [
   { fa: "اپل", en: "Apple", src: "https://cdn.simpleicons.org/apple/000000" },
   { fa: "ایسوس", en: "ASUS", src: "https://cdn.simpleicons.org/asus/00539B" },
   { fa: "لنوو", en: "Lenovo", src: "https://cdn.simpleicons.org/lenovo/E2231A" },
@@ -13,16 +13,27 @@ const BRAND_LOGOS: { fa: string; en: string; src?: string; msft?: boolean }[] = 
   { fa: "اچ‌پی", en: "HP", src: "https://cdn.simpleicons.org/hp/0096D6" },
   { fa: "مایکروسافت", en: "Microsoft", msft: true },
   { fa: "ایسر", en: "Acer", src: "https://cdn.simpleicons.org/acer/83B81A" },
-  { fa: "ام‌اس‌آی", en: "MSI", src: "https://cdn.simpleicons.org/msi/FF0000" },
+  { fa: "ام‌اس‌آی", en: "MSI", msi: true },
 ];
 
 function MsLogo({ className = "" }: { className?: string }) {
   return (
     <svg viewBox="0 0 23 23" className={className} aria-hidden="true">
-      <rect width="10.6" height="10.6" fill="#F25022" />
-      <rect x="12.4" width="10.6" height="10.6" fill="#7FBA00" />
-      <rect y="12.4" width="10.6" height="10.6" fill="#00A4EF" />
-      <rect x="12.4" y="12.4" width="10.6" height="10.6" fill="#FFB900" />
+      <rect width="10.6" height="10.6" fill="#0a2a43" />
+      <rect x="12.4" width="10.6" height="10.6" fill="#0a2a43" />
+      <rect y="12.4" width="10.6" height="10.6" fill="#0a2a43" />
+      <rect x="12.4" y="12.4" width="10.6" height="10.6" fill="#0a2a43" />
+    </svg>
+  );
+}
+
+/* لوگوی نوشتاری MSI — سه حرف انگلیسی به سبک لوگوی رسمی */
+function MsiLogo({ className = "" }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 120 44" className={className} aria-hidden="true">
+      <text x="60" y="34" textAnchor="middle" fontFamily="Arial, Helvetica, sans-serif" fontWeight="800" fontStyle="italic" fontSize="34" letterSpacing="2" fill="#0a2a43">
+        MSI
+      </text>
     </svg>
   );
 }
@@ -37,20 +48,23 @@ const BANDS: Band[] = [
   { id: "flag", title: "پرچم‌دار", desc: "گیمینگ سنگین و ورک‌استیشن", min: 220_000_000, max: 400_000_000, range: "بالای ۲۲۰ میلیون", dark: true },
 ];
 
-/* ---------- دسته‌های کاربرد ---------- */
+/* ---------- پنج گروه بر اساس کاربرد ---------- */
 
-const CAT_SPAN: Record<string, string> = {
-  "گیمینگ": "lg:col-span-5",
-  "خلاقیت و رندر": "lg:col-span-3",
-  "بیزنس و اداری": "lg:col-span-2",
-  "اولترابوک": "lg:col-span-2",
-};
-const CAT_REP: Record<string, string> = {
-  "گیمینگ": "razer-blade-16",
-  "خلاقیت و رندر": "macbook-pro-14",
-  "بیزنس و اداری": "thinkpad-x1-carbon",
-  "اولترابوک": "lg-gram-17",
-};
+interface UseGroup {
+  id: string;
+  name: string;
+  desc: string;
+  Icon: ComponentType<{ size?: number; className?: string }>;
+  cats?: string[];
+  price?: [number, number];
+}
+const USE_GROUPS: UseGroup[] = [
+  { id: "gaming", name: "گیمینگ", desc: "فریم‌ریت بالا و خنک‌کنندگی قوی", Icon: IGamepad, cats: ["گیمینگ"] },
+  { id: "creative", name: "طراحی و تولید محتوا", desc: "نمایشگر کالیبره، رندر سریع", Icon: IPenNib, cats: ["خلاقیت و رندر"] },
+  { id: "student", name: "دانشجویی", desc: "سبک، بادوام و خوش‌قیمت", Icon: ICap, price: [0, 120_000_000] },
+  { id: "office", name: "اداری و مهندسی", desc: "پایدار برای نرم‌افزارهای سنگین", Icon: IBriefGear, cats: ["بیزنس و اداری"] },
+  { id: "dev", name: "برنامه‌نویسی", desc: "کیبورد عالی و باتری بلند", Icon: ICode, cats: ["اولترابوک"] },
+];
 
 function nextSunday(): number {
   const d = new Date();
@@ -80,23 +94,10 @@ export default function Home({ products, onBrand, onCategory, onPrice, onExplore
 
 
 
-  const cats = useMemo(() => {
-    const order = ["گیمینگ", "خلاقیت و رندر", "بیزنس و اداری", "اولترابوک"];
-    const list = order
-      .filter((c) => products.some((p) => p.category === c))
-      .map((c) => {
-        const inCat = products.filter((p) => p.category === c);
-        const rep = inCat.find((p) => p.id === CAT_REP[c]) ?? inCat[0];
-        return { name: c, count: inCat.length, min: Math.min(...inCat.map((p) => p.price)), img: rep.image };
-      });
-    const extra = [...new Set(products.map((p) => p.category))]
-      .filter((c) => !order.includes(c))
-      .map((c) => {
-        const inCat = products.filter((p) => p.category === c);
-        return { name: c, count: inCat.length, min: Math.min(...inCat.map((p) => p.price)), img: inCat[0].image };
-      });
-    return [...list, ...extra];
-  }, [products]);
+  const groupCount = (g: UseGroup) =>
+    products.filter((p) =>
+      g.cats ? g.cats.includes(p.category) : g.price ? p.price >= g.price[0] && p.price < g.price[1] : false
+    ).length;
 
   if (products.length === 0) {
     return (
@@ -176,24 +177,26 @@ export default function Home({ products, onBrand, onCategory, onPrice, onExplore
           </div>
         </Reveal>
         <Reveal delay={80}>
-          <ul className="mt-8 flex flex-wrap items-center justify-center gap-x-10 gap-y-8 md:justify-between lg:gap-x-6">
+          <ul className="mt-10 flex flex-wrap items-center justify-center gap-x-14 gap-y-10 md:justify-between lg:gap-x-8">
             {BRAND_LOGOS.map((b) => (
               <li key={b.fa}>
                 <button
                   onClick={() => onBrand(b.fa)}
                   title={`لپ‌تاپ‌های ${b.fa}`}
                   aria-label={`نمایش لپ‌تاپ‌های برند ${b.en} (${b.fa})`}
-                  className="group flex items-center transition-transform duration-300 hover:-translate-y-1.5 active:translate-y-0"
+                  className="group flex items-center transition-transform duration-300 hover:-translate-y-2 active:translate-y-0"
                 >
                   {b.msft ? (
-                    <MsLogo className="h-7 w-7 opacity-85 transition-all duration-300 group-hover:scale-110 md:h-8 md:w-8" />
+                    <MsLogo className="h-11 w-11 opacity-85 transition-all duration-300 group-hover:scale-110 md:h-12 md:w-12" />
+                  ) : b.msi ? (
+                    <MsiLogo className="h-9 w-auto opacity-85 transition-all duration-300 group-hover:scale-110 md:h-12" />
                   ) : (
                     <img
                       src={b.src}
                       alt={b.en}
                       loading="lazy"
                       decoding="async"
-                      className="h-6 w-auto max-w-[120px] object-contain opacity-60 grayscale transition-all duration-300 group-hover:opacity-100 group-hover:grayscale-0 md:h-8"
+                      className="logo-navy h-9 w-auto max-w-[170px] object-contain opacity-85 group-hover:opacity-100 md:h-12"
                     />
                   )}
                 </button>
@@ -203,38 +206,38 @@ export default function Home({ products, onBrand, onCategory, onPrice, onExplore
         </Reveal>
       </section>
 
-      {/* ── خرید بر اساس کاربرد ── */}
+      {/* ── خرید بر اساس کاربرد: پنج گروه با لوگوی مینیمال ── */}
       <section className="mx-auto max-w-7xl px-4 pt-14 sm:px-6" aria-label="خرید بر اساس کاربرد">
         <Reveal>
           <div className="flex items-center gap-4">
             <h2 className="shrink-0 font-display text-2xl font-bold tracking-tight sm:text-3xl">بر اساس کاربرد شما</h2>
             <span className="h-px flex-1 bg-gradient-to-l from-line to-transparent" aria-hidden="true" />
+            <span className="hidden text-[11px] font-bold text-mist sm:block">پنج گروه تخصصی</span>
           </div>
         </Reveal>
-        <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-12">
-          {cats.map((c, i) => (
-            <Reveal key={c.name} delay={i * 70} className={`sm:col-span-1 ${CAT_SPAN[c.name] ?? "lg:col-span-3"}`}>
-              <button
-                onClick={() => onCategory(c.name)}
-                className="group relative block h-44 w-full overflow-hidden rounded-2xl border border-line text-right sm:h-52"
-                aria-label={`لپ‌تاپ‌های ${c.name}`}
-              >
-                <img src={c.img} alt="" className="img-zoom absolute inset-0 h-full w-full object-cover" loading="lazy" decoding="async" />
-                <span className="absolute inset-0 bg-gradient-to-t from-deep via-deep/35 to-transparent transition-opacity" aria-hidden="true" />
-                <span className="absolute inset-x-0 bottom-0 flex items-end justify-between gap-2 p-4">
-                  <span>
-                    <span className="block font-display text-xl font-bold text-white drop-shadow-sm sm:text-2xl">{c.name}</span>
-                    <span className="mt-0.5 block text-[11px] font-bold text-skywash/85">
-                      {toFa(c.count)} دستگاه · از {toFa(Math.round(c.min / 1_000_000))} میلیون ریال
-                    </span>
+        <div className="mt-6 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5">
+          {USE_GROUPS.map((g, i) => {
+            const count = groupCount(g);
+            return (
+              <Reveal key={g.id} delay={i * 70}>
+                <button
+                  onClick={() => (g.cats ? onCategory(g.cats[0]) : onPrice(g.price![0], g.price![1]))}
+                  className="card-lift group flex h-full w-full flex-col items-center rounded-2xl border border-line bg-white p-5 text-center"
+                  aria-label={`لپ‌تاپ‌های ${g.name} — ${toFa(count)} دستگاه`}
+                >
+                  <span className="flex h-16 w-16 items-center justify-center rounded-full bg-skywash text-ink transition-all duration-300 group-hover:bg-sea group-hover:text-white group-hover:shadow-lg group-hover:shadow-sea/25">
+                    <g.Icon size={30} className="transition-transform duration-300 group-hover:-rotate-6 group-hover:scale-110" />
                   </span>
-                  <span className="flex h-9 w-9 shrink-0 translate-x-2 items-center justify-center rounded-full bg-white/15 text-white opacity-0 backdrop-blur-sm transition-all duration-300 group-hover:translate-x-0 group-hover:opacity-100">
-                    <IArrowR size={16} className="-scale-x-100" />
+                  <span className="mt-3 font-display text-lg font-bold leading-tight transition-colors group-hover:text-sea">{g.name}</span>
+                  <span className="mt-1 text-[11px] leading-5 text-mist">{g.desc}</span>
+                  <span className="mt-3 flex items-center gap-1.5 text-[11px] font-extrabold text-sea">
+                    {toFa(count)} دستگاه
+                    <IArrowR size={12} className="-scale-x-100 transition-transform duration-300 group-hover:-translate-x-1" />
                   </span>
-                </span>
-              </button>
-            </Reveal>
-          ))}
+                </button>
+              </Reveal>
+            );
+          })}
         </div>
       </section>
 

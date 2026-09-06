@@ -152,6 +152,15 @@ input[type="range"] {
   accent-color: var(--color-sea);
 }
 
+/* لوگوی برندها با رنگ سرمه‌ای سازمانی */
+.logo-navy {
+  filter: brightness(0) saturate(100%) invert(9%) sepia(45%) saturate(3200%) hue-rotate(193deg) brightness(95%) contrast(92%);
+  transition: filter 0.3s ease, opacity 0.3s ease;
+}
+.group:hover .logo-navy {
+  filter: brightness(0) saturate(100%) invert(16%) sepia(60%) saturate(4200%) hue-rotate(193deg) brightness(108%) contrast(95%);
+}
+
 /* Persian display headings need a touch of breathing room */
 .font-display {
   line-height: 1.15;

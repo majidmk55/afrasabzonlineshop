@@ -58,6 +58,11 @@ export const IPencil = (p: P) => <svg {...base(p)}><path d="m14.5 5 4.5 4.5L8.5 
 export const IChart = (p: P) => <svg {...base(p)}><path d="M4 4v16h16" /><path d="M8 16v-5M12 16V7M16 16v-8M20 16v-3" /></svg>;
 export const IBox = (p: P) => <svg {...base(p)}><path d="m12 3 8 4v10l-8 4-8-4V7l8-4Z" /><path d="M4 7l8 4 8-4M12 11v10" /></svg>;
 export const IUpload = (p: P) => <svg {...base(p)}><path d="M12 16V4m0 0L7.5 8.5M12 4l4.5 4.5" /><path d="M4 15v4a1.5 1.5 0 0 0 1.5 1.5h13A1.5 1.5 0 0 0 20 19v-4" /></svg>;
+export const IGamepad = (p: P) => <svg {...base(p)}><rect x="2.5" y="7" width="19" height="10.5" rx="5" /><path d="M8 10.4v4M6 12.4h4" /><circle cx="15.3" cy="11" r="0.4" fill="currentColor" strokeWidth="1.1" /><circle cx="17.8" cy="13.6" r="0.4" fill="currentColor" strokeWidth="1.1" /></svg>;
+export const IPenNib = (p: P) => <svg {...base(p)}><path d="m12 2.5 5 6.5-3.2 12.5H10.2L7 9l5-6.5Z" /><circle cx="12" cy="10" r="1.3" /><path d="M12 11.3v5.2" /></svg>;
+export const ICap = (p: P) => <svg {...base(p)}><path d="m12 4.5 9.5 4.5L12 13.5 2.5 9 12 4.5Z" /><path d="M6.5 11.3v4.2c0 1.4 2.5 2.7 5.5 2.7s5.5-1.3 5.5-2.7v-4.2" /><path d="M21.5 9v5.5" /></svg>;
+export const IBriefGear = (p: P) => <svg {...base(p)}><rect x="2.5" y="7.5" width="19" height="12.5" rx="1.5" /><path d="M9 7.5V5h6v2.5" /><circle cx="17.3" cy="16.2" r="2.3" /><path d="M17.3 12.9v-1.2M17.3 20.7v-1.2M14 16.2h-1.2M21.8 16.2h-1.2" /></svg>;
+export const ICode = (p: P) => <svg {...base(p)}><path d="m8 8.5-4.5 3.5L8 15.5M16 8.5l4.5 3.5L16 15.5M13.4 5.5l-2.8 13" /></svg>;
 
 export const SPEC_ICONS: Record<string, (p: P) => JSX.Element> = {
   cpu: ICpu, gpu: IGpu, ram: IRam, display: IDisplay, wifi: IWifi, battery: IBattery, scale: IScale, shield: IShield,
