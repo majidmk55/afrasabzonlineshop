@@ -51,9 +51,11 @@ interface HomeProps {
   onPrice: (min: number, max: number) => void;
   onExplore: () => void;
   onSpecs: (id: string) => void;
+  onToggleCompare?: (id: string) => void;
+  compareIds?: string[];
 }
 
-export default function Home({ products, onBrand, onCategory, onPrice, onExplore, onSpecs }: HomeProps) {
+export default function Home({ products, onBrand, onCategory, onPrice, onExplore, onSpecs, onToggleCompare, compareIds }: HomeProps) {
   const flash = useMemo(() => products.find((p) => p.oldPrice) ?? products[0] ?? null, [products]);
   const countdown = useCountdown(useMemo(() => nextSunday(), []));
   const pad = (n: number) => toFa(String(n).padStart(2, "0"));
@@ -138,7 +140,7 @@ export default function Home({ products, onBrand, onCategory, onPrice, onExplore
       </section>
 
       {/* ── فروشگاه به سبک دیجی‌کالا/ترب ── */}
-      <DigiShop products={products} onSpecs={onSpecs} onBrand={onBrand} />
+      <DigiShop products={products} onSpecs={onSpecs} onBrand={onBrand} onToggleCompare={onToggleCompare} compareIds={compareIds} />
 
       {/* ── خرید بر اساس کاربرد: پنج گروه با لوگوی مینیمال ── */}
       <section className="mx-auto max-w-[80%] px-2 pt-14 sm:px-4" aria-label="خرید بر اساس کاربرد">

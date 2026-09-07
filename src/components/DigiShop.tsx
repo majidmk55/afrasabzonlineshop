@@ -1,11 +1,13 @@
 import { useState } from "react";
 import { fmt, toFa, type Laptop } from "../data/laptops";
-import { ICpu, IDisplay, IGpu, IRam, IFilter, IChevron } from "./icons";
+import { ICpu, IDisplay, IGpu, IRam, IFilter, IChevron, ICompare } from "./icons";
 
 interface DigiShopProps {
   products: Laptop[];
   onSpecs: (id: string) => void;
   onBrand: (brand: string) => void;
+  onToggleCompare?: (id: string) => void;
+  compareIds?: string[];
 }
 
 const BRANDS = [
@@ -44,7 +46,7 @@ const FILTER_ITEMS = [
   "ظرفیت حافظه SSD",
 ];
 
-function ProductCard({ product, onSpecs }: { product: Laptop; onSpecs: (id: string) => void }) {
+function ProductCard({ product, onSpecs, onToggleCompare, compared }: { product: Laptop; onSpecs: (id: string) => void; onToggleCompare?: (id: string) => void; compared?: boolean }) {
   const cpu = product.brief.find((b) => b[0] === "پردازنده")?.[1] ?? "—";
   const gpu = product.brief.find((b) => b[0] === "گرافیک")?.[1] ?? "—";
   const ram = product.brief.find((b) => b[0] === "رم / حافظه")?.[1] ?? "—";
@@ -84,6 +86,21 @@ function ProductCard({ product, onSpecs }: { product: Laptop; onSpecs: (id: stri
             <span className="h-2 w-2 rounded-full bg-yellow-500" />
             <span className="h-2 w-2 rounded-full bg-gray-500" />
           </div>
+        )}
+        {/* دکمه مقایسه */}
+        {onToggleCompare && (
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              onToggleCompare(product.id);
+            }}
+            className={`absolute bottom-2 left-2 flex h-8 w-8 items-center justify-center rounded-full border-2 transition-all ${
+              compared ? "border-[#2563eb] bg-[#2563eb] text-white" : "border-white bg-white/80 text-[#666] hover:border-[#2563eb] hover:text-[#2563eb]"
+            }`}
+            aria-label={compared ? "حذف از مقایسه" : "افزودن به مقایسه"}
+          >
+            <ICompare size={16} />
+          </button>
         )}
       </div>
 
@@ -211,7 +228,7 @@ function FilterSidebar() {
   );
 }
 
-export default function DigiShop({ products, onSpecs, onBrand }: DigiShopProps) {
+export default function DigiShop({ products, onSpecs, onBrand, onToggleCompare, compareIds }: DigiShopProps) {
   const [sortBy, setSortBy] = useState("bestseller");
   const displayProducts = products.slice(0, 10); // فقط ۱۰ محصول
 
@@ -286,7 +303,7 @@ export default function DigiShop({ products, onSpecs, onBrand }: DigiShopProps) 
         <div className="flex-1">
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
             {displayProducts.map((product) => (
-              <ProductCard key={product.id} product={product} onSpecs={onSpecs} />
+              <ProductCard key={product.id} product={product} onSpecs={onSpecs} onToggleCompare={onToggleCompare} compared={compareIds?.includes(product.id)} />
             ))}
           </div>
         </div>

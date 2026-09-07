@@ -233,6 +233,8 @@ export default function App() {
           onPrice={(min, max) => setFiltersAndScroll({ minPrice: min, maxPrice: max })}
           onExplore={() => scrollToId("catalog")}
           onSpecs={openProduct}
+          onToggleCompare={toggleCompare}
+          compareIds={compareIds}
         />
         <Guide />
       </main>
