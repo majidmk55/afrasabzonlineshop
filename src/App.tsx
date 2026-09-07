@@ -5,7 +5,7 @@ import Home from "./components/Home";
 import ProductModal from "./components/ProductModal";
 import CartDrawer from "./components/CartDrawer";
 import Checkout from "./components/Checkout";
-import { CompareTray, CompareModal } from "./components/Compare";
+import { CompareTray } from "./components/Compare";
 import ComparePage from "./components/ComparePage";
 import Guide from "./components/Guide";
 import Footer from "./components/Footer";
@@ -29,7 +29,6 @@ export default function App() {
   const [checkoutOpen, setCheckoutOpen] = useState(false);
   const [productId, setProductId] = useState<string | null>(null);
   const [compareIds, setCompareIds] = useState<string[]>([]);
-  const [compareOpen, setCompareOpen] = useState(false);
   const [comparePageOpen, setComparePageOpen] = useState(false);
   const [compareIdsForPage, setCompareIdsForPage] = useState<string[]>([]);
   const [promo, setPromo] = useState<string | null>(null);
@@ -164,7 +163,6 @@ export default function App() {
   }, []);
 
   const openProduct = useCallback((id: string) => {
-    setCompareOpen(false);
     setProductId(id);
   }, []);
 
@@ -217,7 +215,12 @@ export default function App() {
         }}
         onOpenProduct={openProduct}
         onCategory={(c) => setFiltersAndScroll({ cats: [c] })}
-        onCompareOpen={() => compareIds.length >= 2 && setCompareOpen(true)}
+        onCompareOpen={() => {
+          if (compareIds.length >= 2) {
+            setCompareIdsForPage(compareIds);
+            setComparePageOpen(true);
+          }
+        }}
         onHome={() => window.scrollTo({ top: 0, behavior: "smooth" })}
         onAdmin={() => setAdminOpen(true)}
       />
@@ -286,39 +289,18 @@ export default function App() {
         />
       )}
 
-      {!compareOpen && (
-        <CompareTray
-          products={products}
-          ids={compareIds}
-          onRemove={(id) => setCompareIds((ids) => ids.filter((x) => x !== id))}
-          onClear={() => setCompareIds([])}
-          onOpen={() => {
-            setCompareIdsForPage(compareIds);
-            setComparePageOpen(true);
-          }}
-          onOpenProduct={openProduct}
-        />
-      )}
-      {compareOpen && (
-        <CompareModal
-          products={visible}
-          ids={compareIds}
-          onClose={() => setCompareOpen(false)}
-          onRemove={(id) => {
-            setCompareIds((ids) => ids.filter((x) => x !== id));
-            if (compareIds.length <= 2) setCompareOpen(false);
-          }}
-          onAdd={(id) => {
-            addToCart(id);
-            setCompareOpen(false);
-          }}
-          onOpenProduct={openProduct}
-          onOpenComparePage={() => {
-            setCompareOpen(false);
-            setComparePageOpen(true);
-          }}
-        />
-      )}
+      <CompareTray
+        products={products}
+        ids={compareIds}
+        onRemove={(id) => setCompareIds((ids) => ids.filter((x) => x !== id))}
+        onClear={() => setCompareIds([])}
+        onOpen={() => {
+          setCompareIdsForPage(compareIds);
+          setComparePageOpen(true);
+        }}
+        onOpenProduct={openProduct}
+      />
+
 
       {comparePageOpen && (
         <ComparePage
