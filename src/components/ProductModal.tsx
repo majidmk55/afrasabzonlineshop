@@ -58,38 +58,52 @@ function MainSpecs({ laptop }: { laptop: Laptop }) {
     ["کارت گرافیک", brief("گرافیک")],
   ];
   
-  // تقسیم به دو ستون (3 تایی)
-  const leftColumn = items.slice(0, 3);
-  const rightColumn = items.slice(3);
+  // تقسیم به سه ستون (2 تایی)
+  const col1 = items.slice(0, 2);
+  const col2 = items.slice(2, 4);
+  const col3 = items.slice(4, 6);
   
   return (
     <section aria-label="مشخصات اصلی" className="overflow-hidden rounded-2xl border-2 border-sea/30 bg-sea/20 shadow-sm">
-      <h4 className="flex items-center gap-2 border-b border-sea/20 bg-white/50 px-4 py-3 font-body text-[11px] font-extrabold text-seadark">
+      <h4 className="flex items-center gap-2 border-b border-sea/20 bg-white/50 px-4 py-3 font-body text-[13px] font-extrabold text-seadark">
         مشخصات اصلی در یک نگاه
       </h4>
-      <div className="relative grid grid-cols-1 md:grid-cols-2">
-        {/* خط نقطه‌چین جداکننده */}
-        <div className="absolute left-1/2 top-[20%] bottom-[20%] hidden -translate-x-1/2 border-l-[1.5px] border-dotted border-sea/30 opacity-60 md:block" />
+      <div className="relative grid grid-cols-1 md:grid-cols-3">
+        {/* خطوط نقطه‌چین جداکننده */}
+        <div className="absolute left-[33.33%] top-[20%] bottom-[20%] hidden -translate-x-1/2 border-l-[1.5px] border-dotted border-sea/30 opacity-60 md:block" />
+        <div className="absolute left-[66.66%] top-[20%] bottom-[20%] hidden -translate-x-1/2 border-l-[1.5px] border-dotted border-sea/30 opacity-60 md:block" />
         
-        {/* ستون راست */}
+        {/* ستون اول */}
         <dl className="divide-y divide-sea/15">
-          {leftColumn.map(([k, v]) => (
+          {col1.map(([k, v]) => (
             <div key={k} className="flex min-h-[35px] items-center px-4 py-2">
-              <div className="w-full">
-                <dt className="mb-1 text-right text-[8px] font-medium text-sea/70">{k}</dt>
-                <dd className="text-right text-[10px] font-semibold leading-snug text-ink" dir="auto">{v}</dd>
+              <div className="w-full text-right">
+                <dt className="mb-1 text-[9px] font-medium text-sea/70">{k}</dt>
+                <dd className="text-[12px] font-semibold leading-snug text-ink text-right" dir="rtl">{v}</dd>
               </div>
             </div>
           ))}
         </dl>
         
-        {/* ستون چپ */}
+        {/* ستون دوم */}
         <dl className="divide-y divide-sea/15">
-          {rightColumn.map(([k, v]) => (
+          {col2.map(([k, v]) => (
             <div key={k} className="flex min-h-[35px] items-center px-4 py-2">
-              <div className="w-full">
-                <dt className="mb-1 text-left text-[8px] font-medium text-sea/70">{k}</dt>
-                <dd className="text-left text-[10px] font-semibold leading-snug text-ink" dir="auto">{v}</dd>
+              <div className="w-full text-right">
+                <dt className="mb-1 text-[9px] font-medium text-sea/70">{k}</dt>
+                <dd className="text-[12px] font-semibold leading-snug text-ink text-right" dir="rtl">{v}</dd>
+              </div>
+            </div>
+          ))}
+        </dl>
+        
+        {/* ستون سوم */}
+        <dl className="divide-y divide-sea/15">
+          {col3.map(([k, v]) => (
+            <div key={k} className="flex min-h-[35px] items-center px-4 py-2">
+              <div className="w-full text-right">
+                <dt className="mb-1 text-[9px] font-medium text-sea/70">{k}</dt>
+                <dd className="text-[12px] font-semibold leading-snug text-ink text-right" dir="rtl">{v}</dd>
               </div>
             </div>
           ))}
@@ -167,10 +181,11 @@ function SpecTable({ laptop }: { laptop: Laptop }) {
       <MainSpecs laptop={laptop} />
       {sorted.map((group) => {
         const Icon = SPEC_ICONS[group.icon];
-        // تقسیم ردیف‌ها به دو ستون
-        const midIndex = Math.ceil(group.rows.length / 2);
-        const leftColumn = group.rows.slice(0, midIndex);
-        const rightColumn = group.rows.slice(midIndex);
+        // تقسیم ردیف‌ها به سه ستون
+        const colSize = Math.ceil(group.rows.length / 3);
+        const col1 = group.rows.slice(0, colSize);
+        const col2 = group.rows.slice(colSize, colSize * 2);
+        const col3 = group.rows.slice(colSize * 2);
 
         return (
           <section
@@ -180,25 +195,26 @@ function SpecTable({ laptop }: { laptop: Laptop }) {
           >
             {/* هدر بخش */}
             <h4 className="flex items-center gap-2 border-b border-[#e2e8f0] bg-[#f8fafc] px-4 py-3">
-              {Icon && <Icon size={14} className="shrink-0 text-[#64748b]" />}
-              <span className="font-body text-[11px] font-bold text-[#1a1a1a]">{group.title}</span>
+              {Icon && <Icon size={16} className="shrink-0 text-[#64748b]" />}
+              <span className="font-body text-[13px] font-bold text-[#1a1a1a]">{group.title}</span>
             </h4>
             
-            {/* محتوای دو ستونی */}
-            <div className="relative grid grid-cols-1 md:grid-cols-2">
-              {/* خط نقطه‌چین جداکننده عمودی */}
-              <div className="absolute left-1/2 top-[20%] bottom-[20%] hidden -translate-x-1/2 border-l-[1.5px] border-dotted border-[#cbd5e1] opacity-60 md:block" />
+            {/* محتوای سه ستونی */}
+            <div className="relative grid grid-cols-1 md:grid-cols-3">
+              {/* خطوط نقطه‌چین جداکننده عمودی */}
+              <div className="absolute left-[33.33%] top-[20%] bottom-[20%] hidden -translate-x-1/2 border-l-[1.5px] border-dotted border-[#cbd5e1] opacity-60 md:block" />
+              <div className="absolute left-[66.66%] top-[20%] bottom-[20%] hidden -translate-x-1/2 border-l-[1.5px] border-dotted border-[#cbd5e1] opacity-60 md:block" />
               
-              {/* ستون راست */}
+              {/* ستون اول */}
               <div className="divide-y divide-[#f1f5f9]">
-                {leftColumn.map(([k, v]) => (
+                {col1.map(([k, v]) => (
                   <div
                     key={k}
                     className="flex min-h-[35px] items-center px-4 py-2 transition-colors hover:bg-[#f8fafc]"
                   >
-                    <div className="w-full">
-                      <dt className="mb-1 text-right text-[8px] font-medium text-[#64748b]">{k}</dt>
-                      <dd className="text-right text-[10px] font-semibold leading-snug text-[#1e293b]" dir="auto">
+                    <div className="w-full text-right">
+                      <dt className="mb-1 text-[9px] font-medium text-[#64748b] text-right">{k}</dt>
+                      <dd className="text-[12px] font-semibold leading-snug text-[#1e293b] text-right" dir="rtl">
                         {v}
                       </dd>
                     </div>
@@ -206,16 +222,33 @@ function SpecTable({ laptop }: { laptop: Laptop }) {
                 ))}
               </div>
               
-              {/* ستون چپ */}
+              {/* ستون دوم */}
               <div className="divide-y divide-[#f1f5f9]">
-                {rightColumn.map(([k, v]) => (
+                {col2.map(([k, v]) => (
                   <div
                     key={k}
                     className="flex min-h-[35px] items-center px-4 py-2 transition-colors hover:bg-[#f8fafc]"
                   >
-                    <div className="w-full">
-                      <dt className="mb-1 text-left text-[8px] font-medium text-[#64748b]">{k}</dt>
-                      <dd className="text-left text-[10px] font-semibold leading-snug text-[#1e293b]" dir="auto">
+                    <div className="w-full text-right">
+                      <dt className="mb-1 text-[9px] font-medium text-[#64748b] text-right">{k}</dt>
+                      <dd className="text-[12px] font-semibold leading-snug text-[#1e293b] text-right" dir="rtl">
+                        {v}
+                      </dd>
+                    </div>
+                  </div>
+                ))}
+              </div>
+              
+              {/* ستون سوم */}
+              <div className="divide-y divide-[#f1f5f9]">
+                {col3.map(([k, v]) => (
+                  <div
+                    key={k}
+                    className="flex min-h-[35px] items-center px-4 py-2 transition-colors hover:bg-[#f8fafc]"
+                  >
+                    <div className="w-full text-right">
+                      <dt className="mb-1 text-[9px] font-medium text-[#64748b] text-right">{k}</dt>
+                      <dd className="text-[12px] font-semibold leading-snug text-[#1e293b] text-right" dir="rtl">
                         {v}
                       </dd>
                     </div>
