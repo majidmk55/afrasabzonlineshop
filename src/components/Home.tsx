@@ -1,6 +1,7 @@
-import { useMemo, type ComponentType } from "react";
+import { useMemo, useRef, type ComponentType } from "react";
 import { fmt, toFa, type Laptop } from "../data/laptops";
-import { Reveal, useCountdown } from "../lib/motion";
+import { prefersReducedMotion, Reveal, useCountdown } from "../lib/motion";
+import ProductCard from "./ProductCard";
 import { IArrowR, IBolt, IBriefGear, ICap, ICode, ICpu, IDisplay, IGamepad, IGpu, IPenNib, IRam, IShield, ITruck, LogoMark } from "./icons";
 
 /* ---------- برندها (لوگوی رسمی) ---------- */
