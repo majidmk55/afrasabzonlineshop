@@ -57,19 +57,44 @@ function MainSpecs({ laptop }: { laptop: Laptop }) {
     ["سیستم‌عامل", row("نرم‌افزار", "سیستم‌عامل نصب‌شده")],
     ["کارت گرافیک", brief("گرافیک")],
   ];
+  
+  // تقسیم به دو ستون (3 تایی)
+  const leftColumn = items.slice(0, 3);
+  const rightColumn = items.slice(3);
+  
   return (
     <section aria-label="مشخصات اصلی" className="overflow-hidden rounded-2xl border-2 border-sea/30 bg-sea/20 shadow-sm">
-      <h4 className="flex items-center gap-2 border-b border-sea/20 bg-white/50 px-4 py-3.5 font-body text-[16.5px] font-extrabold text-seadark">
+      <h4 className="flex items-center gap-2 border-b border-sea/20 bg-white/50 px-5 py-4 font-body text-[16.5px] font-extrabold text-seadark">
         مشخصات اصلی در یک نگاه
       </h4>
-      <dl className="divide-y divide-sea/15 px-4">
-        {items.map(([k, v]) => (
-          <div key={k} className="flex flex-col gap-0.5 py-3 sm:flex-row sm:gap-4">
-            <dt className="w-48 shrink-0 text-[13px] font-extrabold text-ink">{k}</dt>
-            <dd className="font-spec text-[14.5px] font-semibold text-ink" dir="auto">{v}</dd>
-          </div>
-        ))}
-      </dl>
+      <div className="relative grid grid-cols-1 md:grid-cols-2">
+        {/* خط نقطه‌چین جداکننده */}
+        <div className="absolute left-1/2 top-[20%] bottom-[20%] hidden -translate-x-1/2 border-l-[1.5px] border-dotted border-sea/30 opacity-60 md:block" />
+        
+        {/* ستون راست */}
+        <dl className="divide-y divide-sea/15">
+          {leftColumn.map(([k, v]) => (
+            <div key={k} className="flex min-h-[70px] items-center px-5 py-4">
+              <div className="w-full">
+                <dt className="mb-1.5 text-right text-[12px] font-medium text-sea/70">{k}</dt>
+                <dd className="text-right text-[14px] font-semibold leading-relaxed text-ink" dir="auto">{v}</dd>
+              </div>
+            </div>
+          ))}
+        </dl>
+        
+        {/* ستون چپ */}
+        <dl className="divide-y divide-sea/15">
+          {rightColumn.map(([k, v]) => (
+            <div key={k} className="flex min-h-[70px] items-center px-5 py-4">
+              <div className="w-full">
+                <dt className="mb-1.5 text-left text-[12px] font-medium text-sea/70">{k}</dt>
+                <dd className="text-left text-[14px] font-semibold leading-relaxed text-ink" dir="auto">{v}</dd>
+              </div>
+            </div>
+          ))}
+        </dl>
+      </div>
     </section>
   );
 }
@@ -142,24 +167,62 @@ function SpecTable({ laptop }: { laptop: Laptop }) {
       <MainSpecs laptop={laptop} />
       {sorted.map((group) => {
         const Icon = SPEC_ICONS[group.icon];
+        // تقسیم ردیف‌ها به دو ستون
+        const midIndex = Math.ceil(group.rows.length / 2);
+        const leftColumn = group.rows.slice(0, midIndex);
+        const rightColumn = group.rows.slice(midIndex);
+
         return (
           <section
             key={group.title}
             aria-label={group.title}
-            className="overflow-hidden rounded-2xl border border-line bg-sea/5 transition-colors hover:border-sea/40"
+            className="overflow-hidden rounded-2xl border border-[#e2e8f0] bg-white shadow-sm"
           >
-            <h4 className="flex items-center gap-2.5 border-b border-line/70 bg-white/60 px-4 py-3 font-body text-[15px] font-extrabold">
-              {Icon && <Icon size={21} className="shrink-0 text-sea" />}
-              {group.title}
+            {/* هدر بخش */}
+            <h4 className="flex items-center gap-2 border-b border-[#e2e8f0] bg-[#f8fafc] px-5 py-4">
+              {Icon && <Icon size={20} className="shrink-0 text-[#64748b]" />}
+              <span className="font-body text-[16px] font-bold text-[#1a1a1a]">{group.title}</span>
             </h4>
-            <dl className="grid gap-x-6 gap-y-0 px-4 sm:grid-cols-2">
-              {group.rows.map(([k, v]) => (
-                <div key={k} className="flex flex-col gap-0.5 border-b border-line/60 py-2.5">
-                  <dt className="text-[12px] font-bold text-mist">{k}</dt>
-                  <dd className="font-spec text-[13px] text-ink" dir="auto">{v}</dd>
-                </div>
-              ))}
-            </dl>
+            
+            {/* محتوای دو ستونی */}
+            <div className="relative grid grid-cols-1 md:grid-cols-2">
+              {/* خط نقطه‌چین جداکننده عمودی */}
+              <div className="absolute left-1/2 top-[20%] bottom-[20%] hidden -translate-x-1/2 border-l-[1.5px] border-dotted border-[#cbd5e1] opacity-60 md:block" />
+              
+              {/* ستون راست */}
+              <div className="divide-y divide-[#f1f5f9]">
+                {leftColumn.map(([k, v]) => (
+                  <div
+                    key={k}
+                    className="flex min-h-[70px] items-center px-5 py-4 transition-colors hover:bg-[#f8fafc]"
+                  >
+                    <div className="w-full">
+                      <dt className="mb-1.5 text-right text-[12px] font-medium text-[#64748b]">{k}</dt>
+                      <dd className="text-right text-[14px] font-semibold leading-relaxed text-[#1e293b]" dir="auto">
+                        {v}
+                      </dd>
+                    </div>
+                  </div>
+                ))}
+              </div>
+              
+              {/* ستون چپ */}
+              <div className="divide-y divide-[#f1f5f9]">
+                {rightColumn.map(([k, v]) => (
+                  <div
+                    key={k}
+                    className="flex min-h-[70px] items-center px-5 py-4 transition-colors hover:bg-[#f8fafc]"
+                  >
+                    <div className="w-full">
+                      <dt className="mb-1.5 text-left text-[12px] font-medium text-[#64748b]">{k}</dt>
+                      <dd className="text-left text-[14px] font-semibold leading-relaxed text-[#1e293b]" dir="auto">
+                        {v}
+                      </dd>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
           </section>
         );
       })}
