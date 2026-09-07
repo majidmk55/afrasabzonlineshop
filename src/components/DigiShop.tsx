@@ -61,7 +61,7 @@ function ProductCard({ product, onSpecs }: { product: Laptop; onSpecs: (id: stri
       className="group flex h-full w-full flex-col rounded-xl border border-[#e5e7eb] bg-white p-4 text-right transition-all duration-200 hover:border-[#3b82f6] hover:shadow-lg"
     >
       {/* تصویر */}
-      <div className="relative mb-3 flex h-[180px] items-center justify-center overflow-hidden rounded-lg bg-[#f9fafb]">
+      <div className="relative mb-3 flex h-[180px] items-center justify-center overflow-hidden rounded-lg bg-white">
         <img
           src={product.image}
           alt={product.name}
@@ -81,15 +81,15 @@ function ProductCard({ product, onSpecs }: { product: Laptop; onSpecs: (id: stri
 
       {/* آیکون‌های مشخصات */}
       <div className="mb-3 flex items-center justify-between gap-2 border-b border-[#f0f0f0] pb-3">
-        <div className="flex items-center gap-1">
+        <div className="flex flex-col items-center gap-1">
           <IRam size={20} className="text-[#666]" />
           <span className="text-[11px] text-[#666]">{ramShort}</span>
         </div>
-        <div className="flex items-center gap-1">
+        <div className="flex flex-col items-center gap-1">
           <ICpu size={20} className="text-[#666]" />
           <span className="text-[11px] text-[#666]">{cpuShort}</span>
         </div>
-        <div className="flex items-center gap-1">
+        <div className="flex flex-col items-center gap-1">
           <IDisplay size={20} className="text-[#666]" />
           <span className="text-[11px] text-[#666]">{displayShort}</span>
         </div>
@@ -208,7 +208,7 @@ export default function DigiShop({ products, onSpecs, onBrand }: DigiShopProps) 
   const displayProducts = products.slice(0, 10); // فقط ۱۰ محصول
 
   return (
-    <div className="mx-auto max-w-[90%] px-2 py-6 sm:px-4">
+    <div className="mx-auto max-w-[80%] px-2 py-6 sm:px-4">
       {/* نوار لوگو برندها */}
       <section className="mb-4 flex items-center justify-center gap-8 rounded-xl bg-white py-4">
         {BRANDS.map((brand) => (
@@ -223,7 +223,7 @@ export default function DigiShop({ products, onSpecs, onBrand }: DigiShopProps) 
               alt={brand.en}
               className="h-14 w-auto object-contain opacity-80 transition-opacity group-hover:opacity-100"
               style={{
-                filter: "brightness(0) saturate(100%) invert(75%) sepia(10%) saturate(500%) hue-rotate(180deg) brightness(95%) contrast(90%)"
+                filter: "brightness(0) saturate(100%) invert(75%) sepia(10%) saturate(500%) hue-rotate(180deg) brightness(60%) contrast(90%)"
               }}
               loading="lazy"
             />

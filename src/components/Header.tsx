@@ -45,7 +45,7 @@ export default function Header({ products, cartCount, compareCount, onCartOpen, 
 
   return (
     <header className="sticky top-0 z-40 border-b border-line bg-white/90 backdrop-blur-sm">
-      <div className="mx-auto flex max-w-[90%] items-center gap-3 px-2 py-3 sm:px-4">
+      <div className="mx-auto flex max-w-[80%] items-center gap-3 px-2 py-3 sm:px-4">
         <button onClick={onHome} className="group flex items-center gap-2.5" aria-label="کورهِوس — صفحه اصلی">
           <LogoMark size={30} className="text-ink transition-transform duration-300 group-hover:-rotate-12" />
           <span className="font-display text-xl font-bold tracking-tight">

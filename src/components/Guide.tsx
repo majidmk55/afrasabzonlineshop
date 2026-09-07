@@ -35,7 +35,7 @@ export default function Guide() {
       {/* استاندارد کورهِوس — sticky two-column */}
       <section className="dark-panel relative overflow-hidden" aria-label="استاندارد کورهِوس">
         <div className="pointer-events-none absolute -left-32 bottom-0 h-96 w-96 rounded-full bg-sea/10 blur-3xl" aria-hidden="true" />
-        <div className="relative mx-auto grid max-w-[90%] gap-12 px-2 py-16 sm:px-4 lg:grid-cols-[0.9fr_1.1fr] lg:py-24">
+        <div className="relative mx-auto grid max-w-[80%] gap-12 px-2 py-16 sm:px-4 lg:grid-cols-[0.9fr_1.1fr] lg:py-24">
           <div className="lg:sticky lg:top-28 lg:self-start">
             <Reveal>
               <p className="text-[11px] font-extrabold tracking-wide text-sea">چرا از ما بخرید؟</p>
@@ -83,7 +83,7 @@ export default function Guide() {
 
       {/* یادداشت‌های میدانی — reviews marquee */}
       <section className="border-t border-line bg-foam/60 py-14" aria-label="دیدگاه خریداران">
-        <div className="mx-auto max-w-[90%] px-2 sm:px-4">
+        <div className="mx-auto max-w-[80%] px-2 sm:px-4">
           <Reveal>
             <div className="flex flex-wrap items-end justify-between gap-3">
               <div>

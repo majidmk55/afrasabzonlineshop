@@ -67,7 +67,7 @@ export default function Home({ products, onBrand, onCategory, onPrice, onExplore
 
   if (products.length === 0) {
     return (
-      <section className="mx-auto max-w-[90%] px-2 py-24 text-center sm:px-4">
+      <section className="mx-auto max-w-[80%] px-2 py-24 text-center sm:px-4">
         <p className="font-display text-2xl font-bold">ویترین در حال آماده‌سازی است</p>
         <p className="mt-2 text-sm text-mist">همه کالاها از پنل مدیریت خاموش شده‌اند. لطفاً بعداً سر بزنید.</p>
       </section>
@@ -93,7 +93,7 @@ export default function Home({ products, onBrand, onCategory, onPrice, onExplore
           <div className="scanline h-20 w-full bg-gradient-to-b from-transparent via-sea/20 to-transparent" />
         </div>
 
-        <div className="relative mx-auto flex min-h-[280px] max-w-[90%] flex-col justify-center px-2 py-10 sm:min-h-[340px] sm:px-4 lg:min-h-[400px]">
+        <div className="relative mx-auto flex min-h-[280px] max-w-[80%] flex-col justify-center px-2 py-10 sm:min-h-[340px] sm:px-4 lg:min-h-[400px]">
           <p className="flex w-fit items-center gap-2 rounded-full border border-sea/50 bg-deeplit/70 px-4 py-1.5 text-[11px] font-bold tracking-wider text-skywash backdrop-blur-sm">
             <LogoMark size={16} className="text-sea" /> بورس تخصصی لپ‌تاپ — از ۱۳۹۸
           </p>
@@ -141,7 +141,7 @@ export default function Home({ products, onBrand, onCategory, onPrice, onExplore
       <DigiShop products={products} onSpecs={onSpecs} onBrand={onBrand} />
 
       {/* ── خرید بر اساس کاربرد: پنج گروه با لوگوی مینیمال ── */}
-      <section className="mx-auto max-w-[90%] px-2 pt-14 sm:px-4" aria-label="خرید بر اساس کاربرد">
+      <section className="mx-auto max-w-[80%] px-2 pt-14 sm:px-4" aria-label="خرید بر اساس کاربرد">
         <Reveal>
           <div className="flex items-center gap-4">
             <h2 className="shrink-0 font-display text-2xl font-bold tracking-tight sm:text-3xl">بر اساس کاربرد شما</h2>
@@ -176,7 +176,7 @@ export default function Home({ products, onBrand, onCategory, onPrice, onExplore
       </section>
 
       {/* ── خرید بر اساس بودجه ── */}
-      <section className="mx-auto max-w-[90%] px-2 py-14 sm:px-4" aria-label="خرید بر اساس بودجه">
+      <section className="mx-auto max-w-[80%] px-2 py-14 sm:px-4" aria-label="خرید بر اساس بودجه">
         <Reveal>
           <div className="flex items-center gap-4">
             <h2 className="shrink-0 font-display text-2xl font-bold tracking-tight sm:text-3xl">بر اساس بودجه شما</h2>
