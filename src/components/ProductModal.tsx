@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { WARRANTY_PRICE, fmt, toFa, type Laptop } from "../data/laptops";
 import { Reveal, prefersReducedMotion, useEscape, useLockBody } from "../lib/motion";
-import { IBox, ICheck, IClose, ICompare, IMinus, IPlus, IStar, ITruck, SPEC_ICONS } from "./icons";
+import { ICheck, IClose, ICompare, IMinus, IPlus, IStar, ITruck, SPEC_ICONS } from "./icons";
 
 type Tab = "specs" | "box" | "shipping";
 
@@ -58,11 +58,11 @@ function MainSpecs({ laptop }: { laptop: Laptop }) {
     ["کارت گرافیک", brief("گرافیک")],
   ];
   return (
-    <section aria-label="مشخصات اصلی" className="overflow-hidden rounded-2xl border-2 border-purple-300/80 bg-purple-100/70 shadow-sm">
-      <h4 className="flex items-center gap-2 border-b border-purple-200 bg-white/50 px-4 py-3.5 font-body text-[16.5px] font-extrabold text-purple-800">
+    <section aria-label="مشخصات اصلی" className="overflow-hidden rounded-2xl border-2 border-sea/30 bg-sea/20 shadow-sm">
+      <h4 className="flex items-center gap-2 border-b border-sea/20 bg-white/50 px-4 py-3.5 font-body text-[16.5px] font-extrabold text-seadark">
         مشخصات اصلی در یک نگاه
       </h4>
-      <dl className="divide-y divide-purple-200/70 px-4">
+      <dl className="divide-y divide-sea/15 px-4">
         {items.map(([k, v]) => (
           <div key={k} className="flex flex-col gap-0.5 py-3 sm:flex-row sm:gap-4">
             <dt className="w-48 shrink-0 text-[13px] font-extrabold text-ink">{k}</dt>
@@ -130,145 +130,75 @@ function ProsCons({ laptop }: { laptop: Laptop }) {
 }
 
 /* ---------- نمای انفجاری سخت‌افزار (شماتیک آزمایشگاه) ---------- */
-const PARTS = [
-  { n: "۱", label: "درب و نمایشگر OLED" },
-  { n: "۲", label: "لولا و کابل تصویر" },
-  { n: "۳", label: "دک کیبورد و تاچ‌پد" },
-  { n: "۴", label: "لوله‌های حرارتی مسی" },
-  { n: "۵", label: "دو فن خنک‌کننده" },
-  { n: "۶", label: "برد اصلی، پردازنده و گرافیک" },
-  { n: "۷", label: "ماژول رم و SSD" },
-  { n: "۸", label: "باتری لیتیوم‌پلیمر" },
-  { n: "۹", label: "بلندگوها و برد پورت‌ها" },
-  { n: "۱۰", label: "پوشش پایینی آلومینیومی" },
-];
-
-function HardwareExploded({ laptop }: { laptop: Laptop }) {
-  const [hi, setHi] = useState<number | null>(null);
-  return (
-    <section aria-label="نمای انفجاری سخت‌افزار" className="overflow-hidden rounded-2xl border border-line bg-deep">
-      <h4 className="flex items-center gap-2.5 border-b border-panel px-4 py-3 font-body text-[15px] font-extrabold text-white">
-        <IBox size={21} className="shrink-0 text-sea" />
-        نمای انفجاری سخت‌افزار — داخل {laptop.shortName}
-      </h4>
-      <div className="grid gap-6 p-5 sm:p-6 lg:grid-cols-[1.3fr_1fr]">
-        {/* شمای لایه‌ها */}
-        <div className="relative overflow-hidden rounded-xl bg-slab/60" dir="ltr">
-          <svg viewBox="0 0 520 430" className="h-auto w-full" role="img" aria-label="شمای انفجاری قطعات داخلی لپ‌تاپ">
-            <defs>
-              <linearGradient id="slabGrad" x1="0" y1="0" x2="1" y2="0">
-                <stop offset="0%" stopColor="#16496e" />
-                <stop offset="100%" stopColor="#0c3350" />
-              </linearGradient>
-            </defs>
-            {PARTS.map((p, i) => {
-              const y = 24 + i * 40;
-              const w = i === 0 || i === 9 ? 400 : i === 7 ? 340 : 300;
-              const x = 70;
-              const active = hi === i;
-              return (
-                <g
-                  key={p.n}
-                  onMouseEnter={() => setHi(i)}
-                  onMouseLeave={() => setHi(null)}
-                  style={{ cursor: "pointer", transition: "opacity .25s ease" }}
-                  opacity={hi === null || active ? 1 : 0.35}
-                >
-                  <polygon
-                    points={`${x},${y + 12} ${x + 46},${y} ${x + 46 + w},${y} ${x + w},${y + 12} ${x + w},${y + 24} ${x},${y + 24}`}
-                    fill={active ? "#0477b3" : "url(#slabGrad)"}
-                    stroke={active ? "#7cc7ec" : "#2c5c80"}
-                    strokeWidth="1.2"
-                    style={{ transition: "fill .25s ease" }}
-                  />
-                  {i === 5 && (
-                    <>
-                      <rect x={x + 90} y={y + 3} width="34" height="7" fill="#0c0f15" opacity="0.85" />
-                      <rect x={x + 132} y={y + 3} width="26" height="7" fill="#0c0f15" opacity="0.6" />
-                    </>
-                  )}
-                  {i === 4 && (
-                    <>
-                      <circle cx={x + 120} cy={y + 12} r="8" fill="none" stroke="#7cc7ec" strokeWidth="1.4" />
-                      <circle cx={x + 168} cy={y + 12} r="8" fill="none" stroke="#7cc7ec" strokeWidth="1.4" />
-                    </>
-                  )}
-                  {i === 3 && (
-                    <path d={`M ${x + 60} ${y + 12} q 70 -8 150 0 t 90 0`} fill="none" stroke="#e08d5a" strokeWidth="2.4" strokeLinecap="round" />
-                  )}
-                  {i === 7 && (
-                    <rect x={x + 40} y={y + 4} width={w - 90} height="14" rx="3" fill="#0a2a43" stroke="#2c5c80" strokeWidth="1" />
-                  )}
-                  <line x1={x + w + 12} y1={y + 12} x2={x + w + 34} y2={y + 12} stroke="#7cc7ec" strokeWidth="1" strokeDasharray="3 3" />
-                  <circle cx={x + w + 44} cy={y + 12} r="9" fill={active ? "#0477b3" : "#07293f"} stroke="#7cc7ec" strokeWidth="1.2" />
-                  <text x={x + w + 44} y={y + 16} textAnchor="middle" fontSize="10" fill="#bfe3f5" fontFamily="IBM Plex Mono, monospace">
-                    {p.n.replace(/[۰-۹]/g, (d) => String("۰۱۲۳۴۵۶۷۸۹".indexOf(d)))}
-                  </text>
-                </g>
-              );
-            })}
-          </svg>
-        </div>
-
-        {/* راهنمای قطعات */}
-        <ol className="self-center space-y-1.5">
-          {PARTS.map((p, i) => (
-            <li key={p.n}>
-              <button
-                onMouseEnter={() => setHi(i)}
-                onMouseLeave={() => setHi(null)}
-                className={`flex w-full items-center gap-3 rounded-lg px-3 py-1.5 text-right text-[13px] transition-all ${
-                  hi === i ? "bg-sea/25 text-white" : "text-skywash/85 hover:bg-slab"
-                }`}
-              >
-                <span className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-full border text-[11px] font-bold ${hi === i ? "border-sea bg-sea text-white" : "border-panel text-skywash"}`}>
-                  {p.n}
-                </span>
-                {p.label}
-              </button>
-            </li>
-          ))}
-        </ol>
-      </div>
-      <p className="border-t border-panel bg-coal/40 px-4 py-2.5 text-[10px] leading-relaxed text-skywash/70">
-        شمای شماتیک آزمایشگاه کورهِوس — چیدمان قطعات ممکن است در هر مدل کمی متفاوت باشد. همه دستگاه‌ها پیش از ارسال باز، تست و دوباره پلمپ می‌شوند و گزارش ۴۲ مرحله‌ای همراه جعبه است.
-      </p>
-    </section>
-  );
-}
-
 function SpecTable({ laptop }: { laptop: Laptop }) {
   const sorted = [...laptop.specs].sort((a, b) => {
     const ia = SPEC_ORDER.indexOf(a.title);
     const ib = SPEC_ORDER.indexOf(b.title);
     return (ia === -1 ? 99 : ia) - (ib === -1 ? 99 : ib);
   });
+  
+  // تقسیم به دو ستون
+  const mid = Math.ceil(sorted.length / 2);
+  const leftCol = sorted.slice(0, mid);
+  const rightCol = sorted.slice(mid);
+
   return (
     <div className="space-y-5">
       <MainSpecs laptop={laptop} />
-      {sorted.map((group) => {
-        const Icon = SPEC_ICONS[group.icon];
-        return (
-          <section
-            key={group.title}
-            aria-label={group.title}
-            className="overflow-hidden rounded-2xl border border-line bg-sea/5 transition-colors hover:border-sea/40"
-          >
-            <h4 className="flex items-center gap-2.5 border-b border-line/70 bg-white/60 px-4 py-3 font-body text-[15px] font-extrabold">
-              {Icon && <Icon size={21} className="shrink-0 text-sea" />}
-              {group.title}
-            </h4>
-            <dl className="divide-y divide-line/60 px-4">
-              {group.rows.map(([k, v]) => (
-                <div key={k} className="flex flex-col gap-0.5 py-2.5 sm:flex-row sm:gap-4">
-                  <dt className="w-48 shrink-0 text-[12px] font-bold text-mist">{k}</dt>
-                  <dd className="font-spec text-[13px] text-ink" dir="auto">{v}</dd>
-                </div>
-              ))}
-            </dl>
-          </section>
-        );
-      })}
+      <div className="grid gap-5 md:grid-cols-2">
+        {/* ستون راست */}
+        <div className="space-y-5">
+          {rightCol.map((group) => {
+            const Icon = SPEC_ICONS[group.icon];
+            return (
+              <section
+                key={group.title}
+                aria-label={group.title}
+                className="overflow-hidden rounded-2xl border border-line bg-sea/5 transition-colors hover:border-sea/40"
+              >
+                <h4 className="flex items-center gap-2.5 border-b border-line/70 bg-white/60 px-4 py-3 font-body text-[15px] font-extrabold">
+                  {Icon && <Icon size={21} className="shrink-0 text-sea" />}
+                  {group.title}
+                </h4>
+                <dl className="divide-y divide-line/60 px-4">
+                  {group.rows.map(([k, v]) => (
+                    <div key={k} className="flex flex-col gap-0.5 py-2.5 sm:flex-row sm:gap-4">
+                      <dt className="w-48 shrink-0 text-[12px] font-bold text-mist">{k}</dt>
+                      <dd className="font-spec text-[13px] text-ink" dir="auto">{v}</dd>
+                    </div>
+                  ))}
+                </dl>
+              </section>
+            );
+          })}
+        </div>
+        {/* ستون چپ */}
+        <div className="space-y-5">
+          {leftCol.map((group) => {
+            const Icon = SPEC_ICONS[group.icon];
+            return (
+              <section
+                key={group.title}
+                aria-label={group.title}
+                className="overflow-hidden rounded-2xl border border-line bg-sea/5 transition-colors hover:border-sea/40"
+              >
+                <h4 className="flex items-center gap-2.5 border-b border-line/70 bg-white/60 px-4 py-3 font-body text-[15px] font-extrabold">
+                  {Icon && <Icon size={21} className="shrink-0 text-sea" />}
+                  {group.title}
+                </h4>
+                <dl className="divide-y divide-line/60 px-4">
+                  {group.rows.map(([k, v]) => (
+                    <div key={k} className="flex flex-col gap-0.5 py-2.5 sm:flex-row sm:gap-4">
+                      <dt className="w-48 shrink-0 text-[12px] font-bold text-mist">{k}</dt>
+                      <dd className="font-spec text-[13px] text-ink" dir="auto">{v}</dd>
+                    </div>
+                  ))}
+                </dl>
+              </section>
+            );
+          })}
+        </div>
+      </div>
     </div>
   );
 }
@@ -489,7 +419,6 @@ export default function ProductModal({ laptop, products, onClose, onAdd, onToggl
               <div className="space-y-5">
                 <SpecTable laptop={laptop} />
                 <ProsCons laptop={laptop} />
-                <HardwareExploded laptop={laptop} />
               </div>
             )}
             {tab === "box" && (

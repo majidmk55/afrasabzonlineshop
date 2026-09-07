@@ -173,6 +173,31 @@ export default function Footer({ count, onCategory, onBrand, onAdmin }: FooterPr
             </div>
           </div>
 
+          {/* مارکت‌پلیس‌ها */}
+          <div className="mt-8 rounded-2xl border border-white/10 bg-white/5 p-5">
+            <p className="mb-4 text-[12px] font-extrabold text-white">کورهِوس را در مارکت‌پلیس‌های معتبر دنبال کنید:</p>
+            <div className="flex flex-wrap gap-3">
+              <a
+                href="https://emalls.ir/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-2 rounded-xl border border-white/20 bg-white/10 px-5 py-3 transition-all hover:border-sea hover:bg-sea/20"
+              >
+                <span className="text-[13px] font-bold text-white">مشاهده در</span>
+                <span className="text-[15px] font-extrabold text-sea">ایمالز</span>
+              </a>
+              <a
+                href="https://torob.com/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-2 rounded-xl border border-white/20 bg-white/10 px-5 py-3 transition-all hover:border-sea hover:bg-sea/20"
+              >
+                <span className="text-[13px] font-bold text-white">مشاهده در</span>
+                <span className="text-[15px] font-extrabold text-sea">ترب</span>
+              </a>
+            </div>
+          </div>
+
           <div className="mt-8 flex flex-wrap items-center justify-between gap-3 border-t border-white/10 pt-6">
             <p className="text-[11px] text-skywash/60">
               © {toFa(1404)} کورهِوس — کلیه حقوق محفوظ است. قیمت‌ها به ریال و شامل مالیات بر ارزش افزوده. · {count.toLocaleString("fa-IR")} دستگاه فعال روی ویترین

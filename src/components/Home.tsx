@@ -2,6 +2,7 @@ import { useMemo, useRef, type ComponentType } from "react";
 import { fmt, toFa, type Laptop } from "../data/laptops";
 import { prefersReducedMotion, Reveal, useCountdown } from "../lib/motion";
 import ProductCard from "./ProductCard";
+import DigiShop from "./DigiShop";
 import { IArrowR, IBolt, IBriefGear, ICap, ICode, ICpu, IDisplay, IGamepad, IGpu, IPenNib, IRam, IShield, ITruck, LogoMark } from "./icons";
 
 /* ---------- برندها (لوگوی رسمی) ---------- */
@@ -387,6 +388,9 @@ export default function Home({ products, onBrand, onCategory, onPrice, onExplore
           </div>
         </Reveal>
       </section>
+
+      {/* ── فروشگاه به سبک دیجی‌کالا/ترب ── */}
+      <DigiShop products={products} onSpecs={onSpecs} onBrand={onBrand} />
     </>
   );
 }
