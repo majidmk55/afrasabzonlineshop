@@ -50,10 +50,18 @@ function ProductCard({ product, onSpecs }: { product: Laptop; onSpecs: (id: stri
   const ram = product.brief.find((b) => b[0] === "رم / حافظه")?.[1] ?? "—";
   const display = product.brief.find((b) => b[0] === "نمایشگر")?.[1] ?? "—";
 
-  const cpuShort = cpu.split(" ").slice(0, 3).join(" ");
-  const gpuShort = gpu.split(" ").slice(0, 2).join(" ");
-  const ramShort = ram.split(" ")[0];
-  const displayShort = display.split(" ")[0];
+  // حذف نام شرکت‌های سازنده از مشخصات
+  const removeBrand = (text: string) => {
+    return text
+      .split(" ")
+      .filter(word => !["APPLE", "AMD", "INTEL", "Apple", "Amd", "Intel", "apple", "amd", "intel"].includes(word))
+      .join(" ");
+  };
+
+  const cpuShort = removeBrand(cpu).split(" ").slice(0, 3).join(" ");
+  const gpuShort = removeBrand(gpu).split(" ").slice(0, 2).join(" ");
+  const ramShort = removeBrand(ram).split(" ")[0];
+  const displayShort = removeBrand(display).split(" ")[0];
 
   return (
     <button
