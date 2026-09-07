@@ -31,6 +31,7 @@ export default function App() {
   const [compareIds, setCompareIds] = useState<string[]>([]);
   const [compareOpen, setCompareOpen] = useState(false);
   const [comparePageOpen, setComparePageOpen] = useState(false);
+  const [compareIdsForPage, setCompareIdsForPage] = useState<string[]>([]);
   const [promo, setPromo] = useState<string | null>(null);
   const [filters, setFilters] = useState<{ q: string; cats: string[]; brands: string[]; minPrice: number; maxPrice: number; inStockOnly: boolean; sort: string }>({
     q: "",
@@ -291,7 +292,10 @@ export default function App() {
           ids={compareIds}
           onRemove={(id) => setCompareIds((ids) => ids.filter((x) => x !== id))}
           onClear={() => setCompareIds([])}
-          onOpen={() => setCompareOpen(true)}
+          onOpen={() => {
+            setCompareIdsForPage(compareIds);
+            setComparePageOpen(true);
+          }}
           onOpenProduct={openProduct}
         />
       )}
@@ -319,6 +323,7 @@ export default function App() {
       {comparePageOpen && (
         <ComparePage
           products={visible}
+          ids={compareIdsForPage}
           onClose={() => setComparePageOpen(false)}
           onAddToCart={(id) => {
             addToCart(id);

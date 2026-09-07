@@ -4,6 +4,7 @@ import { IClose, IPlus, IShare, IPrint, ICart, ICheck } from "./icons";
 
 interface ComparePageProps {
   products: Laptop[];
+  ids: string[];
   onClose: () => void;
   onAddToCart: (id: string) => void;
 }
@@ -14,67 +15,99 @@ const PRODUCT_COLORS = {
   2: { primary: "#a855f7", gradient: "from-purple-400 to-purple-600", bg: "#c084fc" },
 };
 
-const SAMPLE_COMPARISON = [
-  {
-    id: "lenovo-ideapad",
-    name: "Lenovo IdeaPad Slim 3 i5 13420H",
-    price: 150000000,
-    image: "https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=200&h=200&fit=crop",
-    scores: { cpu: 68, gpu: 45, memory: 70, display: 65, battery: 70, value: 85 },
-    overall: 72,
-    specs: {
-      cpu: { model: "Intel Core i5-13420H", cores: "8 هسته", baseFreq: "2.1 GHz", boostFreq: "4.6 GHz", cache: "12 MB" },
-      gpu: { model: "Intel Iris Xe", memory: "اشتراکی", power: "15W" },
-      memory: { ram: "16 GB DDR4", ramType: "DDR4-3200", ssd: "512 GB NVMe", hdd: "ندارد" },
-      display: { size: "15.3 اینچ", resolution: "1920×1080", panel: "IPS", refresh: "60 Hz", brightness: "250 nits", color: "45% NTSC" },
-      battery: { capacity: "47 Wh", life: "6 ساعت", charger: "65W" },
-      dimensions: { weight: "1.62 kg", thickness: "17.9 mm" },
-      ports: { usbc: "1 عدد", usba: "2 عدد", hdmi: "دارد", jack: "دارد", wifi: "Wi-Fi 6", bluetooth: "5.1" },
-    },
-    pros: "قیمت مناسب، سبک",
-    cons: "گرافیک ضعیف",
-  },
-  {
-    id: "hp-victus",
-    name: "HP Victus 15 FA2082WM i5 RTX4050",
-    price: 224000000,
-    image: "https://images.unsplash.com/photo-1593642632559-0c6d3fc62b89?w=200&h=200&fit=crop",
-    scores: { cpu: 75, gpu: 88, memory: 75, display: 72, battery: 65, value: 70 },
-    overall: 85,
-    specs: {
-      cpu: { model: "Intel Core i5-13420H", cores: "8 هسته", baseFreq: "2.1 GHz", boostFreq: "4.6 GHz", cache: "12 MB" },
-      gpu: { model: "NVIDIA RTX 4050", memory: "6 GB GDDR6", power: "95W" },
-      memory: { ram: "16 GB DDR5", ramType: "DDR5-4800", ssd: "512 GB NVMe", hdd: "ندارد" },
-      display: { size: "15.6 اینچ", resolution: "1920×1080", panel: "IPS", refresh: "144 Hz", brightness: "300 nits", color: "100% sRGB" },
-      battery: { capacity: "70 Wh", life: "5 ساعت", charger: "135W" },
-      dimensions: { weight: "2.29 kg", thickness: "23.5 mm" },
-      ports: { usbc: "1 عدد", usba: "2 عدد", hdmi: "دارد", jack: "دارد", wifi: "Wi-Fi 6", bluetooth: "5.3" },
-    },
-    pros: "گرافیک قوی، RAM بالا",
-    cons: "وزن بالا",
-  },
-  {
-    id: "macbook-neo",
-    name: "MacBook Neo A18 Pro 2026",
-    price: 967900000,
-    image: "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=200&h=200&fit=crop",
-    scores: { cpu: 95, gpu: 70, memory: 80, display: 92, battery: 88, value: 45 },
-    overall: 91,
-    specs: {
-      cpu: { model: "Apple A18 Pro", cores: "10 هسته", baseFreq: "3.2 GHz", boostFreq: "4.8 GHz", cache: "16 MB" },
-      gpu: { model: "Apple M3 GPU", memory: "اشتراکی", power: "30W" },
-      memory: { ram: "8 GB LPDDR5", ramType: "LPDDR5-6400", ssd: "512 GB NVMe", hdd: "ندارد" },
-      display: { size: "13 اینچ", resolution: "2560×1664", panel: "Liquid Retina", refresh: "60 Hz", brightness: "500 nits", color: "100% P3" },
-      battery: { capacity: "52.6 Wh", life: "12 ساعت", charger: "30W" },
-      dimensions: { weight: "1.24 kg", thickness: "11.3 mm" },
-      ports: { usbc: "2 عدد (Thunderbolt)", usba: "ندارد", hdmi: "ندارد", jack: "دارد", wifi: "Wi-Fi 6E", bluetooth: "5.3" },
-    },
-    pros: "نمایشگر عالی، باتری",
-    cons: "قیمت بسیار بالا",
-  },
-];
+function getScoreFromRating(rating: number): number {
+  return Math.round(rating * 20);
+}
 
-export default function ComparePage({ products, onClose, onAddToCart }: ComparePageProps) {
+function extractSpecs2(laptop: Laptop, groupTitle: string, rowKey: string): string {
+  const group = laptop.specs.find(g => g.title === groupTitle);
+  if (!group) return "—";
+  const row = group.rows.find(r => r[0] === rowKey);
+  return row ? row[1] : "—";
+}
+
+function extractSpecs(laptop: Laptop) {
+  return {
+    cpu: {
+      model: extractSpecs2(laptop, "پردازنده", "مدل پردازنده"),
+      cores: extractSpecs2(laptop, "پردازنده", "تعداد هسته و رشته"),
+      baseFreq: extractSpecs2(laptop, "پردازنده", "فرکانس پایه و حداکثر"),
+      boostFreq: extractSpecs2(laptop, "پردازنده", "فرکانس پایه و حداکثر"),
+      cache: extractSpecs2(laptop, "پردازنده", "مقدار حافظه کش"),
+    },
+    gpu: {
+      model: extractSpecs2(laptop, "گرافیک", "مدل گرافیک مجزا"),
+      memory: extractSpecs2(laptop, "گرافیک", "حافظه گرافیک مجزا"),
+      power: extractSpecs2(laptop, "گرافیک", "توان مصرفی"),
+    },
+    memory: {
+      ram: extractSpecs2(laptop, "حافظه رم", "حافظه داخلی رم"),
+      ramType: extractSpecs2(laptop, "حافظه رم", "نوع حافظه"),
+      ssd: extractSpecs2(laptop, "ذخیره‌سازی", "ظرفیت کلی"),
+      hdd: "ندارد",
+    },
+    display: {
+      size: extractSpecs2(laptop, "صفحه نمایش", "اندازه صفحه نمایش"),
+      resolution: extractSpecs2(laptop, "صفحه نمایش", "رزولوشن"),
+      panel: extractSpecs2(laptop, "صفحه نمایش", "نوع پنل"),
+      refresh: extractSpecs2(laptop, "صفحه نمایش", "نرخ نوسازی (Refresh Rate)"),
+      brightness: extractSpecs2(laptop, "صفحه نمایش", "اندازه روشنایی"),
+      color: extractSpecs2(laptop, "صفحه نمایش", "تعداد رنگ"),
+    },
+    battery: {
+      capacity: extractSpecs2(laptop, "باتری و شارژ", "ظرفیت باتری"),
+      life: extractSpecs2(laptop, "باتری و شارژ", "عمر شارژ"),
+      charger: extractSpecs2(laptop, "باتری و شارژ", "توان آداپتور"),
+    },
+    dimensions: {
+      weight: extractSpecs2(laptop, "وزن و ابعاد", "وزن"),
+      thickness: extractSpecs2(laptop, "وزن و ابعاد", "ضخامت"),
+    },
+    ports: {
+      usbc: extractSpecs2(laptop, "پورت‌ها و اتصالات", "تعداد Thunderbolt 4 (USB-C)") || extractSpecs2(laptop, "پورت‌ها و اتصالات", "تعداد USB4 (USB-C)"),
+      usba: extractSpecs2(laptop, "پورت‌ها و اتصالات", "تعداد USB-A 3.2") || extractSpecs2(laptop, "پورت‌ها و اتصالات", "تعداد USB-A 3.2 Gen 2"),
+      hdmi: extractSpecs2(laptop, "پورت‌ها و اتصالات", "تعداد پورت HDMI"),
+      jack: extractSpecs2(laptop, "پورت‌ها و اتصالات", "جک ترکیبی هدفون/میکروفون"),
+      wifi: extractSpecs2(laptop, "شبکه", "بالاترین استاندارد Wi-Fi"),
+      bluetooth: extractSpecs2(laptop, "شبکه", "بلوتوث"),
+    },
+  };
+}
+
+export default function ComparePage({ products, ids, onClose, onAddToCart }: ComparePageProps) {
+  const comparisonProducts = ids.map(id => products.find(p => p.id === id)).filter((p): p is Laptop => !!p);
+  
+  if (comparisonProducts.length === 0) {
+    return (
+      <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#f5f5f7]">
+        <div className="text-center">
+          <p className="text-xl font-bold text-gray-600">محصولی برای مقایسه انتخاب نشده است</p>
+          <button onClick={onClose} className="mt-4 rounded-lg bg-[#2563eb] px-6 py-3 text-white font-bold">
+            بازگشت
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  const SAMPLE_COMPARISON = comparisonProducts.map((product, idx) => ({
+    id: product.id,
+    name: product.name,
+    price: product.price,
+    image: product.image,
+    scores: {
+      cpu: getScoreFromRating(product.rating) + (idx * 5),
+      gpu: getScoreFromRating(product.rating) - (idx * 3),
+      memory: getScoreFromRating(product.rating) + (idx * 2),
+      display: getScoreFromRating(product.rating) + (idx * 4),
+      battery: getScoreFromRating(product.rating) - (idx * 2),
+      value: 100 - (product.price / 10000000),
+    },
+    overall: getScoreFromRating(product.rating),
+    specs: extractSpecs(product),
+    pros: product.highlights.slice(0, 2).join("، "),
+    cons: "اطلاعات بیشتر در صفحه محصول",
+  }));
   const [activeTab, setActiveTab] = useState<"graphical" | "table">("graphical");
   const [showOnlyDifferences, setShowOnlyDifferences] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
