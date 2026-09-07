@@ -5,41 +5,6 @@ import ProductCard from "./ProductCard";
 import DigiShop from "./DigiShop";
 import { IArrowR, IBolt, IBriefGear, ICap, ICode, IDisplay, IGamepad, IPenNib, IShield, ITruck, LogoMark } from "./icons";
 
-/* ---------- برندها (لوگوی رسمی) ---------- */
-
-const BRAND_LOGOS: { fa: string; en: string; src?: string; msft?: boolean; msi?: boolean; big?: boolean }[] = [
-  { fa: "اپل", en: "Apple", src: "https://cdn.simpleicons.org/apple/000000" },
-  { fa: "ایسوس", en: "ASUS", src: "https://cdn.simpleicons.org/asus/00539B", big: true },
-  { fa: "لنوو", en: "Lenovo", src: "https://cdn.simpleicons.org/lenovo/E2231A", big: true },
-  { fa: "دل", en: "Dell", src: "https://cdn.simpleicons.org/dell/0672CB" },
-  { fa: "اچ‌پی", en: "HP", src: "https://cdn.simpleicons.org/hp/0096D6" },
-  { fa: "مایکروسافت", en: "Microsoft", msft: true },
-  { fa: "ایسر", en: "Acer", src: "https://cdn.simpleicons.org/acer/83B81A", big: true },
-  { fa: "ام‌اس‌آی", en: "MSI", msi: true },
-];
-
-function MsLogo({ className = "" }: { className?: string }) {
-  return (
-    <svg viewBox="0 0 23 23" className={className} aria-hidden="true">
-      <rect width="10.6" height="10.6" fill="#0a2a43" />
-      <rect x="12.4" width="10.6" height="10.6" fill="#0a2a43" />
-      <rect y="12.4" width="10.6" height="10.6" fill="#0a2a43" />
-      <rect x="12.4" y="12.4" width="10.6" height="10.6" fill="#0a2a43" />
-    </svg>
-  );
-}
-
-/* لوگوی نوشتاری MSI — سه حرف انگلیسی به سبک لوگوی رسمی */
-function MsiLogo({ className = "" }: { className?: string }) {
-  return (
-    <svg viewBox="0 0 120 44" className={className} aria-hidden="true">
-      <text x="60" y="34" textAnchor="middle" fontFamily="Arial, Helvetica, sans-serif" fontWeight="800" fontStyle="italic" fontSize="34" letterSpacing="2" fill="#0a2a43">
-        MSI
-      </text>
-    </svg>
-  );
-}
-
 /* تصویر بیلبورد — Lenovo IdeaPad Pro 5i Hero Family */
 const BILLBOARD_IMG = "https://www.ballicom.co.uk/bp-assets/uploads/2023/12/16_Ideapad_Pro_5i_Hero_Family.png";
 
@@ -174,47 +139,6 @@ export default function Home({ products, onBrand, onCategory, onPrice, onExplore
 
       {/* ── فروشگاه به سبک دیجی‌کالا/ترب ── */}
       <DigiShop products={products} onSpecs={onSpecs} onBrand={onBrand} />
-
-      {/* ── خرید بر اساس برند ── */}
-      <section className="mx-auto max-w-7xl px-4 pt-12 sm:px-6" aria-label="خرید بر اساس برند">
-        <Reveal>
-          <div className="flex items-center gap-4">
-            <h2 className="shrink-0 font-display text-2xl font-bold tracking-tight sm:text-3xl">خرید بر اساس برند</h2>
-            <span className="h-px flex-1 bg-gradient-to-l from-line to-transparent" aria-hidden="true" />
-            <span className="hidden text-[11px] font-bold text-mist sm:block">{toFa(products.length)} دستگاه فعال</span>
-          </div>
-        </Reveal>
-        <Reveal delay={80}>
-          <ul className="mt-10 flex flex-wrap items-center justify-center gap-x-14 gap-y-10 md:justify-between lg:gap-x-8">
-            {BRAND_LOGOS.map((b) => (
-              <li key={b.fa}>
-                <button
-                  onClick={() => onBrand(b.fa)}
-                  title={`لپ‌تاپ‌های ${b.fa}`}
-                  aria-label={`نمایش لپ‌تاپ‌های برند ${b.en} (${b.fa})`}
-                  className="group flex items-center transition-transform duration-300 hover:-translate-y-2 active:translate-y-0"
-                >
-                  {b.msft ? (
-                    <MsLogo className="h-11 w-11 opacity-85 transition-all duration-300 group-hover:scale-110 md:h-12 md:w-12" />
-                  ) : b.msi ? (
-                    <MsiLogo className="h-9 w-auto opacity-85 transition-all duration-300 group-hover:scale-110 md:h-12" />
-                  ) : (
-                    <img
-                      src={b.src}
-                      alt={b.en}
-                      loading="lazy"
-                      decoding="async"
-                      className={`logo-navy w-auto object-contain opacity-85 group-hover:opacity-100 ${
-                        b.big ? "h-[54px] max-w-[230px] md:h-18" : "h-9 max-w-[170px] md:h-12"
-                      }`}
-                    />
-                  )}
-                </button>
-              </li>
-            ))}
-          </ul>
-        </Reveal>
-      </section>
 
       {/* ── خرید بر اساس کاربرد: پنج گروه با لوگوی مینیمال ── */}
       <section className="mx-auto max-w-7xl px-4 pt-14 sm:px-6" aria-label="خرید بر اساس کاربرد">
