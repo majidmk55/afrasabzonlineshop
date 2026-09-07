@@ -51,6 +51,20 @@ export function loadProducts(): Laptop[] {
   return LAPTOPS.map((p) => ({ ...p }));
 }
 
+/** Shallow equality check for primitive and array values */
+function shallowEqual(a: unknown, b: unknown): boolean {
+  if (a === b) return true;
+  if (typeof a !== typeof b) return false;
+  if (Array.isArray(a) && Array.isArray(b)) {
+    if (a.length !== b.length) return false;
+    for (let i = 0; i < a.length; i++) {
+      if (a[i] !== b[i]) return false;
+    }
+    return true;
+  }
+  return false;
+}
+
 export function saveProducts(products: Laptop[]) {
   const base: Record<string, Partial<Laptop>> = {};
   const custom: Laptop[] = [];
@@ -61,13 +75,15 @@ export function saveProducts(products: Laptop[]) {
       continue;
     }
     const diff: Partial<Laptop> = {};
+    let hasDiff = false;
     (Object.keys(p) as (keyof Laptop)[]).forEach((k) => {
-      if (JSON.stringify(p[k]) !== JSON.stringify(orig[k])) {
+      if (!shallowEqual(p[k], orig[k])) {
         // @ts-expect-error partial assignment
         diff[k] = p[k];
+        hasDiff = true;
       }
     });
-    if (Object.keys(diff).length) base[p.id] = diff;
+    if (hasDiff) base[p.id] = diff;
   }
   try {
     localStorage.setItem(PKEY, JSON.stringify({ base, custom }));

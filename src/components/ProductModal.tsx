@@ -20,7 +20,13 @@ function weightScore(l: Laptop): number {
   return Math.round(Math.min(97, Math.max(42, 104 - kg * 22)));
 }
 
+/* Cache for score calculations to avoid recomputation */
+const scoreCache = new Map<string, { parts: { label: string; icon: string; v: number }[]; overall: number }>();
+
 function scoreLaptop(l: Laptop) {
+  const cached = scoreCache.get(l.id);
+  if (cached) return cached;
+
   const h = hash(l.id);
   const parts: { label: string; icon: string; v: number }[] = [
     { label: "پردازنده", icon: "cpu", v: 68 + ((h >> 1) % 30) },
@@ -31,7 +37,9 @@ function scoreLaptop(l: Laptop) {
     { label: "وزن", icon: "scale", v: weightScore(l) },
   ];
   const overall = Math.round(parts.reduce((a, p) => a + p.v, 0) / parts.length);
-  return { parts, overall };
+  const result = { parts, overall };
+  scoreCache.set(l.id, result);
+  return result;
 }
 
 /* خلاصه «مشخصات اصلی» — شش ردیف کلیدی مانند برگه فنی استاندارد */

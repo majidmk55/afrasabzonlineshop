@@ -108,6 +108,16 @@ export function useEscape(active: boolean, onClose: () => void) {
   }, [active, onClose]);
 }
 
+/** Debounce a value by a given delay (default 300ms). */
+export function useDebounce<T>(value: T, delay = 300): T {
+  const [debouncedValue, setDebouncedValue] = useState(value);
+  useEffect(() => {
+    const timer = setTimeout(() => setDebouncedValue(value), delay);
+    return () => clearTimeout(timer);
+  }, [value, delay]);
+  return debouncedValue;
+}
+
 /** Live countdown to a target timestamp — returns DD:HH:MM:SS parts. */
 export function useCountdown(target: number) {
   const calc = () => {
@@ -121,9 +131,8 @@ export function useCountdown(target: number) {
   };
   const [left, setLeft] = useState(calc);
   useEffect(() => {
-    const id = setInterval(() => setLeft(calc()), 1000);
+    const id = setInterval(() => setLeft(calc), 1000);
     return () => clearInterval(id);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [target]);
   return left;
 }

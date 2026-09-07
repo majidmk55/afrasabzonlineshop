@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { memo, useMemo, useState } from "react";
 import { fmt, type Laptop } from "../data/laptops";
 import { Reveal } from "../lib/motion";
 import { ICheck, IChevron, IClose, ICompare, IEye, IFilter, IPlus, IStar } from "./icons";
@@ -18,17 +18,19 @@ export const DEFAULT_FILTERS: Filters = { q: "", cats: [], brands: [], minPrice:
 const BASE_CATEGORIES = ["گیمینگ", "خلاقیت و رندر", "بیزنس و اداری", "اولترابوک"];
 const BASE_BRANDS = ["ایسوس", "اپل", "لنوو", "دل", "ریزر", "ام‌اس‌آی", "فریم‌ورک", "ال‌جی", "اچ‌پی", "گیگابایت"];
 
+/** Early-exit filter: check cheap conditions first, expensive string search last */
 function matches(l: Laptop, f: Filters): boolean {
+  // Fast path: price and stock checks (no string operations)
+  if (l.price < f.minPrice || l.price > f.maxPrice) return false;
+  if (f.inStockOnly && l.stock <= 0) return false;
+  if (f.cats.length && !f.cats.includes(l.category)) return false;
+  if (f.brands.length && !f.brands.includes(l.brand)) return false;
+  // Slow path: full-text search (only if other filters pass)
   if (f.q) {
     const q = f.q.toLowerCase();
     const hay = `${l.name} ${l.brand} ${l.series} ${l.category} ${l.highlights.join(" ")} ${l.brief.map((b) => b.join(" ")).join(" ")}`.toLowerCase();
     if (!hay.includes(q)) return false;
   }
-  if (f.cats.length && !f.cats.includes(l.category)) return false;
-  if (f.brands.length && !f.brands.includes(l.brand)) return false;
-  if (f.minPrice > 0 && l.price < f.minPrice) return false;
-  if (l.price > f.maxPrice) return false;
-  if (f.inStockOnly && l.stock <= 0) return false;
   return true;
 }
 
@@ -42,7 +44,7 @@ function Stars({ rating }: { rating: number }) {
   );
 }
 
-function ProductCard({ laptop, compared, onToggleCompare, onAdd, onOpen, delay }: {
+const ProductCard = memo(function ProductCard({ laptop, compared, onToggleCompare, onAdd, onOpen, delay }: {
   laptop: Laptop;
   compared: boolean;
   onToggleCompare: (id: string) => void;
@@ -134,7 +136,7 @@ function ProductCard({ laptop, compared, onToggleCompare, onAdd, onOpen, delay }
       </article>
     </Reveal>
   );
-}
+});
 
 interface CatalogProps {
   products: Laptop[];

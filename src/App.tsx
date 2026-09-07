@@ -1,4 +1,4 @@
-import { lazy, Suspense, useMemo, useState } from "react";
+import { lazy, Suspense, useCallback, useMemo, useState } from "react";
 import Header from "./components/Header";
 import Home from "./components/Home";
 import Catalog, { DEFAULT_FILTERS, type Filters } from "./components/Catalog";
@@ -8,6 +8,7 @@ import Checkout from "./components/Checkout";
 import { CompareTray, CompareModal } from "./components/Compare";
 import Guide from "./components/Guide";
 import Footer from "./components/Footer";
+import { ErrorBoundary } from "./components/ErrorBoundary";
 import { PROMOS, type CartLine, type Laptop } from "./data/laptops";
 import { loadOrders, loadProducts, loadSettings, saveOrders, saveProducts, saveSettings, visibleProducts, type OrderRecord, type Settings } from "./lib/store";
 import { scrollToId } from "./lib/motion";
@@ -36,49 +37,65 @@ export default function App() {
   /* کالاهای قابل‌نمایش برای مشتریان — ناموجودها خودکار خاموش می‌شوند */
   const visible = useMemo(() => visibleProducts(products, settings), [products, settings]);
 
-  const lines: CartLine[] = useMemo(
-    () =>
-      Object.entries(cart)
-        .map(([id, e]) => {
-          const laptop = products.find((l) => l.id === id);
-          return laptop ? { laptop, qty: Math.min(e.qty, Math.max(1, laptop.stock)), warranty: e.warranty } : null;
-        })
-        .filter((x): x is CartLine => x !== null && x.laptop.stock > 0),
-    [cart, products]
-  );
-  const cartCount = lines.reduce((a, l) => a + l.qty, 0);
+  /* Build a lookup map for O(1) product access — avoids repeated .find() calls */
+  const productMap = useMemo(() => {
+    const map = new Map<string, Laptop>();
+    for (const p of products) map.set(p.id, p);
+    return map;
+  }, [products]);
 
-  const notify = (msg: string) => {
+  const lines: CartLine[] = useMemo(() => {
+    const result: CartLine[] = [];
+    for (const [id, e] of Object.entries(cart)) {
+      const laptop = productMap.get(id);
+      if (laptop && laptop.stock > 0) {
+        result.push({
+          laptop,
+          qty: Math.min(e.qty, Math.max(1, laptop.stock)),
+          warranty: e.warranty,
+        });
+      }
+    }
+    return result;
+  }, [cart, productMap]);
+
+  const cartCount = useMemo(() => lines.reduce((a, l) => a + l.qty, 0), [lines]);
+
+  const notify = useCallback((msg: string) => {
     const id = Date.now();
     setToast({ id, msg });
     setTimeout(() => setToast((t) => (t?.id === id ? null : t)), 2600);
-  };
+  }, []);
 
-  const updateProducts = (next: Laptop[]) => {
+  const updateProducts = useCallback((next: Laptop[]) => {
     setProducts(next);
     saveProducts(next);
-  };
+  }, []);
 
-  const updateSettings = (s: Settings) => {
+  const updateSettings = useCallback((s: Settings) => {
     setSettings(s);
     saveSettings(s);
-  };
+  }, []);
 
-  const recordOrder = (order: OrderRecord) => {
-    const next = [order, ...orders];
-    setOrders(next);
-    saveOrders(next);
+  const recordOrder = useCallback((order: OrderRecord) => {
+    setOrders((prev) => {
+      const next = [order, ...prev];
+      saveOrders(next);
+      return next;
+    });
     /* کاهش موجودی پس از خرید موفق */
-    updateProducts(
-      products.map((p) => {
+    setProducts((prev) => {
+      const next = prev.map((p) => {
         const it = order.items.find((i) => i.id === p.id);
         return it ? { ...p, stock: Math.max(0, p.stock - it.qty) } : p;
-      })
-    );
-  };
+      });
+      saveProducts(next);
+      return next;
+    });
+  }, []);
 
-  const addToCart = (id: string, qty = 1, warranty = false) => {
-    const l = products.find((x) => x.id === id);
+  const addToCart = useCallback((id: string, qty = 1, warranty = false) => {
+    const l = productMap.get(id);
     if (!l) return;
     setCart((c) => ({
       ...c,
@@ -88,29 +105,31 @@ export default function App() {
       },
     }));
     notify(`${l.shortName} به سبد اضافه شد`);
-  };
+  }, [productMap, notify]);
 
-  const setQty = (id: string, qty: number) => {
+  const setQty = useCallback((id: string, qty: number) => {
     setCart((c) => {
       if (qty <= 0) {
         const { [id]: _drop, ...rest } = c;
         return rest;
       }
-      const l = products.find((x) => x.id === id);
+      const l = productMap.get(id);
       return { ...c, [id]: { ...c[id], qty: Math.min(l?.stock ?? 99, qty) } };
     });
-  };
+  }, [productMap]);
 
-  const removeLine = (id: string) =>
+  const removeLine = useCallback((id: string) => {
     setCart((c) => {
       const { [id]: _drop, ...rest } = c;
       return rest;
     });
+  }, []);
 
-  const toggleWarranty = (id: string) =>
+  const toggleWarranty = useCallback((id: string) => {
     setCart((c) => ({ ...c, [id]: { ...c[id], warranty: !c[id].warranty } }));
+  }, []);
 
-  const toggleCompare = (id: string) => {
+  const toggleCompare = useCallback((id: string) => {
     setCompareIds((ids) => {
       if (ids.includes(id)) return ids.filter((x) => x !== id);
       if (ids.length >= 3) {
@@ -119,9 +138,9 @@ export default function App() {
       }
       return [...ids, id];
     });
-  };
+  }, [notify]);
 
-  const applyPromo = (code: string): string | null => {
+  const applyPromo = useCallback((code: string): string | null => {
     if (!code) {
       setPromo(null);
       return null;
@@ -131,17 +150,17 @@ export default function App() {
       return null;
     }
     return "کد نامعتبر است — CORE10 را امتحان کنید";
-  };
+  }, []);
 
-  const openProduct = (id: string) => {
+  const openProduct = useCallback((id: string) => {
     setCompareOpen(false);
     setProductId(id);
-  };
+  }, []);
 
-  const setFiltersAndScroll = (patch: Partial<Filters>) => {
+  const setFiltersAndScroll = useCallback((patch: Partial<Filters>) => {
     setFilters({ ...DEFAULT_FILTERS, ...patch });
     scrollToId("catalog");
-  };
+  }, []);
 
   if (adminOpen) {
     return (
@@ -170,6 +189,7 @@ export default function App() {
   const activeProduct = productId ? visible.find((l) => l.id === productId) ?? products.find((l) => l.id === productId) ?? null : null;
 
   return (
+    <ErrorBoundary>
     <div className="min-h-screen">
       <a href="#catalog" className="sr-only focus:not-sr-only focus:absolute focus:right-2 focus:top-2 focus:z-[100] focus:bg-sea focus:px-3 focus:py-2 focus:text-xs focus:text-white">
         پرش به فهرست کالاها
@@ -299,5 +319,6 @@ export default function App() {
         </div>
       )}
     </div>
+    </ErrorBoundary>
   );
 }
