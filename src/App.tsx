@@ -1,7 +1,7 @@
 import { lazy, Suspense, useCallback, useMemo, useState } from "react";
 import Header from "./components/Header";
 import Home from "./components/Home";
-import Catalog, { DEFAULT_FILTERS, type Filters } from "./components/Catalog";
+
 import ProductModal from "./components/ProductModal";
 import CartDrawer from "./components/CartDrawer";
 import Checkout from "./components/Checkout";
@@ -30,7 +30,15 @@ export default function App() {
   const [compareIds, setCompareIds] = useState<string[]>([]);
   const [compareOpen, setCompareOpen] = useState(false);
   const [promo, setPromo] = useState<string | null>(null);
-  const [filters, setFilters] = useState<Filters>(DEFAULT_FILTERS);
+  const [filters, setFilters] = useState<{ q: string; cats: string[]; brands: string[]; minPrice: number; maxPrice: number; inStockOnly: boolean; sort: string }>({
+    q: "",
+    cats: [],
+    brands: [],
+    minPrice: 0,
+    maxPrice: 400_000_000,
+    inStockOnly: false,
+    sort: "featured",
+  });
   const [adminOpen, setAdminOpen] = useState(false);
   const [toast, setToast] = useState<{ id: number; msg: string } | null>(null);
 
@@ -157,8 +165,8 @@ export default function App() {
     setProductId(id);
   }, []);
 
-  const setFiltersAndScroll = useCallback((patch: Partial<Filters>) => {
-    setFilters({ ...DEFAULT_FILTERS, ...patch });
+  const setFiltersAndScroll = useCallback((patch: Partial<typeof filters>) => {
+    setFilters((prev) => ({ ...prev, ...patch }));
     scrollToId("catalog");
   }, []);
 
@@ -219,16 +227,6 @@ export default function App() {
           onPrice={(min, max) => setFiltersAndScroll({ minPrice: min, maxPrice: max })}
           onExplore={() => scrollToId("catalog")}
           onSpecs={openProduct}
-        />
-        <Catalog
-          products={visible}
-          filters={filters}
-          patch={(p) => setFilters((f) => ({ ...f, ...p }))}
-          reset={() => setFilters(DEFAULT_FILTERS)}
-          compareIds={compareIds}
-          onToggleCompare={toggleCompare}
-          onAdd={addToCart}
-          onOpen={openProduct}
         />
         <Guide />
       </main>

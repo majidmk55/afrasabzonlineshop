@@ -209,6 +209,28 @@ export default function DigiShop({ products, onSpecs, onBrand }: DigiShopProps) 
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-6">
+      {/* نوار لوگو برندها */}
+      <section className="mb-4 flex items-center justify-center gap-8 rounded-xl bg-white py-4">
+        {BRANDS.map((brand) => (
+          <button
+            key={brand.en}
+            onClick={() => onBrand(brand.fa)}
+            className="group transition-all hover:scale-110"
+            title={brand.fa}
+          >
+            <img
+              src={brand.src}
+              alt={brand.en}
+              className="h-10 w-auto object-contain opacity-70 transition-opacity group-hover:opacity-100"
+              style={{
+                filter: "brightness(0) saturate(100%) invert(15%) sepia(40%) saturate(2000%) hue-rotate(200deg) brightness(90%) contrast(90%)"
+              }}
+              loading="lazy"
+            />
+          </button>
+        ))}
+      </section>
+
       {/* بخش ۲: نوار ابزار */}
       <section className="mb-4 flex items-center justify-between rounded-[10px] bg-[#f3f4f6] px-4 py-3">
         {/* سمت راست: مرتب‌سازی */}
