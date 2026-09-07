@@ -64,7 +64,7 @@ function MainSpecs({ laptop }: { laptop: Laptop }) {
   
   return (
     <section aria-label="مشخصات اصلی" className="overflow-hidden rounded-2xl border-2 border-sea/30 bg-sea/20 shadow-sm">
-      <h4 className="flex items-center gap-2 border-b border-sea/20 bg-white/50 px-5 py-4 font-body text-[16.5px] font-extrabold text-seadark">
+      <h4 className="flex items-center gap-2 border-b border-sea/20 bg-white/50 px-4 py-3 font-body text-[11px] font-extrabold text-seadark">
         مشخصات اصلی در یک نگاه
       </h4>
       <div className="relative grid grid-cols-1 md:grid-cols-2">
@@ -74,10 +74,10 @@ function MainSpecs({ laptop }: { laptop: Laptop }) {
         {/* ستون راست */}
         <dl className="divide-y divide-sea/15">
           {leftColumn.map(([k, v]) => (
-            <div key={k} className="flex min-h-[70px] items-center px-5 py-4">
+            <div key={k} className="flex min-h-[35px] items-center px-4 py-2">
               <div className="w-full">
-                <dt className="mb-1.5 text-right text-[12px] font-medium text-sea/70">{k}</dt>
-                <dd className="text-right text-[14px] font-semibold leading-relaxed text-ink" dir="auto">{v}</dd>
+                <dt className="mb-1 text-right text-[8px] font-medium text-sea/70">{k}</dt>
+                <dd className="text-right text-[10px] font-semibold leading-snug text-ink" dir="auto">{v}</dd>
               </div>
             </div>
           ))}
@@ -86,10 +86,10 @@ function MainSpecs({ laptop }: { laptop: Laptop }) {
         {/* ستون چپ */}
         <dl className="divide-y divide-sea/15">
           {rightColumn.map(([k, v]) => (
-            <div key={k} className="flex min-h-[70px] items-center px-5 py-4">
+            <div key={k} className="flex min-h-[35px] items-center px-4 py-2">
               <div className="w-full">
-                <dt className="mb-1.5 text-left text-[12px] font-medium text-sea/70">{k}</dt>
-                <dd className="text-left text-[14px] font-semibold leading-relaxed text-ink" dir="auto">{v}</dd>
+                <dt className="mb-1 text-left text-[8px] font-medium text-sea/70">{k}</dt>
+                <dd className="text-left text-[10px] font-semibold leading-snug text-ink" dir="auto">{v}</dd>
               </div>
             </div>
           ))}
@@ -179,9 +179,9 @@ function SpecTable({ laptop }: { laptop: Laptop }) {
             className="overflow-hidden rounded-2xl border border-[#e2e8f0] bg-white shadow-sm"
           >
             {/* هدر بخش */}
-            <h4 className="flex items-center gap-2 border-b border-[#e2e8f0] bg-[#f8fafc] px-5 py-4">
-              {Icon && <Icon size={20} className="shrink-0 text-[#64748b]" />}
-              <span className="font-body text-[16px] font-bold text-[#1a1a1a]">{group.title}</span>
+            <h4 className="flex items-center gap-2 border-b border-[#e2e8f0] bg-[#f8fafc] px-4 py-3">
+              {Icon && <Icon size={14} className="shrink-0 text-[#64748b]" />}
+              <span className="font-body text-[11px] font-bold text-[#1a1a1a]">{group.title}</span>
             </h4>
             
             {/* محتوای دو ستونی */}
@@ -194,11 +194,11 @@ function SpecTable({ laptop }: { laptop: Laptop }) {
                 {leftColumn.map(([k, v]) => (
                   <div
                     key={k}
-                    className="flex min-h-[70px] items-center px-5 py-4 transition-colors hover:bg-[#f8fafc]"
+                    className="flex min-h-[35px] items-center px-4 py-2 transition-colors hover:bg-[#f8fafc]"
                   >
                     <div className="w-full">
-                      <dt className="mb-1.5 text-right text-[12px] font-medium text-[#64748b]">{k}</dt>
-                      <dd className="text-right text-[14px] font-semibold leading-relaxed text-[#1e293b]" dir="auto">
+                      <dt className="mb-1 text-right text-[8px] font-medium text-[#64748b]">{k}</dt>
+                      <dd className="text-right text-[10px] font-semibold leading-snug text-[#1e293b]" dir="auto">
                         {v}
                       </dd>
                     </div>
@@ -211,11 +211,11 @@ function SpecTable({ laptop }: { laptop: Laptop }) {
                 {rightColumn.map(([k, v]) => (
                   <div
                     key={k}
-                    className="flex min-h-[70px] items-center px-5 py-4 transition-colors hover:bg-[#f8fafc]"
+                    className="flex min-h-[35px] items-center px-4 py-2 transition-colors hover:bg-[#f8fafc]"
                   >
                     <div className="w-full">
-                      <dt className="mb-1.5 text-left text-[12px] font-medium text-[#64748b]">{k}</dt>
-                      <dd className="text-left text-[14px] font-semibold leading-relaxed text-[#1e293b]" dir="auto">
+                      <dt className="mb-1 text-left text-[8px] font-medium text-[#64748b]">{k}</dt>
+                      <dd className="text-left text-[10px] font-semibold leading-snug text-[#1e293b]" dir="auto">
                         {v}
                       </dd>
                     </div>
