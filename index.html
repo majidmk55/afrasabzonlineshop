@@ -38,14 +38,59 @@
     <meta name="subject" content="فروشگاه تخصصی لپ‌تاپ — گیمینگ، خلاقیت، بیزنس، اولترابوک" />
     <link rel="alternate" type="application/rss+xml" title="تازه‌ترین لپ‌تاپ‌های کورهِوس" href="https://corehaus.ir/feed.xml" />
 
+    <!-- Additional SEO Meta Tags -->
+    <meta name="author" content="کورهِوس - Corehaus" />
+    <meta name="publisher" content="کورهِوس" />
+    <meta name="copyright" content="© 2026 کورهِوس. تمامی حقوق محفوظ است." />
+    <meta name="language" content="Persian" />
+    <meta name="revisit-after" content="7 days" />
+    <meta name="rating" content="general" />
+    <meta name="distribution" content="global" />
+    
+    <!-- Geo Tags -->
+    <meta name="geo.region" content="IR" />
+    <meta name="geo.placename" content="تهران، ایران" />
+    <meta name="geo.position" content="35.6892;51.3890" />
+    <meta name="ICBM" content="35.6892, 51.3890" />
+    
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="/manifest.json" />
+    
+    <!-- Apple Touch Icons -->
+    <link rel="apple-touch-icon" sizes="72x72" href="/icon-72x72.png" />
+    <link rel="apple-touch-icon" sizes="114x114" href="/icon-114x114.png" />
+    <link rel="apple-touch-icon" sizes="144x144" href="/icon-144x144.png" />
+    <link rel="apple-touch-icon" sizes="192x192" href="/icon-192x192.png" />
+    
+    <!-- Windows Tile -->
+    <meta name="msapplication-TileColor" content="#0477b3" />
+    <meta name="msapplication-TileImage" content="/icon-144x144.png" />
+    <meta name="msapplication-config" content="/browserconfig.xml" />
+    
+    <!-- Verification Tags -->
+    <meta name="google-site-verification" content="YOUR_GOOGLE_VERIFICATION_CODE" />
+    <meta name="yandex-verification" content="YOUR_YANDEX_VERIFICATION_CODE" />
+    <meta name="msvalidate.01" content="YOUR_BING_VERIFICATION_CODE" />
+
     <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%230477b3'/%3E%3Cpath d='M5 21c3-7 7-10 11-10s8 3 11 10' stroke='%23ffffff' stroke-width='3' fill='none' stroke-linecap='round'/%3E%3Ccircle cx='16' cy='11' r='2.4' fill='%23ffffff'/%3E%3C/svg%3E" />
 
+    <!-- Preload critical fonts for LCP optimization -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Lalezar&family=Vazirmatn:wght@300;400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500&family=Markazi+Text:wght@400;500;600;700&display=swap" />
     <link
       href="https://fonts.googleapis.com/css2?family=Lalezar&family=Vazirmatn:wght@300;400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500&family=Markazi+Text:wght@400;500;600;700&display=swap"
       rel="stylesheet"
+      media="print"
+      onload="this.media='all'"
     />
+    
+    <!-- Preload hero image for LCP -->
+    <link rel="preload" as="image" href="https://www.ballicom.co.uk/bp-assets/uploads/2023/12/16_Ideapad_Pro_5i_Hero_Family.png" type="image/png" />
+    
+    <!-- DNS prefetch for external domains -->
+    <link rel="dns-prefetch" href="https://cdn.simpleicons.org" />
+    <link rel="dns-prefetch" href="https://image.qwenlm.ai" />
 
     <!-- Structured data: Organization -->
     <script type="application/ld+json">

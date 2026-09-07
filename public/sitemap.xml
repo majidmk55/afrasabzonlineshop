@@ -1,0 +1,277 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:xhtml="http://www.w3.org/1999/xhtml"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1"
+        xmlns:video="http://www.google.com/schemas/sitemap-video/1.1">
+  
+  <!-- صفحه اصلی -->
+  <url>
+    <loc>https://corehaus.ir/</loc>
+    <lastmod>2026-01-22</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
+  </url>
+
+  <!-- دسته‌بندی‌های اصلی -->
+  <url>
+    <loc>https://corehaus.ir/category/gaming</loc>
+    <lastmod>2026-01-22</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://corehaus.ir/category/business</loc>
+    <lastmod>2026-01-22</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://corehaus.ir/category/ultrabook</loc>
+    <lastmod>2026-01-22</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://corehaus.ir/category/creative</loc>
+    <lastmod>2026-01-22</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://corehaus.ir/category/student</loc>
+    <lastmod>2026-01-22</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+
+  <!-- برندها -->
+  <url>
+    <loc>https://corehaus.ir/brand/apple</loc>
+    <lastmod>2026-01-22</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://corehaus.ir/brand/asus</loc>
+    <lastmod>2026-01-22</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://corehaus.ir/brand/lenovo</loc>
+    <lastmod>2026-01-22</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://corehaus.ir/brand/dell</loc>
+    <lastmod>2026-01-22</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://corehaus.ir/brand/hp</loc>
+    <lastmod>2026-01-22</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://corehaus.ir/brand/microsoft</loc>
+    <lastmod>2026-01-22</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://corehaus.ir/brand/acer</loc>
+    <lastmod>2026-01-22</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://corehaus.ir/brand/msi</loc>
+    <lastmod>2026-01-22</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- محصولات - لپ‌تاپ‌ها -->
+  <url>
+    <loc>https://corehaus.ir/laptop/razer/blade-16-rtx5090</loc>
+    <lastmod>2026-01-22</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://image.qwenlm.ai/generated-images/22d2b52b-b71b-46ad-9b5b-b039b0470b06/_result.png</image:loc>
+      <image:title>ریزر Blade 16 با RTX 5090</image:title>
+      <image:caption>لپ‌تاپ گیمینگ ریزر Blade 16 با پردازنده Core Ultra 9 و گرافیک RTX 5090</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://corehaus.ir/laptop/apple/macbook-pro-14-m4pro</loc>
+    <lastmod>2026-01-22</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://image.qwenlm.ai/generated-images/8dd519b5-f437-4086-9c54-c5ccd27c1919/_result.png</image:loc>
+      <image:title>مک‌بوک پرو 14 با M4 Pro</image:title>
+      <image:caption>لپ‌تاپ حرفه‌ای اپل مک‌بوک پرو 14 اینچ با تراشه M4 Pro</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://corehaus.ir/laptop/asus/zephyrus-g14-rtx5070</loc>
+    <lastmod>2026-01-22</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://image.qwenlm.ai/generated-images/71449d80-a863-4702-8155-1b614caec9bb/_result.png</image:loc>
+      <image:title>ایسوس Zephyrus G14 با RTX 5070</image:title>
+      <image:caption>لپ‌تاپ گیمینگ ایسوس Zephyrus G14 با Ryzen AI 9 و RTX 5070</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://corehaus.ir/laptop/lenovo/thinkpad-x1-carbon-gen13</loc>
+    <lastmod>2026-01-22</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://image.qwenlm.ai/generated-images/71449d80-a863-4702-8155-1b614caec9bb/_result.png</image:loc>
+      <image:title>لنوو ThinkPad X1 Carbon Gen 13</image:title>
+      <image:caption>لپ‌تاپ بیزنس لنوو ThinkPad X1 Carbon نسل 13</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://corehaus.ir/laptop/dell/xps-13-9345</loc>
+    <lastmod>2026-01-22</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://image.qwenlm.ai/generated-images/4a3cc636-1ba3-4965-9218-aa5abc272010/_result.png</image:loc>
+      <image:title>دل XPS 13 مدل 9345</image:title>
+      <image:caption>اولترابوک دل XPS 13 با Snapdragon X Elite</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://corehaus.ir/laptop/msi/prestige-16-ai-evo</loc>
+    <lastmod>2026-01-22</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://image.qwenlm.ai/generated-images/c9ffa312-56ee-45c2-bc4c-009641d97292/_result.png</image:loc>
+      <image:title>ام‌اس‌آی Prestige 16 AI Evo</image:title>
+      <image:caption>لپ‌تاپ حرفه‌ای MSI Prestige 16 AI Evo</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://corehaus.ir/laptop/framework/framework-16</loc>
+    <lastmod>2026-01-22</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://image.qwenlm.ai/generated-images/cc227e49-7661-4fed-8b02-c7887669a30d/_result.png</image:loc>
+      <image:title>فریم‌ورک Framework 16</image:title>
+      <image:caption>لپ‌تاپ ماژولار Framework 16 با قابلیت ارتقا</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://corehaus.ir/laptop/lg/gram-17-2025</loc>
+    <lastmod>2026-01-22</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://image.qwenlm.ai/generated-images/e064a396-6a12-46c5-a44b-005876bc7f3e/_result.png</image:loc>
+      <image:title>ال‌جی Gram 17 مدل 2025</image:title>
+      <image:caption>اولترابوک سبک LG Gram 17 اینچ</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://corehaus.ir/laptop/hp/spectre-x360-14-2025</loc>
+    <lastmod>2026-01-22</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://image.qwenlm.ai/generated-images/22705440-bebe-468c-8245-42a01bce3d4c/_result.png</image:loc>
+      <image:title>اچ‌پی Spectre x360 14 مدل 2025</image:title>
+      <image:caption>لپ‌تاپ کانورتیبل HP Spectre x360 14 اینچ</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://corehaus.ir/laptop/gigabyte/aorus-17x-rtx4090</loc>
+    <lastmod>2026-01-22</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://image.qwenlm.ai/generated-images/248160ed-9015-41f2-9152-87181460597d/_result.png</image:loc>
+      <image:title>گیگابایت Aorus 17X با RTX 4090</image:title>
+      <image:caption>لپ‌تاپ گیمینگ Gigabyte Aorus 17X با RTX 4090</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://corehaus.ir/laptop/microsoft/surface-laptop-7</loc>
+    <lastmod>2026-01-22</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://image.qwenlm.ai/generated-images/4a3cc636-1ba3-4965-9218-aa5abc272010/_result.png</image:loc>
+      <image:title>مایکروسافت Surface Laptop 7</image:title>
+      <image:caption>لپ‌تاپ Surface Laptop 7 با Snapdragon X Elite</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://corehaus.ir/laptop/acer/swift-go-14</loc>
+    <lastmod>2026-01-22</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://image.qwenlm.ai/generated-images/cc227e49-7661-4fed-8b02-c7887669a30d/_result.png</image:loc>
+      <image:title>ایسر Swift Go 14</image:title>
+      <image:caption>اولترابوک Acer Swift Go 14 با OLED</image:caption>
+    </image:image>
+  </url>
+
+  <!-- صفحات مقایسه -->
+  <url>
+    <loc>https://corehaus.ir/compare/razer-blade-16-vs-macbook-pro-14</loc>
+    <lastmod>2026-01-22</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://corehaus.ir/compare/asus-zephyrus-g14-vs-msi-prestige-16</loc>
+    <lastmod>2026-01-22</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <!-- صفحات اطلاعاتی -->
+  <url>
+    <loc>https://corehaus.ir/about</loc>
+    <lastmod>2026-01-22</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://corehaus.ir/contact</loc>
+    <lastmod>2026-01-22</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://corehaus.ir/faq</loc>
+    <lastmod>2026-01-22</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://corehaus.ir/terms</loc>
+    <lastmod>2026-01-22</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+  </url>
+  <url>
+    <loc>https://corehaus.ir/privacy</loc>
+    <lastmod>2026-01-22</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+  </url>
+
+</urlset>
