@@ -1,7 +1,7 @@
 import { useMemo, type ComponentType } from "react";
 import { fmt, toFa, type Laptop } from "../data/laptops";
 import { Reveal, useCountdown } from "../lib/motion";
-import { IArrowR, IBolt, IBriefGear, ICap, ICode, IDisplay, IGamepad, IPenNib, IShield, ITruck, LogoMark } from "./icons";
+import { IArrowR, IBolt, IBriefGear, ICap, ICode, ICpu, IDisplay, IGamepad, IGpu, IPenNib, IRam, IShield, ITruck, LogoMark } from "./icons";
 
 /* ---------- برندها (لوگوی رسمی) ---------- */
 
@@ -305,6 +305,85 @@ export default function Home({ products, onBrand, onCategory, onPrice, onExplore
               مشاهده همه دستگاه‌ها <IArrowR size={13} className="-scale-x-100" />
             </button>
           </p>
+        </Reveal>
+      </section>
+
+      {/* ── محصولات ویژه با چهار مشخصه اصلی ── */}
+      <section className="mx-auto max-w-7xl px-4 py-14 sm:px-6" aria-label="محصولات ویژه">
+        <Reveal>
+          <div className="flex items-center gap-4">
+            <h2 className="shrink-0 font-display text-2xl font-bold tracking-tight sm:text-3xl">محصولات ویژه</h2>
+            <span className="h-px flex-1 bg-gradient-to-l from-line to-transparent" aria-hidden="true" />
+            <span className="hidden text-[11px] font-bold text-mist sm:block">با چهار مشخصه کلیدی</span>
+          </div>
+        </Reveal>
+        <div className="mt-6 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+          {products.slice(0, 8).map((p, i) => {
+            const cpu = p.brief.find((b) => b[0] === "پردازنده")?.[1] ?? "—";
+            const gpu = p.brief.find((b) => b[0] === "گرافیک")?.[1] ?? "—";
+            const ram = p.brief.find((b) => b[0] === "رم / حافظه")?.[1] ?? "—";
+            const display = p.brief.find((b) => b[0] === "نمایشگر")?.[1] ?? "—";
+            return (
+              <Reveal key={p.id} delay={i * 50}>
+                <button
+                  onClick={() => onSpecs(p.id)}
+                  className="card-lift group flex h-full w-full flex-col rounded-2xl border border-line bg-white p-4 text-right transition-all hover:border-sea"
+                >
+                  <div className="relative overflow-hidden rounded-xl bg-skywash">
+                    <img
+                      src={p.image}
+                      alt={p.name}
+                      className="img-zoom aspect-[4/3] w-full object-cover"
+                      loading="lazy"
+                      decoding="async"
+                    />
+                  </div>
+                  <div className="mt-3">
+                    <p className="text-[10px] font-bold text-mist">{p.brand} · {p.category}</p>
+                    <h3 className="mt-1 font-display text-sm font-bold leading-snug transition-colors group-hover:text-sea">
+                      {p.shortName}
+                    </h3>
+                  </div>
+                  <ul className="mt-3 space-y-1.5">
+                    <li className="flex items-center gap-2 text-[11px]">
+                      <ICpu size={13} className="shrink-0 text-sea" />
+                      <span className="truncate text-mist" title={cpu}>{cpu}</span>
+                    </li>
+                    <li className="flex items-center gap-2 text-[11px]">
+                      <IGpu size={13} className="shrink-0 text-sea" />
+                      <span className="truncate text-mist" title={gpu}>{gpu}</span>
+                    </li>
+                    <li className="flex items-center gap-2 text-[11px]">
+                      <IRam size={13} className="shrink-0 text-sea" />
+                      <span className="truncate text-mist" title={ram}>{ram}</span>
+                    </li>
+                    <li className="flex items-center gap-2 text-[11px]">
+                      <IDisplay size={13} className="shrink-0 text-sea" />
+                      <span className="truncate text-mist" title={display}>{display}</span>
+                    </li>
+                  </ul>
+                  <div className="mt-3 flex items-center justify-between border-t border-line pt-3">
+                    <span className="font-mono text-sm font-bold text-ink">{fmt(p.price)}</span>
+                    <span className="flex items-center gap-1 text-[10px] font-bold text-sea transition-transform group-hover:-translate-x-1">
+                      مشاهده
+                      <IArrowR size={11} className="-scale-x-100" />
+                    </span>
+                  </div>
+                </button>
+              </Reveal>
+            );
+          })}
+        </div>
+        <Reveal delay={100}>
+          <div className="mt-6 text-center">
+            <button
+              onClick={onExplore}
+              className="group inline-flex items-center gap-2 rounded-full border border-sea px-6 py-2.5 text-sm font-bold text-sea transition-all hover:bg-sea hover:text-white"
+            >
+              مشاهده همه {toFa(products.length)} دستگاه
+              <IArrowR size={14} className="-scale-x-100 transition-transform group-hover:-translate-x-1" />
+            </button>
+          </div>
         </Reveal>
       </section>
     </>
