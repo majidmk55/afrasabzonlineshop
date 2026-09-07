@@ -208,7 +208,7 @@ export default function DigiShop({ products, onSpecs, onBrand }: DigiShopProps) 
   const displayProducts = products.slice(0, 10); // فقط ۱۰ محصول
 
   return (
-    <div className="mx-auto max-w-[95%] px-1 py-6 sm:px-2">
+    <div className="mx-auto max-w-[90%] px-2 py-6 sm:px-4">
       {/* نوار لوگو برندها */}
       <section className="mb-4 flex items-center justify-center gap-8 rounded-xl bg-white py-4">
         {BRANDS.map((brand) => (
@@ -221,9 +221,9 @@ export default function DigiShop({ products, onSpecs, onBrand }: DigiShopProps) 
             <img
               src={brand.src}
               alt={brand.en}
-              className="h-10 w-auto object-contain opacity-70 transition-opacity group-hover:opacity-100"
+              className="h-14 w-auto object-contain opacity-80 transition-opacity group-hover:opacity-100"
               style={{
-                filter: "brightness(0) saturate(100%) invert(15%) sepia(40%) saturate(2000%) hue-rotate(200deg) brightness(90%) contrast(90%)"
+                filter: "brightness(0) saturate(100%) invert(75%) sepia(10%) saturate(500%) hue-rotate(180deg) brightness(95%) contrast(90%)"
               }}
               loading="lazy"
             />
