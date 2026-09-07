@@ -56,13 +56,14 @@ export function CompareTray({ products, ids, onRemove, onClear, onOpen, onOpenPr
   );
 }
 
-export function CompareModal({ products, ids, onClose, onRemove, onAdd, onOpenProduct }: {
+export function CompareModal({ products, ids, onClose, onRemove, onAdd, onOpenProduct, onOpenComparePage }: {
   products: Laptop[];
   ids: string[];
   onClose: () => void;
   onRemove: (id: string) => void;
   onAdd: (id: string) => void;
   onOpenProduct: (id: string) => void;
+  onOpenComparePage?: () => void;
 }) {
   useLockBody(true);
   useEscape(true, onClose);
@@ -80,9 +81,19 @@ export function CompareModal({ products, ids, onClose, onRemove, onAdd, onOpenPr
       <div className="panel-in relative mx-auto my-6 w-[min(980px,95vw)] rounded-3xl border border-line bg-white p-5 shadow-2xl sm:p-7">
         <div className="flex items-center justify-between">
           <h2 className="font-display text-xl font-bold">دوئل مشخصات</h2>
-          <button onClick={onClose} aria-label="بستن مقایسه" className="flex h-9 w-9 items-center justify-center rounded-full border border-line transition-colors hover:border-red-400 hover:text-red-500">
-            <IClose size={17} />
-          </button>
+          <div className="flex items-center gap-2">
+            {onOpenComparePage && (
+              <button
+                onClick={onOpenComparePage}
+                className="rounded-full bg-sea px-4 py-2 text-xs font-bold text-white transition-colors hover:bg-seadeep"
+              >
+                مقایسه پیشرفته
+              </button>
+            )}
+            <button onClick={onClose} aria-label="بستن مقایسه" className="flex h-9 w-9 items-center justify-center rounded-full border border-line transition-colors hover:border-red-400 hover:text-red-500">
+              <IClose size={17} />
+            </button>
+          </div>
         </div>
 
         <div className="thin-scroll mt-5 overflow-x-auto">

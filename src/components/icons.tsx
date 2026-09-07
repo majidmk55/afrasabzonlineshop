@@ -70,6 +70,8 @@ export const IKeyboard = (p: P) => <svg {...base(p)}><rect x="2.5" y="7" width="
 export const IPower = (p: P) => <svg {...base(p)}><path d="M12 3v8" /><path d="M6.2 6.5a8 8 0 1 0 11.6 0" /></svg>;
 export const IDrive = (p: P) => <svg {...base(p)}><rect x="3" y="9" width="18" height="7" rx="1.5" /><path d="M6 12.5h7" /><circle cx="17.5" cy="12.5" r="0.5" fill="currentColor" strokeWidth="1.2" /></svg>;
 export const ITag = (p: P) => <svg {...base(p)}><path d="M3 3h8.5L21 12.5 12.5 21 3 11.5V3Z" /><circle cx="8" cy="8" r="1.4" /></svg>;
+export const IShare = (p: P) => <svg {...base(p)}><circle cx="18" cy="5" r="3" /><circle cx="6" cy="12" r="3" /><circle cx="18" cy="19" r="3" /><line x1="8.59" y1="13.51" x2="15.42" y2="17.49" /><line x1="15.41" y1="6.51" x2="8.59" y2="10.49" /></svg>;
+export const IPrint = (p: P) => <svg {...base(p)}><polyline points="6 9 6 2 18 2 18 9" /><path d="M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2" /><rect x="6" y="14" width="12" height="8" /></svg>;
 
 export const SPEC_ICONS: Record<string, (p: P) => JSX.Element> = {
   cpu: ICpu, gpu: IGpu, ram: IRam, display: IDisplay, wifi: IWifi, battery: IBattery, scale: IScale, shield: IShield,

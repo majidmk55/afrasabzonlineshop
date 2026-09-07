@@ -6,6 +6,7 @@ import ProductModal from "./components/ProductModal";
 import CartDrawer from "./components/CartDrawer";
 import Checkout from "./components/Checkout";
 import { CompareTray, CompareModal } from "./components/Compare";
+import ComparePage from "./components/ComparePage";
 import Guide from "./components/Guide";
 import Footer from "./components/Footer";
 import { ErrorBoundary } from "./components/ErrorBoundary";
@@ -29,6 +30,7 @@ export default function App() {
   const [productId, setProductId] = useState<string | null>(null);
   const [compareIds, setCompareIds] = useState<string[]>([]);
   const [compareOpen, setCompareOpen] = useState(false);
+  const [comparePageOpen, setComparePageOpen] = useState(false);
   const [promo, setPromo] = useState<string | null>(null);
   const [filters, setFilters] = useState<{ q: string; cats: string[]; brands: string[]; minPrice: number; maxPrice: number; inStockOnly: boolean; sort: string }>({
     q: "",
@@ -307,6 +309,21 @@ export default function App() {
             setCompareOpen(false);
           }}
           onOpenProduct={openProduct}
+          onOpenComparePage={() => {
+            setCompareOpen(false);
+            setComparePageOpen(true);
+          }}
+        />
+      )}
+
+      {comparePageOpen && (
+        <ComparePage
+          products={visible}
+          onClose={() => setComparePageOpen(false)}
+          onAddToCart={(id) => {
+            addToCart(id);
+            setComparePageOpen(false);
+          }}
         />
       )}
 
