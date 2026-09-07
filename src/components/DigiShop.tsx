@@ -66,12 +66,27 @@ function ProductCard({ product, onSpecs, onToggleCompare, compared }: { product:
   const displayShort = removeBrand(display).split(" ")[0];
 
   return (
-    <button
-      onClick={() => onSpecs(product.id)}
-      className="group flex h-full w-full flex-col rounded-xl border border-[#e5e7eb] bg-white p-4 text-right transition-all duration-200 hover:border-[#3b82f6] hover:shadow-lg"
+    <div
+      className="group relative flex h-full w-full flex-col rounded-xl border border-[#e5e7eb] bg-white p-4 text-right transition-all duration-200 hover:border-[#3b82f6] hover:shadow-lg"
     >
+      {/* دکمه مقایسه */}
+      {onToggleCompare && (
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            onToggleCompare(product.id);
+          }}
+          className={`absolute right-2 top-2 z-10 flex h-9 w-9 items-center justify-center rounded-full border-2 transition-all ${
+            compared ? "border-[#2563eb] bg-[#2563eb] text-white" : "border-[#e5e7eb] bg-white text-[#666] hover:border-[#2563eb] hover:text-[#2563eb]"
+          }`}
+          aria-label={compared ? "حذف از مقایسه" : "افزودن به مقایسه"}
+        >
+          <ICompare size={16} />
+        </button>
+      )}
+      
       {/* تصویر */}
-      <div className="relative mb-3 flex h-[180px] items-center justify-center overflow-hidden rounded-lg bg-white">
+      <button onClick={() => onSpecs(product.id)} className="relative mb-3 flex h-[180px] items-center justify-center overflow-hidden rounded-lg bg-white">
         <img
           src={product.image}
           alt={product.name}
@@ -87,22 +102,7 @@ function ProductCard({ product, onSpecs, onToggleCompare, compared }: { product:
             <span className="h-2 w-2 rounded-full bg-gray-500" />
           </div>
         )}
-        {/* دکمه مقایسه */}
-        {onToggleCompare && (
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              onToggleCompare(product.id);
-            }}
-            className={`absolute bottom-2 left-2 flex h-8 w-8 items-center justify-center rounded-full border-2 transition-all ${
-              compared ? "border-[#2563eb] bg-[#2563eb] text-white" : "border-white bg-white/80 text-[#666] hover:border-[#2563eb] hover:text-[#2563eb]"
-            }`}
-            aria-label={compared ? "حذف از مقایسه" : "افزودن به مقایسه"}
-          >
-            <ICompare size={16} />
-          </button>
-        )}
-      </div>
+      </button>
 
       {/* آیکون‌های مشخصات */}
       <div className="mb-3 flex items-center justify-between gap-2 border-b border-[#f0f0f0] pb-3">
@@ -144,7 +144,7 @@ function ProductCard({ product, onSpecs, onToggleCompare, compared }: { product:
         <span className="text-[16px] font-bold text-[#2c2c2c]">{fmt(product.price)}</span>
         <span className="text-[11px] text-[#666]">ریال</span>
       </div>
-    </button>
+    </div>
   );
 }
 
