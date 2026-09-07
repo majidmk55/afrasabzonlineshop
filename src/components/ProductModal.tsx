@@ -136,69 +136,33 @@ function SpecTable({ laptop }: { laptop: Laptop }) {
     const ib = SPEC_ORDER.indexOf(b.title);
     return (ia === -1 ? 99 : ia) - (ib === -1 ? 99 : ib);
   });
-  
-  // تقسیم به دو ستون
-  const mid = Math.ceil(sorted.length / 2);
-  const leftCol = sorted.slice(0, mid);
-  const rightCol = sorted.slice(mid);
 
   return (
     <div className="space-y-5">
       <MainSpecs laptop={laptop} />
-      <div className="grid gap-5 md:grid-cols-2">
-        {/* ستون راست */}
-        <div className="space-y-5">
-          {rightCol.map((group) => {
-            const Icon = SPEC_ICONS[group.icon];
-            return (
-              <section
-                key={group.title}
-                aria-label={group.title}
-                className="overflow-hidden rounded-2xl border border-line bg-sea/5 transition-colors hover:border-sea/40"
-              >
-                <h4 className="flex items-center gap-2.5 border-b border-line/70 bg-white/60 px-4 py-3 font-body text-[15px] font-extrabold">
-                  {Icon && <Icon size={21} className="shrink-0 text-sea" />}
-                  {group.title}
-                </h4>
-                <dl className="divide-y divide-line/60 px-4">
-                  {group.rows.map(([k, v]) => (
-                    <div key={k} className="flex flex-col gap-0.5 py-2.5 sm:flex-row sm:gap-4">
-                      <dt className="w-48 shrink-0 text-[12px] font-bold text-mist">{k}</dt>
-                      <dd className="font-spec text-[13px] text-ink" dir="auto">{v}</dd>
-                    </div>
-                  ))}
-                </dl>
-              </section>
-            );
-          })}
-        </div>
-        {/* ستون چپ */}
-        <div className="space-y-5">
-          {leftCol.map((group) => {
-            const Icon = SPEC_ICONS[group.icon];
-            return (
-              <section
-                key={group.title}
-                aria-label={group.title}
-                className="overflow-hidden rounded-2xl border border-line bg-sea/5 transition-colors hover:border-sea/40"
-              >
-                <h4 className="flex items-center gap-2.5 border-b border-line/70 bg-white/60 px-4 py-3 font-body text-[15px] font-extrabold">
-                  {Icon && <Icon size={21} className="shrink-0 text-sea" />}
-                  {group.title}
-                </h4>
-                <dl className="divide-y divide-line/60 px-4">
-                  {group.rows.map(([k, v]) => (
-                    <div key={k} className="flex flex-col gap-0.5 py-2.5 sm:flex-row sm:gap-4">
-                      <dt className="w-48 shrink-0 text-[12px] font-bold text-mist">{k}</dt>
-                      <dd className="font-spec text-[13px] text-ink" dir="auto">{v}</dd>
-                    </div>
-                  ))}
-                </dl>
-              </section>
-            );
-          })}
-        </div>
-      </div>
+      {sorted.map((group) => {
+        const Icon = SPEC_ICONS[group.icon];
+        return (
+          <section
+            key={group.title}
+            aria-label={group.title}
+            className="overflow-hidden rounded-2xl border border-line bg-sea/5 transition-colors hover:border-sea/40"
+          >
+            <h4 className="flex items-center gap-2.5 border-b border-line/70 bg-white/60 px-4 py-3 font-body text-[15px] font-extrabold">
+              {Icon && <Icon size={21} className="shrink-0 text-sea" />}
+              {group.title}
+            </h4>
+            <dl className="grid gap-x-6 gap-y-0 px-4 sm:grid-cols-2">
+              {group.rows.map(([k, v]) => (
+                <div key={k} className="flex flex-col gap-0.5 border-b border-line/60 py-2.5">
+                  <dt className="text-[12px] font-bold text-mist">{k}</dt>
+                  <dd className="font-spec text-[13px] text-ink" dir="auto">{v}</dd>
+                </div>
+              ))}
+            </dl>
+          </section>
+        );
+      })}
     </div>
   );
 }
