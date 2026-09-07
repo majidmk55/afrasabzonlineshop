@@ -208,7 +208,7 @@ export default function DigiShop({ products, onSpecs, onBrand }: DigiShopProps) 
   const displayProducts = products.slice(0, 10); // فقط ۱۰ محصول
 
   return (
-    <div className="mx-auto max-w-7xl px-4 py-6">
+    <div className="mx-auto max-w-[95%] px-1 py-6 sm:px-2">
       {/* نوار لوگو برندها */}
       <section className="mb-4 flex items-center justify-center gap-8 rounded-xl bg-white py-4">
         {BRANDS.map((brand) => (
