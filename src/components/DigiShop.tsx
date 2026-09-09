@@ -44,6 +44,13 @@ const FILTER_ITEMS = [
   "مدل پردازنده گرافیکی",
   "ظرفیت حافظه HDD",
   "ظرفیت حافظه SSD",
+  "وب‌کم",
+  "حسگر اثر انگشت",
+  "سیم‌کارت",
+  "باتری",
+  "رنگ",
+  "سری لپ‌تاپ",
+  "کاربرد لپ‌تاپ",
 ];
 
 function ProductCard({ product, onSpecs, onToggleCompare, compared }: { product: Laptop; onSpecs: (id: string) => void; onToggleCompare?: (id: string) => void; compared?: boolean }) {
@@ -107,16 +114,20 @@ function ProductCard({ product, onSpecs, onToggleCompare, compared }: { product:
       {/* آیکون‌های مشخصات */}
       <div className="mb-3 flex items-center justify-between gap-2 border-b border-[#f0f0f0] pb-3">
         <div className="flex flex-col items-center gap-1">
-          <IRam size={20} className="text-[#666]" />
-          <span className="text-[11px] text-[#666]">{ramShort}</span>
+          <IRam size={16} className="text-[#666]" />
+          <span className="text-[9px] text-[#666]">{ramShort}</span>
         </div>
         <div className="flex flex-col items-center gap-1">
-          <ICpu size={20} className="text-[#666]" />
-          <span className="text-[11px] text-[#666]">{cpuShort}</span>
+          <ICpu size={16} className="text-[#666]" />
+          <span className="text-[9px] text-[#666]">{cpuShort}</span>
         </div>
         <div className="flex flex-col items-center gap-1">
-          <IDisplay size={20} className="text-[#666]" />
-          <span className="text-[11px] text-[#666]">{displayShort}</span>
+          <IGpu size={16} className="text-[#666]" />
+          <span className="text-[9px] text-[#666]">{gpuShort}</span>
+        </div>
+        <div className="flex flex-col items-center gap-1">
+          <IDisplay size={16} className="text-[#666]" />
+          <span className="text-[9px] text-[#666]">{displayShort}</span>
         </div>
       </div>
 
@@ -184,6 +195,13 @@ function FilterSidebar() {
     gpuModel: ["Intel Iris Xe", "Intel Arc", "NVIDIA GTX 1650", "NVIDIA RTX 3050", "NVIDIA RTX 4050", "NVIDIA RTX 4060", "NVIDIA RTX 4070", "NVIDIA RTX 4080", "NVIDIA RTX 4090", "NVIDIA RTX 5070", "NVIDIA RTX 5090", "AMD Radeon", "Apple M Series"],
     hdd: ["ندارد", "500 گیگابایت", "1 ترابایت", "2 ترابایت"],
     ssd: ["256 گیگابایت", "512 گیگابایت", "1 ترابایت", "2 ترابایت", "4 ترابایت"],
+    webcam: ["ندارد", "720p HD", "1080p Full HD", "1440p QHD", "IR (تشخیص چهره)"],
+    fingerprint: ["ندارد", "روی دکمه پاور", "روی تاچ‌پد", "مجزا"],
+    simCard: ["ندارد", "4G LTE", "5G"],
+    battery: ["40-50 وات‌ساعت", "50-60 وات‌ساعت", "60-70 وات‌ساعت", "70-80 وات‌ساعت", "80-90 وات‌ساعت", "90+ وات‌ساعت"],
+    color: ["مشکی", "سفید", "نقره‌ای", "خاکستری", "آبی", "طلایی", "سبز", "قرمز"],
+    laptopSeries: ["IdeaPad", "ThinkPad", "Yoga", "Legion", "ROG", "VivoBook", "ZenBook", "TUF", "Predator", "Swift", "Aspire", "Nitro", "Pavilion", "Victus", "Omen", "Spectre", "Envy", "XPS", "Inspiron", "Latitude", "Precision", "Surface", "Gram", "Gram Pro", "MacBook Air", "MacBook Pro", "Aorus", "Prestige", "Katana", "Creator", "Framework"],
+    laptopUsage: ["گیمینگ", "اداری و کاری", "دانشجویی", "طراحی و گرافیک", "برنامه‌نویسی", "مهندسی", "ترید و بورس", "مولتی‌مدیا", "اولترابوک", "ورک‌استیشن"],
   };
 
   return (
@@ -370,6 +388,83 @@ function FilterSidebar() {
                       <label key={ssd} className="flex cursor-pointer items-center gap-2">
                         <input type="checkbox" className="h-4 w-4 accent-[#2563eb]" />
                         <span className="text-[13px] text-[#333]">{ssd}</span>
+                      </label>
+                    ))}
+                  </div>
+                )}
+
+                {index === 14 && (
+                  <div className="space-y-2">
+                    {filterData.webcam.map((webcam) => (
+                      <label key={webcam} className="flex cursor-pointer items-center gap-2">
+                        <input type="checkbox" className="h-4 w-4 accent-[#2563eb]" />
+                        <span className="text-[13px] text-[#333]">{webcam}</span>
+                      </label>
+                    ))}
+                  </div>
+                )}
+
+                {index === 15 && (
+                  <div className="space-y-2">
+                    {filterData.fingerprint.map((fingerprint) => (
+                      <label key={fingerprint} className="flex cursor-pointer items-center gap-2">
+                        <input type="checkbox" className="h-4 w-4 accent-[#2563eb]" />
+                        <span className="text-[13px] text-[#333]">{fingerprint}</span>
+                      </label>
+                    ))}
+                  </div>
+                )}
+
+                {index === 16 && (
+                  <div className="space-y-2">
+                    {filterData.simCard.map((sim) => (
+                      <label key={sim} className="flex cursor-pointer items-center gap-2">
+                        <input type="checkbox" className="h-4 w-4 accent-[#2563eb]" />
+                        <span className="text-[13px] text-[#333]">{sim}</span>
+                      </label>
+                    ))}
+                  </div>
+                )}
+
+                {index === 17 && (
+                  <div className="space-y-2">
+                    {filterData.battery.map((battery) => (
+                      <label key={battery} className="flex cursor-pointer items-center gap-2">
+                        <input type="checkbox" className="h-4 w-4 accent-[#2563eb]" />
+                        <span className="text-[13px] text-[#333]">{battery}</span>
+                      </label>
+                    ))}
+                  </div>
+                )}
+
+                {index === 18 && (
+                  <div className="space-y-2">
+                    {filterData.color.map((color) => (
+                      <label key={color} className="flex cursor-pointer items-center gap-2">
+                        <input type="checkbox" className="h-4 w-4 accent-[#2563eb]" />
+                        <span className="text-[13px] text-[#333]">{color}</span>
+                      </label>
+                    ))}
+                  </div>
+                )}
+
+                {index === 19 && (
+                  <div className="space-y-2">
+                    {filterData.laptopSeries.map((series) => (
+                      <label key={series} className="flex cursor-pointer items-center gap-2">
+                        <input type="checkbox" className="h-4 w-4 accent-[#2563eb]" />
+                        <span className="text-[13px] text-[#333]">{series}</span>
+                      </label>
+                    ))}
+                  </div>
+                )}
+
+                {index === 20 && (
+                  <div className="space-y-2">
+                    {filterData.laptopUsage.map((usage) => (
+                      <label key={usage} className="flex cursor-pointer items-center gap-2">
+                        <input type="checkbox" className="h-4 w-4 accent-[#2563eb]" />
+                        <span className="text-[13px] text-[#333]">{usage}</span>
                       </label>
                     ))}
                   </div>
