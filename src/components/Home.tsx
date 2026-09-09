@@ -5,8 +5,8 @@ import ProductCard from "./ProductCard";
 import DigiShop from "./DigiShop";
 import { IArrowR, IBolt, IBriefGear, ICap, ICode, IDisplay, IGamepad, IPenNib, IShield, ITruck, LogoMark } from "./icons";
 
-/* تصویر بیلبورد — خانواده لپ‌تاپ‌های مدرن */
-const BILLBOARD_IMG = "https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=1600&q=85&auto=format&fit=crop";
+/* تصویر بیلبورد — SVG inline */
+const BILLBOARD_IMG = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1600 900'%3E%3Cdefs%3E%3ClinearGradient id='bg' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%23667eea'/%3E%3Cstop offset='100%25' style='stop-color:%23764ba2'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect fill='url(%23bg)' width='1600' height='900'/%3E%3Crect x='200' y='250' width='400' height='260' rx='8' fill='%231a1a1a'/%3E%3Crect x='220' y='270' width='360' height='220' rx='4' fill='%2300d4ff'/%3E%3Crect x='700' y='280' width='350' height='230' rx='8' fill='%23c0c0c0'/%3E%3Crect x='720' y='300' width='310' height='190' rx='4' fill='%23000'/%3E%3Crect x='1150' y='260' width='380' height='250' rx='8' fill='%232a2a2a'/%3E%3Crect x='1170' y='280' width='340' height='210' rx='4' fill='%23ff0080'/%3E%3Ctext x='800' y='700' font-family='Arial' font-size='72' font-weight='bold' fill='white' text-anchor='middle'%3Eافرالینک - فروشگاه تخصصی لپ‌تاپ%3C/text%3E%3C/svg%3E";
 
 /* ---------- بازه‌های قیمت ---------- */
 
