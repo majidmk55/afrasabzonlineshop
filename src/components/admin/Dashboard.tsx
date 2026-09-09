@@ -5,6 +5,7 @@ import RevenueChart from '../../components/admin/charts/RevenueChart';
 import BrandChart from '../../components/admin/charts/BrandChart';
 import CategoryPieChart from '../../components/admin/charts/CategoryPieChart';
 import SalesFunnel from '../../components/admin/charts/SalesFunnel';
+import NanoReviewComparison from '../../components/admin/charts/NanoReviewComparison';
 import TopProductsTable from '../../components/admin/tables/TopProductsTable';
 import AlertPanel from '../../components/admin/alerts/AlertPanel';
 import { mockKPIs } from '../../lib/analytics/mockData';
@@ -147,6 +148,11 @@ export default function Dashboard() {
       <div className="mb-6 grid grid-cols-1 gap-6 lg:grid-cols-2">
         <CategoryPieChart />
         <SalesFunnel />
+      </div>
+
+      {/* NanoReview Comparison */}
+      <div className="mb-6">
+        <NanoReviewComparison />
       </div>
 
       {/* Tables and Alerts */}
