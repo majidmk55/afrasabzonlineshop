@@ -146,7 +146,7 @@ export default function Home({ products, onBrand, onCategory, onPrice, onExplore
       <section className="mx-auto max-w-[80%] px-2 pt-14 sm:px-4" aria-label="خرید بر اساس کاربرد">
         <Reveal>
           <div className="flex items-center gap-4">
-            <h2 className="shrink-0 font-display text-2xl font-bold tracking-tight sm:text-3xl">بر اساس کاربرد شما</h2>
+            <h2 className="shrink-0 font-body text-2xl font-bold tracking-tight sm:text-3xl">بر اساس کاربرد شما</h2>
             <span className="h-px flex-1 bg-gradient-to-l from-line to-transparent" aria-hidden="true" />
             <span className="hidden text-[11px] font-bold text-mist sm:block">پنج گروه تخصصی</span>
           </div>
@@ -164,7 +164,7 @@ export default function Home({ products, onBrand, onCategory, onPrice, onExplore
                   <span className="flex h-16 w-16 items-center justify-center rounded-full bg-skywash text-ink transition-all duration-300 group-hover:bg-sea group-hover:text-white group-hover:shadow-lg group-hover:shadow-sea/25">
                     <g.Icon size={30} className="transition-transform duration-300 group-hover:-rotate-6 group-hover:scale-110" />
                   </span>
-                  <span className="mt-3 font-display text-lg font-bold leading-tight transition-colors group-hover:text-sea">{g.name}</span>
+                  <span className="mt-3 font-body text-lg font-bold leading-tight transition-colors group-hover:text-sea">{g.name}</span>
                   <span className="mt-1 text-[11px] leading-5 text-mist">{g.desc}</span>
                   <span className="mt-3 flex items-center gap-1.5 text-[11px] font-extrabold text-sea">
                     {toFa(count)} دستگاه
@@ -181,7 +181,7 @@ export default function Home({ products, onBrand, onCategory, onPrice, onExplore
       <section className="mx-auto max-w-[80%] px-2 py-14 sm:px-4" aria-label="خرید بر اساس بودجه">
         <Reveal>
           <div className="flex items-center gap-4">
-            <h2 className="shrink-0 font-display text-2xl font-bold tracking-tight sm:text-3xl">بر اساس بودجه شما</h2>
+            <h2 className="shrink-0 font-body text-2xl font-bold tracking-tight sm:text-3xl">بر اساس بودجه شما</h2>
             <span className="h-px flex-1 bg-gradient-to-l from-line to-transparent" aria-hidden="true" />
             <span className="hidden text-[11px] font-bold text-mist sm:block">قیمت‌ها به ریال و به‌روز</span>
           </div>
@@ -201,7 +201,7 @@ export default function Home({ products, onBrand, onCategory, onPrice, onExplore
                   aria-label={`لپ‌تاپ‌های ${band.title} — ${band.range} ریال`}
                 >
                   <span className="flex items-center justify-between">
-                    <span className={`font-display text-lg font-bold ${band.dark ? "text-white" : "text-ink"}`}>{band.title}</span>
+                    <span className={`font-body text-lg font-bold ${band.dark ? "text-white" : "text-ink"}`}>{band.title}</span>
                     <span className={`rounded-full px-2.5 py-1 text-[10px] font-extrabold ${band.dark ? "bg-sea text-white" : "bg-skywash text-sea"}`}>
                       {toFa(inBand.length)} دستگاه
                     </span>

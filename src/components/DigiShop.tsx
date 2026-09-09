@@ -157,6 +157,35 @@ function FilterSidebar() {
     );
   };
 
+  // داده‌های فیلترها با زیرشاخه‌های کامل
+  const filterData = {
+    brands: [
+      { name: "اپل", count: 2 },
+      { name: "ایسوس", count: 1 },
+      { name: "لنوو", count: 1 },
+      { name: "دل", count: 1 },
+      { name: "اچ‌پی", count: 1 },
+      { name: "مایکروسافت", count: 1 },
+      { name: "ایسر", count: 1 },
+      { name: "ام‌اس‌آی", count: 1 },
+      { name: "ریزر", count: 1 },
+      { name: "فریم‌ورک", count: 1 },
+      { name: "ال‌جی", count: 1 },
+      { name: "گیگابایت", count: 1 },
+    ],
+    ram: ["8 گیگابایت", "16 گیگابایت", "32 گیگابایت", "64 گیگابایت"],
+    panel: ["IPS", "OLED", "Mini-LED", "TFT"],
+    screenSize: ["13 اینچ", "14 اینچ", "15.6 اینچ", "16 اینچ", "17 اینچ"],
+    touchscreen: ["لمسی", "غیر لمسی"],
+    screenCover: ["مات", "براق"],
+    cpuSeries: ["Intel Core i3", "Intel Core i5", "Intel Core i7", "Intel Core i9", "Intel Core Ultra", "AMD Ryzen 3", "AMD Ryzen 5", "AMD Ryzen 7", "AMD Ryzen 9", "Apple M1", "Apple M2", "Apple M3", "Apple M4", "Snapdragon X"],
+    cpuGen: ["نسل 11 اینتل", "نسل 12 اینتل", "نسل 13 اینتل", "نسل 14 اینتل", "AMD Zen 3", "AMD Zen 4", "AMD Zen 5", "Apple Silicon"],
+    gpuType: ["یکپارچه", "مجزا"],
+    gpuModel: ["Intel Iris Xe", "Intel Arc", "NVIDIA GTX 1650", "NVIDIA RTX 3050", "NVIDIA RTX 4050", "NVIDIA RTX 4060", "NVIDIA RTX 4070", "NVIDIA RTX 4080", "NVIDIA RTX 4090", "NVIDIA RTX 5070", "NVIDIA RTX 5090", "AMD Radeon", "Apple M Series"],
+    hdd: ["ندارد", "500 گیگابایت", "1 ترابایت", "2 ترابایت"],
+    ssd: ["256 گیگابایت", "512 گیگابایت", "1 ترابایت", "2 ترابایت", "4 ترابایت"],
+  };
+
   return (
     <aside className="sticky top-5 w-[300px] rounded-xl border border-[#e5e7eb] bg-white" style={{ maxHeight: "calc(100vh - 40px)" }}>
       {/* هدر */}
@@ -188,12 +217,14 @@ function FilterSidebar() {
             {/* محتوای فیلتر */}
             {openFilters.includes(index) && (
               <div className="border-t border-[#f0f0f0] bg-[#fafafa] p-4">
-                {index === 0 ? (
+                {index === 0 && (
                   <label className="flex cursor-pointer items-center justify-between">
                     <span className="text-[13px] text-[#333]">فقط کالاهای موجود</span>
                     <input type="checkbox" className="h-4 w-4 accent-[#2563eb]" />
                   </label>
-                ) : index === 1 ? (
+                )}
+
+                {index === 1 && (
                   <div className="space-y-3">
                     <input
                       type="range"
@@ -204,20 +235,144 @@ function FilterSidebar() {
                     />
                     <div className="flex justify-between text-[11px] text-[#666]">
                       <span>۰</span>
-                      <span>۴۰۰ میلیون</span>
+                      <span>۴۰۰ میلیون ریال</span>
                     </div>
                   </div>
-                ) : index === 2 ? (
+                )}
+
+                {index === 2 && (
                   <div className="space-y-2">
-                    {BRANDS.slice(0, 5).map((b) => (
-                      <label key={b.en} className="flex cursor-pointer items-center gap-2">
-                        <input type="checkbox" className="h-4 w-4 accent-[#2563eb]" />
-                        <span className="text-[13px] text-[#333]">{b.fa}</span>
+                    {filterData.brands.map((brand) => (
+                      <label key={brand.name} className="flex cursor-pointer items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <input type="checkbox" className="h-4 w-4 accent-[#2563eb]" />
+                          <span className="text-[13px] text-[#333]">{brand.name}</span>
+                        </div>
+                        <span className="text-[11px] text-[#999]">({brand.count})</span>
                       </label>
                     ))}
                   </div>
-                ) : (
-                  <p className="text-[12px] text-[#999]">فیلترهای بیشتر به‌زودی...</p>
+                )}
+
+                {index === 3 && (
+                  <div className="space-y-2">
+                    {filterData.ram.map((ram) => (
+                      <label key={ram} className="flex cursor-pointer items-center gap-2">
+                        <input type="checkbox" className="h-4 w-4 accent-[#2563eb]" />
+                        <span className="text-[13px] text-[#333]">{ram}</span>
+                      </label>
+                    ))}
+                  </div>
+                )}
+
+                {index === 4 && (
+                  <div className="space-y-2">
+                    {filterData.panel.map((panel) => (
+                      <label key={panel} className="flex cursor-pointer items-center gap-2">
+                        <input type="checkbox" className="h-4 w-4 accent-[#2563eb]" />
+                        <span className="text-[13px] text-[#333]">{panel}</span>
+                      </label>
+                    ))}
+                  </div>
+                )}
+
+                {index === 5 && (
+                  <div className="space-y-2">
+                    {filterData.screenSize.map((size) => (
+                      <label key={size} className="flex cursor-pointer items-center gap-2">
+                        <input type="checkbox" className="h-4 w-4 accent-[#2563eb]" />
+                        <span className="text-[13px] text-[#333]">{size}</span>
+                      </label>
+                    ))}
+                  </div>
+                )}
+
+                {index === 6 && (
+                  <div className="space-y-2">
+                    {filterData.touchscreen.map((touch) => (
+                      <label key={touch} className="flex cursor-pointer items-center gap-2">
+                        <input type="checkbox" className="h-4 w-4 accent-[#2563eb]" />
+                        <span className="text-[13px] text-[#333]">{touch}</span>
+                      </label>
+                    ))}
+                  </div>
+                )}
+
+                {index === 7 && (
+                  <div className="space-y-2">
+                    {filterData.screenCover.map((cover) => (
+                      <label key={cover} className="flex cursor-pointer items-center gap-2">
+                        <input type="checkbox" className="h-4 w-4 accent-[#2563eb]" />
+                        <span className="text-[13px] text-[#333]">{cover}</span>
+                      </label>
+                    ))}
+                  </div>
+                )}
+
+                {index === 8 && (
+                  <div className="space-y-2">
+                    {filterData.cpuSeries.map((cpu) => (
+                      <label key={cpu} className="flex cursor-pointer items-center gap-2">
+                        <input type="checkbox" className="h-4 w-4 accent-[#2563eb]" />
+                        <span className="text-[13px] text-[#333]">{cpu}</span>
+                      </label>
+                    ))}
+                  </div>
+                )}
+
+                {index === 9 && (
+                  <div className="space-y-2">
+                    {filterData.cpuGen.map((gen) => (
+                      <label key={gen} className="flex cursor-pointer items-center gap-2">
+                        <input type="checkbox" className="h-4 w-4 accent-[#2563eb]" />
+                        <span className="text-[13px] text-[#333]">{gen}</span>
+                      </label>
+                    ))}
+                  </div>
+                )}
+
+                {index === 10 && (
+                  <div className="space-y-2">
+                    {filterData.gpuType.map((gpu) => (
+                      <label key={gpu} className="flex cursor-pointer items-center gap-2">
+                        <input type="checkbox" className="h-4 w-4 accent-[#2563eb]" />
+                        <span className="text-[13px] text-[#333]">{gpu}</span>
+                      </label>
+                    ))}
+                  </div>
+                )}
+
+                {index === 11 && (
+                  <div className="space-y-2">
+                    {filterData.gpuModel.map((gpu) => (
+                      <label key={gpu} className="flex cursor-pointer items-center gap-2">
+                        <input type="checkbox" className="h-4 w-4 accent-[#2563eb]" />
+                        <span className="text-[13px] text-[#333]">{gpu}</span>
+                      </label>
+                    ))}
+                  </div>
+                )}
+
+                {index === 12 && (
+                  <div className="space-y-2">
+                    {filterData.hdd.map((hdd) => (
+                      <label key={hdd} className="flex cursor-pointer items-center gap-2">
+                        <input type="checkbox" className="h-4 w-4 accent-[#2563eb]" />
+                        <span className="text-[13px] text-[#333]">{hdd}</span>
+                      </label>
+                    ))}
+                  </div>
+                )}
+
+                {index === 13 && (
+                  <div className="space-y-2">
+                    {filterData.ssd.map((ssd) => (
+                      <label key={ssd} className="flex cursor-pointer items-center gap-2">
+                        <input type="checkbox" className="h-4 w-4 accent-[#2563eb]" />
+                        <span className="text-[13px] text-[#333]">{ssd}</span>
+                      </label>
+                    ))}
+                  </div>
                 )}
               </div>
             )}
