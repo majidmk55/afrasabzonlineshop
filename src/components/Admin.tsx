@@ -516,6 +516,7 @@ function ProductForm({ initial, products, onSave, onClose }: { initial?: Laptop;
     mem: initial?.brief.find((b) => b[0] === "رم / حافظه")?.[1] ?? "",
     display: initial?.brief.find((b) => b[0] === "نمایشگر")?.[1] ?? "",
     weight: initial?.brief.find((b) => b[0] === "وزن")?.[1] ?? "",
+    warrantyCompany: initial?.warrantyCompany ?? "افرالیک",
   });
   const [err, setErr] = useState("");
   useLockBody(true);
@@ -577,6 +578,7 @@ function ProductForm({ initial, products, onSave, onClose }: { initial?: Laptop;
       inBox: initial?.inBox ?? ["خود دستگاه", "شارژر اصلی", "کابل برق", "دفترچه راهنما", "گزارش آزمایشگاه افرالیک"],
       pros: initial?.pros ?? ["جدیدترین ورودی فروشگاه افرالیک", "دارای کارنامه آزمایشگاه"],
       cons: initial?.cons ?? ["هنوز دیدگاه ثبت نشده است"],
+      warrantyCompany: f.warrantyCompany.trim() || "افرالیک",
       active: initial?.active ?? true,
     };
     onSave(p);
@@ -619,6 +621,9 @@ function ProductForm({ initial, products, onSave, onClose }: { initial?: Laptop;
           <Field label="رم / حافظه"><input className={inputCls} value={f.mem} onChange={(e) => set("mem", e.target.value)} placeholder="16GB DDR5 / 512GB SSD" /></Field>
           <Field label="نمایشگر"><input className={inputCls} value={f.display} onChange={(e) => set("display", e.target.value)} placeholder="15.6&quot; FHD IPS 144Hz" /></Field>
           <Field label="وزن"><input className={inputCls} value={f.weight} onChange={(e) => set("weight", e.target.value)} placeholder="۱.۸ کیلوگرم" /></Field>
+          <div className="sm:col-span-2">
+            <Field label="شرکت گارانتی‌کننده"><input className={inputCls} value={f.warrantyCompany} onChange={(e) => set("warrantyCompany", e.target.value)} placeholder="افرالیک" /></Field>
+          </div>
         </div>
         {err && <p className="mt-3 text-sm text-red-500">{err}</p>}
         <div className="mt-6 flex gap-3">

@@ -152,7 +152,7 @@ function ProductCard({ product, onSpecs, onToggleCompare, compared }: { product:
 
       {/* قیمت */}
       <div className="mt-auto flex items-center justify-end">
-        <div className="rounded-lg border border-[#e5e7eb] px-3 py-1.5">
+        <div className="rounded-lg border border-[#e5e7eb] px-4 py-2">
           <span className="text-[14px] font-bold text-[#2c2c2c]">{fmt(product.price)}</span>
         </div>
       </div>
