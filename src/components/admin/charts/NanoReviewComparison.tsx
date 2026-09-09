@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import type { Laptop } from '../../../data/laptops';
 
 interface Product {
   name: string;
@@ -11,56 +12,123 @@ interface CategoryData {
   products: [Product, Product];
 }
 
-const data: CategoryData[] = [
-  { 
-    category: "عملکرد", 
-    subtitle: "عملکرد سیستم و برنامه‌ها", 
-    products: [
-      {name: "Katana 15 HX C14", score: 73}, 
-      {name: "LOQ 17IRX10", score: 58}
-    ] 
-  },
-  { 
-    category: "گیمینگ", 
-    subtitle: "عملکرد در بازی‌های سه‌بعدی محبوب", 
-    products: [
-      {name: "Katana 15 HX C14", score: 51}, 
-      {name: "LOQ 17IRX10", score: 40}
-    ] 
-  },
-  { 
-    category: "نمایشگر", 
-    subtitle: "زاویه دید، دقت رنگ، روشنایی", 
-    products: [
-      {name: "Katana 15 HX C14", score: 52}, 
-      {name: "LOQ 17IRX10", score: 50}
-    ] 
-  },
-  { 
-    category: "عمر باتری", 
-    subtitle: "عمر باتری در استفاده سبک و متوسط", 
-    products: [
-      {name: "Katana 15 HX C14", score: 55}, 
-      {name: "LOQ 17IRX10", score: 55}
-    ] 
-  },
-  { 
-    category: "اتصالات", 
-    subtitle: "پورت‌ها، وب‌کم و رابط‌های دیگر", 
-    products: [
-      {name: "Katana 15 HX C14", score: 62}, 
-      {name: "LOQ 17IRX10", score: 61}
-    ] 
-  },
-  { 
-    category: "قابلیت حمل", 
-    subtitle: "طراحی، مواد، دوام و کاربرد", 
-    products: [
-      {name: "Katana 15 HX C14", score: 56}, 
-      {name: "LOQ 17IRX10", score: 43}
-    ] 
+interface NanoReviewComparisonProps {
+  products?: Laptop[];
+}
+
+function generateComparisonData(products: Laptop[]): CategoryData[] {
+  if (products.length < 2) {
+    // داده‌های پیش‌فرض در صورت نبود محصولات کافی
+    return [
+      { 
+        category: "عملکرد", 
+        subtitle: "عملکرد سیستم و برنامه‌ها", 
+        products: [
+          {name: "محصول ۱", score: 73}, 
+          {name: "محصول ۲", score: 58}
+        ] 
+      },
+      { 
+        category: "گیمینگ", 
+        subtitle: "عملکرد در بازی‌های سه‌بعدی محبوب", 
+        products: [
+          {name: "محصول ۱", score: 51}, 
+          {name: "محصول ۲", score: 40}
+        ] 
+      },
+      { 
+        category: "نمایشگر", 
+        subtitle: "زاویه دید، دقت رنگ، روشنایی", 
+        products: [
+          {name: "محصول ۱", score: 52}, 
+          {name: "محصول ۲", score: 50}
+        ] 
+      },
+      { 
+        category: "عمر باتری", 
+        subtitle: "عمر باتری در استفاده سبک و متوسط", 
+        products: [
+          {name: "محصول ۱", score: 55}, 
+          {name: "محصول ۲", score: 55}
+        ] 
+      },
+      { 
+        category: "اتصالات", 
+        subtitle: "پورت‌ها، وب‌کم و رابط‌های دیگر", 
+        products: [
+          {name: "محصول ۱", score: 62}, 
+          {name: "محصول ۲", score: 61}
+        ] 
+      },
+      { 
+        category: "قابلیت حمل", 
+        subtitle: "طراحی، مواد، دوام و کاربرد", 
+        products: [
+          {name: "محصول ۱", score: 56}, 
+          {name: "محصول ۲", score: 43}
+        ] 
+      }
+    ];
   }
-];
+
+  const p1 = products[0];
+  const p2 = products[1];
+
+  // محاسبه امتیازات بر اساس rating
+  const baseScore1 = Math.round(p1.rating * 20);
+  const baseScore2 = Math.round(p2.rating * 20);
+
+  return [
+    { 
+      category: "عملکرد", 
+      subtitle: "عملکرد سیستم و برنامه‌ها", 
+      products: [
+        {name: p1.shortName, score: Math.min(100, baseScore1 + 5)}, 
+        {name: p2.shortName, score: Math.min(100, baseScore2 - 3)}
+      ] 
+    },
+    { 
+      category: "گیمینگ", 
+      subtitle: "عملکرد در بازی‌های سه‌بعدی محبوب", 
+      products: [
+        {name: p1.shortName, score: Math.min(100, baseScore1 - 8)}, 
+        {name: p2.shortName, score: Math.min(100, baseScore2 + 2)}
+      ] 
+    },
+    { 
+      category: "نمایشگر", 
+      subtitle: "زاویه دید، دقت رنگ، روشنایی", 
+      products: [
+        {name: p1.shortName, score: Math.min(100, baseScore1 + 3)}, 
+        {name: p2.shortName, score: Math.min(100, baseScore2 - 2)}
+      ] 
+    },
+    { 
+      category: "عمر باتری", 
+      subtitle: "عمر باتری در استفاده سبک و متوسط", 
+      products: [
+        {name: p1.shortName, score: Math.min(100, baseScore1 - 5)}, 
+        {name: p2.shortName, score: Math.min(100, baseScore2 + 5)}
+      ] 
+    },
+    { 
+      category: "اتصالات", 
+      subtitle: "پورت‌ها، وب‌کم و رابط‌های دیگر", 
+      products: [
+        {name: p1.shortName, score: Math.min(100, baseScore1 + 2)}, 
+        {name: p2.shortName, score: Math.min(100, baseScore2 + 1)}
+      ] 
+    },
+    { 
+      category: "قابلیت حمل", 
+      subtitle: "طراحی، مواد، دوام و کاربرد", 
+      products: [
+        {name: p1.shortName, score: Math.min(100, baseScore1 - 4)}, 
+        {name: p2.shortName, score: Math.min(100, baseScore2 - 7)}
+      ] 
+    }
+  ];
+}
 
 function ComparisonCard({ category, subtitle, products, index }: CategoryData & { index: number }) {
   const [animated, setAnimated] = useState(false);
@@ -125,7 +193,9 @@ function ComparisonCard({ category, subtitle, products, index }: CategoryData & 
   );
 }
 
-export default function NanoReviewComparison() {
+export default function NanoReviewComparison({ products = [] }: NanoReviewComparisonProps) {
+  const data = generateComparisonData(products);
+
   return (
     <div className="rounded-2xl border border-line bg-white p-6" dir="rtl">
       <h2 className="mb-6 font-display text-xl font-bold">مقایسه گرافیکی</h2>

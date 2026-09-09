@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { fmt, toFa, type Laptop } from "../data/laptops";
 import { IClose, IPlus, IShare, IPrint, ICart, ICheck } from "./icons";
+import NanoReviewComparison from "./admin/charts/NanoReviewComparison";
 
 interface ComparePageProps {
   products: Laptop[];
@@ -262,6 +263,11 @@ export default function ComparePage({ products, ids, onClose, onAddToCart }: Com
               </div>
             </div>
           </div>
+        </div>
+
+        {/* مقایسه گرافیکی NanoReview */}
+        <div className="mb-8">
+          <NanoReviewComparison products={comparisonProducts} />
         </div>
 
         {/* انتخاب سناریوی استفاده */}
