@@ -5,8 +5,8 @@ import ProductCard from "./ProductCard";
 import DigiShop from "./DigiShop";
 import { IArrowR, IBolt, IBriefGear, ICap, ICode, IDisplay, IGamepad, IPenNib, IShield, ITruck, LogoMark } from "./icons";
 
-/* تصویر بیلبورد — Lenovo IdeaPad Pro 5i Hero Family */
-const BILLBOARD_IMG = "https://www.ballicom.co.uk/bp-assets/uploads/2023/12/16_Ideapad_Pro_5i_Hero_Family.png";
+/* تصویر بیلبورد — خانواده لپ‌تاپ‌های مدرن */
+const BILLBOARD_IMG = "https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=1600&q=85&auto=format&fit=crop";
 
 /* ---------- بازه‌های قیمت ---------- */
 

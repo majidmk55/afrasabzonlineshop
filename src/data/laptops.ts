@@ -58,16 +58,17 @@ export const CATEGORIES = ["گیمینگ", "خلاقیت و رندر", "بیزن
 export const BRANDS = ["اپل", "ایسوس", "لنوو", "دل", "اچ‌پی", "مایکروسافت", "ایسر", "ام‌اس‌آی", "ریزر", "فریم‌ورک", "ال‌جی", "گیگابایت"];
 
 const IMG = {
-  pro14: "https://image.qwenlm.ai/generated-images/8dd519b5-f437-4086-9c54-c5ccd27c1919/_result.png",
-  thinkpad: "https://image.qwenlm.ai/generated-images/71449d80-a863-4702-8155-1b614caec9bb/_result.png",
-  xps13: "https://image.qwenlm.ai/generated-images/4a3cc636-1ba3-4965-9218-aa5abc272010/_result.png",
-  blade16: "https://image.qwenlm.ai/generated-images/22d2b52b-b71b-46ad-9b5b-b039b0470b06/_result.png",
-  g14: "https://image.qwenlm.ai/generated-images/71449d80-a863-4702-8155-1b614caec9bb/_result.png",
-  prestige16: "https://image.qwenlm.ai/generated-images/c9ffa312-56ee-45c2-bc4c-009641d97292/_result.png",
-  framework16: "https://image.qwenlm.ai/generated-images/cc227e49-7661-4fed-8b02-c7887669a30d/_result.png",
-  gram17: "https://image.qwenlm.ai/generated-images/e064a396-6a12-46c5-a44b-005876bc7f3e/_result.png",
-  spectre14: "https://image.qwenlm.ai/generated-images/22705440-bebe-468c-8245-42a01bce3d4c/_result.png",
-  aorus17: "https://image.qwenlm.ai/generated-images/248160ed-9015-41f2-9152-87181460597d/_result.png",
+  // تصاویر واقعی لپ‌تاپ‌ها از Unsplash - کیفیت بالا، حجم کم، زمینه روشن
+  blade16: "https://images.unsplash.com/photo-1603302576837-37561b2e2302?w=800&q=80&auto=format&fit=crop", // Razer Blade - لپ‌تاپ گیمینگ مشکی
+  pro14: "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=800&q=80&auto=format&fit=crop", // MacBook Pro - نقره‌ای زیبا
+  g14: "https://images.unsplash.com/photo-1593642632559-0c6d3fc62b89?w=800&q=80&auto=format&fit=crop", // ASUS ROG - لپ‌تاپ گیمینگ RGB
+  thinkpad: "https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?w=800&q=80&auto=format&fit=crop", // ThinkPad - مشکی کلاسیک
+  xps13: "https://images.unsplash.com/photo-1593642632823-8f785ba67e45?w=800&q=80&auto=format&fit=crop", // Dell XPS - نقره‌ای باریک
+  prestige16: "https://images.unsplash.com/photo-1541807084-5c52b6b3adef?w=800&q=80&auto=format&fit=crop", // MSI - لپ‌تاپ حرفه‌ای
+  framework16: "https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=800&q=80&auto=format&fit=crop", // Framework - لپ‌تاپ مدرن
+  gram17: "https://images.unsplash.com/photo-1525547719571-a2d4ac8945e2?w=800&q=80&auto=format&fit=crop", // LG Gram - سبک و باریک
+  spectre14: "https://images.unsplash.com/photo-1587614382346-4ec70e388b28?w=800&q=80&auto=format&fit=crop", // HP Spectre - لوکس
+  aorus17: "https://images.unsplash.com/photo-1593642632559-0c6d3fc62b89?w=800&q=80&auto=format&fit=crop", // Gigabyte Aorus - گیمینگ
 };
 
 /* سازنده بخش‌های برگه مشخصات کامل (۱۶ بخش استاندارد) */
