@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { fmt, toFa, type Laptop } from "../data/laptops";
 import { IClose, ICart } from "./icons";
 
@@ -21,11 +21,6 @@ function extractSpec(laptop: Laptop, group: string, key: string): string {
 function extractNumber(text: string): number {
   const match = text.match(/(\d+(?:\.\d+)?)/);
   return match ? parseFloat(match[1]) : 0;
-}
-
-// محاسبه امتیاز کلی
-function calculateOverallScore(laptop: Laptop): number {
-  return Math.round(laptop.rating * 20);
 }
 
 // محاسبه امتیاز دسته‌ها
@@ -68,6 +63,89 @@ function calculateCategoryScores(laptop: Laptop) {
     portability: portabilityScore,
     overall,
   };
+}
+
+// کامپوننت Score Bar
+function ScoreBar({ label, scoreA, scoreB, laptopAName, laptopBName }: {
+  label: string;
+  scoreA: number;
+  scoreB: number;
+  laptopAName: string;
+  laptopBName: string;
+}) {
+  const winner = scoreA > scoreB ? 'A' : scoreB > scoreA ? 'B' : null;
+  
+  return (
+    <div className="mb-6">
+      <h4 className="mb-3 text-sm font-bold text-[#1a1a1a]">{label}</h4>
+      <div className="space-y-2">
+        <div className="flex items-center gap-3">
+          <span className="w-32 text-xs text-[#6b7280]">{laptopAName}</span>
+          <div className="flex-1">
+            <div className="relative h-8 overflow-hidden rounded-lg bg-[#f3f4f6]">
+              <div 
+                className={`absolute inset-y-0 right-0 rounded-lg transition-all duration-500 ${
+                  winner === 'A' ? 'bg-[#2563eb]' : 'bg-[#9ca3af]'
+                }`}
+                style={{ width: `${scoreA}%` }}
+              />
+              <span className="absolute inset-0 flex items-center justify-center text-xs font-bold text-white">
+                {toFa(scoreA)}
+              </span>
+            </div>
+          </div>
+        </div>
+        <div className="flex items-center gap-3">
+          <span className="w-32 text-xs text-[#6b7280]">{laptopBName}</span>
+          <div className="flex-1">
+            <div className="relative h-8 overflow-hidden rounded-lg bg-[#f3f4f6]">
+              <div 
+                className={`absolute inset-y-0 right-0 rounded-lg transition-all duration-500 ${
+                  winner === 'B' ? 'bg-[#2563eb]' : 'bg-[#9ca3af]'
+                }`}
+                style={{ width: `${scoreB}%` }}
+              />
+              <span className="absolute inset-0 flex items-center justify-center text-xs font-bold text-white">
+                {toFa(scoreB)}
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// کامپوننت جدول مقایسه
+function ComparisonTable({ title, rows }: {
+  title: string;
+  rows: { label: string; valueA: string; valueB: string }[];
+}) {
+  return (
+    <div className="mb-8">
+      <h3 className="mb-4 text-xl font-bold text-[#1a1a1a]">{title}</h3>
+      <div className="overflow-x-auto">
+        <table className="w-full">
+          <thead>
+            <tr className="border-b-2 border-[#e5e7eb] bg-[#f9fafb]">
+              <th className="p-3 text-right text-sm font-bold text-[#1a1a1a]">مشخصه</th>
+              <th className="p-3 text-center text-sm font-bold text-[#1a1a1a]">لپ‌تاپ A</th>
+              <th className="p-3 text-center text-sm font-bold text-[#1a1a1a]">لپ‌تاپ B</th>
+            </tr>
+          </thead>
+          <tbody>
+            {rows.map((row, idx) => (
+              <tr key={idx} className="border-b border-[#f3f4f6]">
+                <td className="p-3 text-sm font-medium text-[#1a1a1a]">{row.label}</td>
+                <td className="p-3 text-center text-sm text-[#4b5563]">{row.valueA}</td>
+                <td className="p-3 text-center text-sm text-[#4b5563]">{row.valueB}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
 }
 
 export default function ComparePage({ products, ids, onClose, onAddToCart }: ComparePageProps) {
@@ -140,7 +218,7 @@ export default function ComparePage({ products, ids, onClose, onAddToCart }: Com
           </div>
         </div>
 
-        {/* Review Section */}
+        {/* Review Section with Score Bars */}
         <div className="mb-8 rounded-2xl bg-white p-8 shadow-sm">
           <h2 className="mb-2 text-2xl font-bold text-[#1a1a1a]">بررسی</h2>
           <p className="mb-6 text-sm text-[#6b7280]">ارزیابی ویژگی‌های مهم</p>
@@ -162,44 +240,14 @@ export default function ComparePage({ products, ids, onClose, onAddToCart }: Com
             </select>
           </div>
 
-          {/* Scores Table */}
-          <div className="overflow-x-auto">
-            <table className="w-full">
-              <thead>
-                <tr className="border-b-2 border-[#e5e7eb]">
-                  <th className="p-3 text-right text-sm font-bold text-[#1a1a1a]">دسته</th>
-                  <th className="p-3 text-center text-sm font-bold text-[#1a1a1a]">{laptopA.shortName}</th>
-                  <th className="p-3 text-center text-sm font-bold text-[#1a1a1a]">{laptopB.shortName}</th>
-                </tr>
-              </thead>
-              <tbody>
-                {[
-                  { key: "performance", label: "عملکرد" },
-                  { key: "gaming", label: "گیمینگ" },
-                  { key: "display", label: "نمایشگر" },
-                  { key: "battery", label: "عمر باتری" },
-                  { key: "connectivity", label: "اتصالات" },
-                  { key: "portability", label: "قابلیت حمل" },
-                  { key: "overall", label: "امتیاز کلی" },
-                ].map((cat) => {
-                  const scoreA = scoresA[cat.key as keyof typeof scoresA];
-                  const scoreB = scoresB[cat.key as keyof typeof scoresB];
-                  const winner = scoreA > scoreB ? 0 : scoreB > scoreA ? 1 : null;
-                  return (
-                    <tr key={cat.key} className="border-b border-[#f3f4f6]">
-                      <td className="p-3 text-sm font-medium text-[#1a1a1a]">{cat.label}</td>
-                      <td className={`p-3 text-center text-sm font-bold ${winner === 0 ? "bg-green-50 text-green-700" : "text-[#4b5563]"}`}>
-                        {toFa(scoreA)}
-                      </td>
-                      <td className={`p-3 text-center text-sm font-bold ${winner === 1 ? "bg-green-50 text-green-700" : "text-[#4b5563]"}`}>
-                        {toFa(scoreB)}
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
-          </div>
+          {/* Score Bars */}
+          <ScoreBar label="عملکرد" scoreA={scoresA.performance} scoreB={scoresB.performance} laptopAName={laptopA.shortName} laptopBName={laptopB.shortName} />
+          <ScoreBar label="گیمینگ" scoreA={scoresA.gaming} scoreB={scoresB.gaming} laptopAName={laptopA.shortName} laptopBName={laptopB.shortName} />
+          <ScoreBar label="نمایشگر" scoreA={scoresA.display} scoreB={scoresB.display} laptopAName={laptopA.shortName} laptopBName={laptopB.shortName} />
+          <ScoreBar label="عمر باتری" scoreA={scoresA.battery} scoreB={scoresB.battery} laptopAName={laptopA.shortName} laptopBName={laptopB.shortName} />
+          <ScoreBar label="اتصالات" scoreA={scoresA.connectivity} scoreB={scoresB.connectivity} laptopAName={laptopA.shortName} laptopBName={laptopB.shortName} />
+          <ScoreBar label="قابلیت حمل" scoreA={scoresA.portability} scoreB={scoresB.portability} laptopAName={laptopA.shortName} laptopBName={laptopB.shortName} />
+          <ScoreBar label="امتیاز کلی" scoreA={scoresA.overall} scoreB={scoresB.overall} laptopAName={laptopA.shortName} laptopBName={laptopB.shortName} />
         </div>
 
         {/* Value for Money */}
@@ -251,6 +299,18 @@ export default function ComparePage({ products, ids, onClose, onAddToCart }: Com
                     <span>عملکرد گرافیکی بهتر</span>
                   </li>
                 )}
+                {scoresA.display > scoresB.display && (
+                  <li className="flex items-start gap-2 text-sm text-[#4b5563]">
+                    <span className="text-green-600">✓</span>
+                    <span>نمایشگر بهتر</span>
+                  </li>
+                )}
+                {scoresA.battery > scoresB.battery && (
+                  <li className="flex items-start gap-2 text-sm text-[#4b5563]">
+                    <span className="text-green-600">✓</span>
+                    <span>عمر باتری بیشتر</span>
+                  </li>
+                )}
                 {scoresA.portability > scoresB.portability && (
                   <li className="flex items-start gap-2 text-sm text-[#4b5563]">
                     <span className="text-green-600">✓</span>
@@ -275,6 +335,18 @@ export default function ComparePage({ products, ids, onClose, onAddToCart }: Com
                     <span>عملکرد گرافیکی بهتر</span>
                   </li>
                 )}
+                {scoresB.display > scoresA.display && (
+                  <li className="flex items-start gap-2 text-sm text-[#4b5563]">
+                    <span className="text-green-600">✓</span>
+                    <span>نمایشگر بهتر</span>
+                  </li>
+                )}
+                {scoresB.battery > scoresA.battery && (
+                  <li className="flex items-start gap-2 text-sm text-[#4b5563]">
+                    <span className="text-green-600">✓</span>
+                    <span>عمر باتری بیشتر</span>
+                  </li>
+                )}
                 {scoresB.portability > scoresA.portability && (
                   <li className="flex items-start gap-2 text-sm text-[#4b5563]">
                     <span className="text-green-600">✓</span>
@@ -292,255 +364,115 @@ export default function ComparePage({ products, ids, onClose, onAddToCart }: Com
           <p className="mb-6 text-sm text-[#6b7280]">جدول مقایسه نتایج تست و مشخصات فنی</p>
 
           {/* Case Table */}
-          <div className="mb-8">
-            <h3 className="mb-4 text-xl font-bold text-[#1a1a1a]">بدنه</h3>
-            <div className="overflow-x-auto">
-              <table className="w-full">
-                <thead>
-                  <tr className="border-b-2 border-[#e5e7eb] bg-[#f9fafb]">
-                    <th className="p-3 text-right text-sm font-bold text-[#1a1a1a]">مشخصه</th>
-                    <th className="p-3 text-center text-sm font-bold text-[#1a1a1a]">{laptopA.shortName}</th>
-                    <th className="p-3 text-center text-sm font-bold text-[#1a1a1a]">{laptopB.shortName}</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr className="border-b border-[#f3f4f6]">
-                    <td className="p-3 text-sm font-medium text-[#1a1a1a]">وزن</td>
-                    <td className="p-3 text-center text-sm text-[#4b5563]">{extractSpec(laptopA, "وزن و ابعاد", "وزن")}</td>
-                    <td className="p-3 text-center text-sm text-[#4b5563]">{extractSpec(laptopB, "وزن و ابعاد", "وزن")}</td>
-                  </tr>
-                  <tr className="border-b border-[#f3f4f6]">
-                    <td className="p-3 text-sm font-medium text-[#1a1a1a]">طول</td>
-                    <td className="p-3 text-center text-sm text-[#4b5563]">{extractSpec(laptopA, "وزن و ابعاد", "طول")}</td>
-                    <td className="p-3 text-center text-sm text-[#4b5563]">{extractSpec(laptopB, "وزن و ابعاد", "طول")}</td>
-                  </tr>
-                  <tr className="border-b border-[#f3f4f6]">
-                    <td className="p-3 text-sm font-medium text-[#1a1a1a]">عرض</td>
-                    <td className="p-3 text-center text-sm text-[#4b5563]">{extractSpec(laptopA, "وزن و ابعاد", "عرض")}</td>
-                    <td className="p-3 text-center text-sm text-[#4b5563]">{extractSpec(laptopB, "وزن و ابعاد", "عرض")}</td>
-                  </tr>
-                  <tr className="border-b border-[#f3f4f6]">
-                    <td className="p-3 text-sm font-medium text-[#1a1a1a]">ضخامت</td>
-                    <td className="p-3 text-center text-sm text-[#4b5563]">{extractSpec(laptopA, "وزن و ابعاد", "ضخامت")}</td>
-                    <td className="p-3 text-center text-sm text-[#4b5563]">{extractSpec(laptopB, "وزن و ابعاد", "ضخامت")}</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
+          <ComparisonTable
+            title="بدنه"
+            rows={[
+              { label: "وزن", valueA: extractSpec(laptopA, "وزن و ابعاد", "وزن"), valueB: extractSpec(laptopB, "وزن و ابعاد", "وزن") },
+              { label: "طول", valueA: extractSpec(laptopA, "وزن و ابعاد", "طول"), valueB: extractSpec(laptopB, "وزن و ابعاد", "طول") },
+              { label: "عرض", valueA: extractSpec(laptopA, "وزن و ابعاد", "عرض"), valueB: extractSpec(laptopB, "وزن و ابعاد", "عرض") },
+              { label: "ضخامت", valueA: extractSpec(laptopA, "وزن و ابعاد", "ضخامت"), valueB: extractSpec(laptopB, "وزن و ابعاد", "ضخامت") },
+            ]}
+          />
 
           {/* Display Table */}
-          <div className="mb-8">
-            <h3 className="mb-4 text-xl font-bold text-[#1a1a1a]">نمایشگر</h3>
-            <div className="overflow-x-auto">
-              <table className="w-full">
-                <thead>
-                  <tr className="border-b-2 border-[#e5e7eb] bg-[#f9fafb]">
-                    <th className="p-3 text-right text-sm font-bold text-[#1a1a1a]">مشخصه</th>
-                    <th className="p-3 text-center text-sm font-bold text-[#1a1a1a]">{laptopA.shortName}</th>
-                    <th className="p-3 text-center text-sm font-bold text-[#1a1a1a]">{laptopB.shortName}</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr className="border-b border-[#f3f4f6]">
-                    <td className="p-3 text-sm font-medium text-[#1a1a1a]">اندازه صفحه نمایش</td>
-                    <td className="p-3 text-center text-sm text-[#4b5563]">{extractSpec(laptopA, "صفحه نمایش", "اندازه صفحه نمایش")}</td>
-                    <td className="p-3 text-center text-sm text-[#4b5563]">{extractSpec(laptopB, "صفحه نمایش", "اندازه صفحه نمایش")}</td>
-                  </tr>
-                  <tr className="border-b border-[#f3f4f6]">
-                    <td className="p-3 text-sm font-medium text-[#1a1a1a]">رزولوشن</td>
-                    <td className="p-3 text-center text-sm text-[#4b5563]">{extractSpec(laptopA, "صفحه نمایش", "رزولوشن")}</td>
-                    <td className="p-3 text-center text-sm text-[#4b5563]">{extractSpec(laptopB, "صفحه نمایش", "رزولوشن")}</td>
-                  </tr>
-                  <tr className="border-b border-[#f3f4f6]">
-                    <td className="p-3 text-sm font-medium text-[#1a1a1a]">نرخ نوسازی</td>
-                    <td className="p-3 text-center text-sm text-[#4b5563]">{extractSpec(laptopA, "صفحه نمایش", "نرخ نوسازی (Refresh Rate)")}</td>
-                    <td className="p-3 text-center text-sm text-[#4b5563]">{extractSpec(laptopB, "صفحه نمایش", "نرخ نوسازی (Refresh Rate)")}</td>
-                  </tr>
-                  <tr className="border-b border-[#f3f4f6]">
-                    <td className="p-3 text-sm font-medium text-[#1a1a1a]">نوع پنل</td>
-                    <td className="p-3 text-center text-sm text-[#4b5563]">{extractSpec(laptopA, "صفحه نمایش", "فناوری و نوع صفحه")}</td>
-                    <td className="p-3 text-center text-sm text-[#4b5563]">{extractSpec(laptopB, "صفحه نمایش", "فناوری و نوع صفحه")}</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
+          <ComparisonTable
+            title="نمایشگر"
+            rows={[
+              { label: "اندازه صفحه نمایش", valueA: extractSpec(laptopA, "صفحه نمایش", "اندازه صفحه نمایش"), valueB: extractSpec(laptopB, "صفحه نمایش", "اندازه صفحه نمایش") },
+              { label: "رزولوشن", valueA: extractSpec(laptopA, "صفحه نمایش", "رزولوشن"), valueB: extractSpec(laptopB, "صفحه نمایش", "رزولوشن") },
+              { label: "نرخ نوسازی", valueA: extractSpec(laptopA, "صفحه نمایش", "نرخ نوسازی (Refresh Rate)"), valueB: extractSpec(laptopB, "صفحه نمایش", "نرخ نوسازی (Refresh Rate)") },
+              { label: "نوع پنل", valueA: extractSpec(laptopA, "صفحه نمایش", "فناوری و نوع صفحه"), valueB: extractSpec(laptopB, "صفحه نمایش", "فناوری و نوع صفحه") },
+              { label: "زاویه دید", valueA: extractSpec(laptopA, "صفحه نمایش", "زاویه دید"), valueB: extractSpec(laptopB, "صفحه نمایش", "زاویه دید") },
+              { label: "Color Gamut", valueA: extractSpec(laptopA, "صفحه نمایش", "Color Gamut"), valueB: extractSpec(laptopB, "صفحه نمایش", "Color Gamut") },
+            ]}
+          />
 
           {/* CPU Table */}
-          <div className="mb-8">
-            <h3 className="mb-4 text-xl font-bold text-[#1a1a1a]">پردازنده</h3>
-            <div className="overflow-x-auto">
-              <table className="w-full">
-                <thead>
-                  <tr className="border-b-2 border-[#e5e7eb] bg-[#f9fafb]">
-                    <th className="p-3 text-right text-sm font-bold text-[#1a1a1a]">مشخصه</th>
-                    <th className="p-3 text-center text-sm font-bold text-[#1a1a1a]">{laptopA.shortName}</th>
-                    <th className="p-3 text-center text-sm font-bold text-[#1a1a1a]">{laptopB.shortName}</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr className="border-b border-[#f3f4f6]">
-                    <td className="p-3 text-sm font-medium text-[#1a1a1a]">مدل پردازنده</td>
-                    <td className="p-3 text-center text-sm text-[#4b5563]">{extractSpec(laptopA, "پردازنده", "مدل پردازنده")}</td>
-                    <td className="p-3 text-center text-sm text-[#4b5563]">{extractSpec(laptopB, "پردازنده", "مدل پردازنده")}</td>
-                  </tr>
-                  <tr className="border-b border-[#f3f4f6]">
-                    <td className="p-3 text-sm font-medium text-[#1a1a1a]">تعداد هسته و رشته</td>
-                    <td className="p-3 text-center text-sm text-[#4b5563]">{extractSpec(laptopA, "پردازنده", "تعداد هسته و رشته")}</td>
-                    <td className="p-3 text-center text-sm text-[#4b5563]">{extractSpec(laptopB, "پردازنده", "تعداد هسته و رشته")}</td>
-                  </tr>
-                  <tr className="border-b border-[#f3f4f6]">
-                    <td className="p-3 text-sm font-medium text-[#1a1a1a]">فرکانس پایه و حداکثر</td>
-                    <td className="p-3 text-center text-sm text-[#4b5563]">{extractSpec(laptopA, "پردازنده", "فرکانس پایه و حداکثر")}</td>
-                    <td className="p-3 text-center text-sm text-[#4b5563]">{extractSpec(laptopB, "پردازنده", "فرکانس پایه و حداکثر")}</td>
-                  </tr>
-                  <tr className="border-b border-[#f3f4f6]">
-                    <td className="p-3 text-sm font-medium text-[#1a1a1a]">بنچمارک تک هسته‌ای</td>
-                    <td className="p-3 text-center text-sm text-[#4b5563]">{extractSpec(laptopA, "پردازنده", "بنچمارک تک هسته‌ای")}</td>
-                    <td className="p-3 text-center text-sm text-[#4b5563]">{extractSpec(laptopB, "پردازنده", "بنچمارک تک هسته‌ای")}</td>
-                  </tr>
-                  <tr className="border-b border-[#f3f4f6]">
-                    <td className="p-3 text-sm font-medium text-[#1a1a1a]">بنچمارک چند هسته‌ای</td>
-                    <td className="p-3 text-center text-sm text-[#4b5563]">{extractSpec(laptopA, "پردازنده", "بنچمارک چند هسته‌ای")}</td>
-                    <td className="p-3 text-center text-sm text-[#4b5563]">{extractSpec(laptopB, "پردازنده", "بنچمارک چند هسته‌ای")}</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
+          <ComparisonTable
+            title="پردازنده"
+            rows={[
+              { label: "مدل پردازنده", valueA: extractSpec(laptopA, "پردازنده", "مدل پردازنده"), valueB: extractSpec(laptopB, "پردازنده", "مدل پردازنده") },
+              { label: "تعداد هسته و رشته", valueA: extractSpec(laptopA, "پردازنده", "تعداد هسته و رشته"), valueB: extractSpec(laptopB, "پردازنده", "تعداد هسته و رشته") },
+              { label: "فرکانس پایه و حداکثر", valueA: extractSpec(laptopA, "پردازنده", "فرکانس پایه و حداکثر"), valueB: extractSpec(laptopB, "پردازنده", "فرکانس پایه و حداکثر") },
+              { label: "بنچمارک تک هسته‌ای", valueA: extractSpec(laptopA, "پردازنده", "بنچمارک تک هسته‌ای"), valueB: extractSpec(laptopB, "پردازنده", "بنچمارک تک هسته‌ای") },
+              { label: "بنچمارک چند هسته‌ای", valueA: extractSpec(laptopA, "پردازنده", "بنچمارک چند هسته‌ای"), valueB: extractSpec(laptopB, "پردازنده", "بنچمارک چند هسته‌ای") },
+              { label: "واحد پردازش عصبی (NPU)", valueA: extractSpec(laptopA, "پردازنده", "واحد پردازش عصبی (NPU)"), valueB: extractSpec(laptopB, "پردازنده", "واحد پردازش عصبی (NPU)") },
+            ]}
+          />
 
           {/* GPU Table */}
-          <div className="mb-8">
-            <h3 className="mb-4 text-xl font-bold text-[#1a1a1a]">کارت گرافیک</h3>
-            <div className="overflow-x-auto">
-              <table className="w-full">
-                <thead>
-                  <tr className="border-b-2 border-[#e5e7eb] bg-[#f9fafb]">
-                    <th className="p-3 text-right text-sm font-bold text-[#1a1a1a]">مشخصه</th>
-                    <th className="p-3 text-center text-sm font-bold text-[#1a1a1a]">{laptopA.shortName}</th>
-                    <th className="p-3 text-center text-sm font-bold text-[#1a1a1a]">{laptopB.shortName}</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr className="border-b border-[#f3f4f6]">
-                    <td className="p-3 text-sm font-medium text-[#1a1a1a]">مدل گرافیک مجزا</td>
-                    <td className="p-3 text-center text-sm text-[#4b5563]">{extractSpec(laptopA, "گرافیک", "مدل گرافیک مجزا")}</td>
-                    <td className="p-3 text-center text-sm text-[#4b5563]">{extractSpec(laptopB, "گرافیک", "مدل گرافیک مجزا")}</td>
-                  </tr>
-                  <tr className="border-b border-[#f3f4f6]">
-                    <td className="p-3 text-sm font-medium text-[#1a1a1a]">حافظه گرافیک مجزا</td>
-                    <td className="p-3 text-center text-sm text-[#4b5563]">{extractSpec(laptopA, "گرافیک", "حافظه گرافیک مجزا")}</td>
-                    <td className="p-3 text-center text-sm text-[#4b5563]">{extractSpec(laptopB, "گرافیک", "حافظه گرافیک مجزا")}</td>
-                  </tr>
-                  <tr className="border-b border-[#f3f4f6]">
-                    <td className="p-3 text-sm font-medium text-[#1a1a1a]">نوع حافظه گرافیک</td>
-                    <td className="p-3 text-center text-sm text-[#4b5563]">{extractSpec(laptopA, "گرافیک", "نوع حافظه گرافیک")}</td>
-                    <td className="p-3 text-center text-sm text-[#4b5563]">{extractSpec(laptopB, "گرافیک", "نوع حافظه گرافیک")}</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
+          <ComparisonTable
+            title="کارت گرافیک"
+            rows={[
+              { label: "مدل گرافیک مجزا", valueA: extractSpec(laptopA, "گرافیک", "مدل گرافیک مجزا"), valueB: extractSpec(laptopB, "گرافیک", "مدل گرافیک مجزا") },
+              { label: "حافظه گرافیک مجزا", valueA: extractSpec(laptopA, "گرافیک", "حافظه گرافیک مجزا"), valueB: extractSpec(laptopB, "گرافیک", "حافظه گرافیک مجزا") },
+              { label: "نوع حافظه گرافیک", valueA: extractSpec(laptopA, "گرافیک", "نوع حافظه گرافیک"), valueB: extractSpec(laptopB, "گرافیک", "نوع حافظه گرافیک") },
+              { label: "توان مصرفی", valueA: extractSpec(laptopA, "گرافیک", "توان مصرفی"), valueB: extractSpec(laptopB, "گرافیک", "توان مصرفی") },
+            ]}
+          />
 
           {/* RAM Table */}
-          <div className="mb-8">
-            <h3 className="mb-4 text-xl font-bold text-[#1a1a1a]">حافظه رم</h3>
-            <div className="overflow-x-auto">
-              <table className="w-full">
-                <thead>
-                  <tr className="border-b-2 border-[#e5e7eb] bg-[#f9fafb]">
-                    <th className="p-3 text-right text-sm font-bold text-[#1a1a1a]">مشخصه</th>
-                    <th className="p-3 text-center text-sm font-bold text-[#1a1a1a]">{laptopA.shortName}</th>
-                    <th className="p-3 text-center text-sm font-bold text-[#1a1a1a]">{laptopB.shortName}</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr className="border-b border-[#f3f4f6]">
-                    <td className="p-3 text-sm font-medium text-[#1a1a1a]">حافظه داخلی رم</td>
-                    <td className="p-3 text-center text-sm text-[#4b5563]">{extractSpec(laptopA, "حافظه رم", "حافظه داخلی رم")}</td>
-                    <td className="p-3 text-center text-sm text-[#4b5563]">{extractSpec(laptopB, "حافظه رم", "حافظه داخلی رم")}</td>
-                  </tr>
-                  <tr className="border-b border-[#f3f4f6]">
-                    <td className="p-3 text-sm font-medium text-[#1a1a1a]">نوع حافظه</td>
-                    <td className="p-3 text-center text-sm text-[#4b5563]">{extractSpec(laptopA, "حافظه رم", "نوع حافظه")}</td>
-                    <td className="p-3 text-center text-sm text-[#4b5563]">{extractSpec(laptopB, "حافظه رم", "نوع حافظه")}</td>
-                  </tr>
-                  <tr className="border-b border-[#f3f4f6]">
-                    <td className="p-3 text-sm font-medium text-[#1a1a1a]">CAS latency</td>
-                    <td className="p-3 text-center text-sm text-[#4b5563]">{extractSpec(laptopA, "حافظه رم", "CAS latency")}</td>
-                    <td className="p-3 text-center text-sm text-[#4b5563]">{extractSpec(laptopB, "حافظه رم", "CAS latency")}</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
+          <ComparisonTable
+            title="حافظه رم"
+            rows={[
+              { label: "حافظه داخلی رم", valueA: extractSpec(laptopA, "حافظه رم", "حافظه داخلی رم"), valueB: extractSpec(laptopB, "حافظه رم", "حافظه داخلی رم") },
+              { label: "نوع حافظه", valueA: extractSpec(laptopA, "حافظه رم", "نوع حافظه"), valueB: extractSpec(laptopB, "حافظه رم", "نوع حافظه") },
+              { label: "CAS latency", valueA: extractSpec(laptopA, "حافظه رم", "CAS latency"), valueB: extractSpec(laptopB, "حافظه رم", "CAS latency") },
+              { label: "رابط/اینترفیس", valueA: extractSpec(laptopA, "حافظه رم", "رابط/اینترفیس"), valueB: extractSpec(laptopB, "حافظه رم", "رابط/اینترفیس") },
+            ]}
+          />
 
           {/* Storage Table */}
-          <div className="mb-8">
-            <h3 className="mb-4 text-xl font-bold text-[#1a1a1a]">ذخیره‌سازی</h3>
-            <div className="overflow-x-auto">
-              <table className="w-full">
-                <thead>
-                  <tr className="border-b-2 border-[#e5e7eb] bg-[#f9fafb]">
-                    <th className="p-3 text-right text-sm font-bold text-[#1a1a1a]">مشخصه</th>
-                    <th className="p-3 text-center text-sm font-bold text-[#1a1a1a]">{laptopA.shortName}</th>
-                    <th className="p-3 text-center text-sm font-bold text-[#1a1a1a]">{laptopB.shortName}</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr className="border-b border-[#f3f4f6]">
-                    <td className="p-3 text-sm font-medium text-[#1a1a1a]">ظرفیت کلی</td>
-                    <td className="p-3 text-center text-sm text-[#4b5563]">{extractSpec(laptopA, "ذخیره‌سازی", "ظرفیت کلی")}</td>
-                    <td className="p-3 text-center text-sm text-[#4b5563]">{extractSpec(laptopB, "ذخیره‌سازی", "ظرفیت کلی")}</td>
-                  </tr>
-                  <tr className="border-b border-[#f3f4f6]">
-                    <td className="p-3 text-sm font-medium text-[#1a1a1a]">رابط SSD</td>
-                    <td className="p-3 text-center text-sm text-[#4b5563]">{extractSpec(laptopA, "ذخیره‌سازی", "رابط SSD")}</td>
-                    <td className="p-3 text-center text-sm text-[#4b5563]">{extractSpec(laptopB, "ذخیره‌سازی", "رابط SSD")}</td>
-                  </tr>
-                  <tr className="border-b border-[#f3f4f6]">
-                    <td className="p-3 text-sm font-medium text-[#1a1a1a]">نسخه NVMe</td>
-                    <td className="p-3 text-center text-sm text-[#4b5563]">{extractSpec(laptopA, "ذخیره‌سازی", "نسخه NVMe")}</td>
-                    <td className="p-3 text-center text-sm text-[#4b5563]">{extractSpec(laptopB, "ذخیره‌سازی", "نسخه NVMe")}</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
+          <ComparisonTable
+            title="ذخیره‌سازی"
+            rows={[
+              { label: "ظرفیت کلی", valueA: extractSpec(laptopA, "ذخیره‌سازی", "ظرفیت کلی"), valueB: extractSpec(laptopB, "ذخیره‌سازی", "ظرفیت کلی") },
+              { label: "رابط SSD", valueA: extractSpec(laptopA, "ذخیره‌سازی", "رابط SSD"), valueB: extractSpec(laptopB, "ذخیره‌سازی", "رابط SSD") },
+              { label: "نسخه NVMe", valueA: extractSpec(laptopA, "ذخیره‌سازی", "نسخه NVMe"), valueB: extractSpec(laptopB, "ذخیره‌سازی", "نسخه NVMe") },
+            ]}
+          />
 
           {/* Battery Table */}
-          <div className="mb-8">
-            <h3 className="mb-4 text-xl font-bold text-[#1a1a1a]">باتری و شارژ</h3>
-            <div className="overflow-x-auto">
-              <table className="w-full">
-                <thead>
-                  <tr className="border-b-2 border-[#e5e7eb] bg-[#f9fafb]">
-                    <th className="p-3 text-right text-sm font-bold text-[#1a1a1a]">مشخصه</th>
-                    <th className="p-3 text-center text-sm font-bold text-[#1a1a1a]">{laptopA.shortName}</th>
-                    <th className="p-3 text-center text-sm font-bold text-[#1a1a1a]">{laptopB.shortName}</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr className="border-b border-[#f3f4f6]">
-                    <td className="p-3 text-sm font-medium text-[#1a1a1a]">ظرفیت باتری</td>
-                    <td className="p-3 text-center text-sm text-[#4b5563]">{extractSpec(laptopA, "باتری و شارژ", "ظرفیت باتری")}</td>
-                    <td className="p-3 text-center text-sm text-[#4b5563]">{extractSpec(laptopB, "باتری و شارژ", "ظرفیت باتری")}</td>
-                  </tr>
-                  <tr className="border-b border-[#f3f4f6]">
-                    <td className="p-3 text-sm font-medium text-[#1a1a1a]">عمر شارژ</td>
-                    <td className="p-3 text-center text-sm text-[#4b5563]">{extractSpec(laptopA, "باتری و شارژ", "عمر شارژ")}</td>
-                    <td className="p-3 text-center text-sm text-[#4b5563]">{extractSpec(laptopB, "باتری و شارژ", "عمر شارژ")}</td>
-                  </tr>
-                  <tr className="border-b border-[#f3f4f6]">
-                    <td className="p-3 text-sm font-medium text-[#1a1a1a]">توان آداپتور</td>
-                    <td className="p-3 text-center text-sm text-[#4b5563]">{extractSpec(laptopA, "باتری و شارژ", "توان آداپتور")}</td>
-                    <td className="p-3 text-center text-sm text-[#4b5563]">{extractSpec(laptopB, "باتری و شارژ", "توان آداپتور")}</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
+          <ComparisonTable
+            title="باتری و شارژ"
+            rows={[
+              { label: "ظرفیت باتری", valueA: extractSpec(laptopA, "باتری و شارژ", "ظرفیت باتری"), valueB: extractSpec(laptopB, "باتری و شارژ", "ظرفیت باتری") },
+              { label: "عمر شارژ", valueA: extractSpec(laptopA, "باتری و شارژ", "عمر شارژ"), valueB: extractSpec(laptopB, "باتری و شارژ", "عمر شارژ") },
+              { label: "توان آداپتور", valueA: extractSpec(laptopA, "باتری و شارژ", "توان آداپتور"), valueB: extractSpec(laptopB, "باتری و شارژ", "توان آداپتور") },
+            ]}
+          />
+
+          {/* Sound Table */}
+          <ComparisonTable
+            title="صدا"
+            rows={[
+              { label: "سیستم صوتی", valueA: extractSpec(laptopA, "صدا", "سیستم صوتی"), valueB: extractSpec(laptopB, "صدا", "سیستم صوتی") },
+              { label: "تعداد بلندگوها", valueA: extractSpec(laptopA, "صدا", "تعداد بلندگوهای داخلی"), valueB: extractSpec(laptopB, "صدا", "تعداد بلندگوهای داخلی") },
+              { label: "میکروفون", valueA: extractSpec(laptopA, "صدا", "میکروفون داخلی"), valueB: extractSpec(laptopB, "صدا", "میکروفون داخلی") },
+            ]}
+          />
+
+          {/* Connectivity Table */}
+          <ComparisonTable
+            title="اتصالات"
+            rows={[
+              { label: "Wi-Fi", valueA: extractSpec(laptopA, "اتصالات و پورت‌ها", "بالاترین استاندارد Wi-Fi"), valueB: extractSpec(laptopB, "اتصالات و پورت‌ها", "بالاترین استاندارد Wi-Fi") },
+              { label: "Bluetooth", valueA: extractSpec(laptopA, "اتصالات و پورت‌ها", "بلوتوث"), valueB: extractSpec(laptopB, "اتصالات و پورت‌ها", "بلوتوث") },
+              { label: "USB-C", valueA: extractSpec(laptopA, "اتصالات و پورت‌ها", "تعداد USB-C"), valueB: extractSpec(laptopB, "اتصالات و پورت‌ها", "تعداد USB-C") },
+              { label: "USB-A", valueA: extractSpec(laptopA, "اتصالات و پورت‌ها", "تعداد USB-A"), valueB: extractSpec(laptopB, "اتصالات و پورت‌ها", "تعداد USB-A") },
+              { label: "HDMI", valueA: extractSpec(laptopA, "اتصالات و پورت‌ها", "تعداد پورت HDMI"), valueB: extractSpec(laptopB, "اتصالات و پورت‌ها", "تعداد پورت HDMI") },
+            ]}
+          />
+
+          {/* Input Table */}
+          <ComparisonTable
+            title="ورودی / کیبورد / تاچ‌پد"
+            rows={[
+              { label: "کیبورد", valueA: extractSpec(laptopA, "کیبورد", "نوع کیبورد"), valueB: extractSpec(laptopB, "کیبورد", "نوع کیبورد") },
+              { label: "نور پس‌زمینه", valueA: extractSpec(laptopA, "کیبورد", "نور پس‌زمینه"), valueB: extractSpec(laptopB, "کیبورد", "نور پس‌زمینه") },
+              { label: "تاچ‌پد", valueA: extractSpec(laptopA, "کیبورد", "تاچ‌پد"), valueB: extractSpec(laptopB, "کیبورد", "تاچ‌پد") },
+            ]}
+          />
         </div>
 
         {/* Action Buttons */}
