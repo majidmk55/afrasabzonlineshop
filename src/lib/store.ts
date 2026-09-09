@@ -26,6 +26,7 @@ export interface OrderRecord {
 
 export interface Settings {
   autoOff: boolean; // خاموشی خودکار کالاهای ناموجود از سایت
+  enableTax: boolean; // فعال/غیرفعال کردن مالیات بر ارزش افزوده
 }
 
 /* ---------- storage keys ---------- */
@@ -97,11 +98,11 @@ export function saveProducts(products: Laptop[]) {
 export function loadSettings(): Settings {
   try {
     const raw = localStorage.getItem(SKEY);
-    if (raw) return { autoOff: true, ...JSON.parse(raw) };
+    if (raw) return { autoOff: true, enableTax: true, ...JSON.parse(raw) };
   } catch {
     /* ignore */
   }
-  return { autoOff: true };
+  return { autoOff: true, enableTax: true };
 }
 
 export function saveSettings(s: Settings) {

@@ -35,12 +35,13 @@ function ZarinMark({ className = "" }: { className?: string }) {
 interface CheckoutProps {
   lines: CartLine[];
   promo: string | null;
+  enableTax: boolean;
   onApplyPromo: (code: string) => string | null;
   onClose: () => void;
   onComplete: (order: OrderRecord) => void;
 }
 
-export default function Checkout({ lines, promo, onApplyPromo, onClose, onComplete }: CheckoutProps) {
+export default function Checkout({ lines, promo, enableTax, onApplyPromo, onClose, onComplete }: CheckoutProps) {
   const [step, setStep] = useState(0);
   const [method, setMethod] = useState<Method>("zarinpal");
   const [address, setAddress] = useState({ name: "", phone: "", city: "", addr: "", post: "" });
@@ -60,7 +61,7 @@ export default function Checkout({ lines, promo, onApplyPromo, onClose, onComple
   useLockBody(true);
   useEscape(true, () => !processing && !gateProcessing && onClose());
 
-  const t = cartTotals(lines, promo);
+  const t = cartTotals(lines, promo, enableTax);
 
   const validateShip = () => {
     const e: Record<string, string> = {};

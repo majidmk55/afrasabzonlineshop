@@ -9,6 +9,7 @@ import { CompareTray } from "./components/Compare";
 import ComparePage from "./components/ComparePage";
 import Guide from "./components/Guide";
 import Footer from "./components/Footer";
+import LiveChat from "./components/LiveChat";
 import { ErrorBoundary } from "./components/ErrorBoundary";
 import { PROMOS, type CartLine, type Laptop } from "./data/laptops";
 import { loadOrders, loadProducts, loadSettings, saveOrders, saveProducts, saveSettings, visibleProducts, type OrderRecord, type Settings } from "./lib/store";
@@ -264,6 +265,7 @@ export default function App() {
         <CartDrawer
           lines={lines}
           promo={promo}
+          enableTax={settings.enableTax}
           onApplyPromo={applyPromo}
           onClose={() => setCartOpen(false)}
           onSetQty={setQty}
@@ -281,6 +283,7 @@ export default function App() {
         <Checkout
           lines={lines}
           promo={promo}
+          enableTax={settings.enableTax}
           onApplyPromo={applyPromo}
           onClose={() => setCheckoutOpen(false)}
           onComplete={(order) => {
@@ -315,6 +318,8 @@ export default function App() {
           }}
         />
       )}
+
+      <LiveChat />
 
       {toast && (
         <div key={toast.id} className="rise-in fixed bottom-5 right-5 z-[80] flex items-center gap-2.5 rounded-xl border border-line bg-white px-4 py-3 shadow-xl" role="status">

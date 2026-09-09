@@ -800,6 +800,29 @@ function SettingsTab({ settings, onSettings }: { settings: Settings; onSettings:
         </button>
       </div>
 
+      <div className="flex items-start justify-between gap-4 border border-line bg-white p-5">
+        <div>
+          <p className="flex items-center gap-2 font-bold">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-sea">
+              <rect x="3" y="3" width="18" height="18" rx="2" />
+              <path d="M9 9h6v6H9z" />
+            </svg>
+            مالیات بر ارزش افزوده (۱۰٪)
+          </p>
+          <p className="mt-1.5 text-sm leading-relaxed text-mist">
+            وقتی روشن باشد، ۱۰٪ مالیات بر ارزش افزوده به مبلغ نهایی سفارش‌ها اضافه می‌شود. در صورت خاموش بودن، قیمت‌ها بدون مالیات محاسبه می‌شوند.
+          </p>
+        </div>
+        <button
+          role="switch"
+          aria-checked={settings.enableTax}
+          onClick={() => onSettings({ ...settings, enableTax: !settings.enableTax })}
+          className={`relative mt-1 h-7 w-14 shrink-0 rounded-full transition-colors ${settings.enableTax ? "bg-moss" : "bg-mist/40"}`}
+        >
+          <span className={`absolute top-1 h-5 w-5 rounded-full bg-white shadow transition-all ${settings.enableTax ? "right-8" : "right-1"}`} />
+        </button>
+      </div>
+
       <div className="border border-line bg-white p-5 text-sm leading-relaxed text-mist">
         <p className="font-bold text-ink">نکته درباره سرعت</p>
         <p className="mt-1.5">

@@ -6,6 +6,7 @@ import { IArrowR, IClose, ILock, IMinus, IPlus, ITrash, ITruck } from "./icons";
 interface CartDrawerProps {
   lines: CartLine[];
   promo: string | null;
+  enableTax: boolean;
   onApplyPromo: (code: string) => string | null;
   onClose: () => void;
   onSetQty: (id: string, qty: number) => void;
@@ -14,13 +15,13 @@ interface CartDrawerProps {
   onCheckout: () => void;
 }
 
-export default function CartDrawer({ lines, promo, onApplyPromo, onClose, onSetQty, onRemove, onToggleWarranty, onCheckout }: CartDrawerProps) {
+export default function CartDrawer({ lines, promo, enableTax, onApplyPromo, onClose, onSetQty, onRemove, onToggleWarranty, onCheckout }: CartDrawerProps) {
   const [code, setCode] = useState("");
   const [promoMsg, setPromoMsg] = useState<{ ok: boolean; text: string } | null>(null);
   useLockBody(true);
   useEscape(true, onClose);
 
-  const t = cartTotals(lines, promo);
+  const t = cartTotals(lines, promo, enableTax);
   const toFree = Math.max(0, FREE_SHIPPING_THRESHOLD - (t.subtotal - t.discount));
 
   const tryPromo = () => {

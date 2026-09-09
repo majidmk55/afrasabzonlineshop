@@ -2208,11 +2208,11 @@ export function cardBrand(num: string): string | null {
   return null;
 }
 
-export function cartTotals(lines: CartLine[], promoCode: string | null) {
+export function cartTotals(lines: CartLine[], promoCode: string | null, enableTax: boolean = true) {
   const subtotal = lines.reduce((a, l) => a + (l.laptop.price + (l.warranty ? WARRANTY_PRICE : 0)) * l.qty, 0);
   const promo = promoCode ? PROMOS[promoCode] : undefined;
   const discount = promo?.pct ? Math.round((subtotal * promo.pct) / 100) : 0;
   const shipping = lines.length === 0 ? 0 : promo?.freeShip || subtotal - discount >= FREE_SHIPPING_THRESHOLD ? 0 : SHIPPING_FLAT;
-  const tax = Math.round((subtotal - discount) * TAX_RATE);
+  const tax = enableTax ? Math.round((subtotal - discount) * TAX_RATE) : 0;
   return { subtotal, discount, shipping, tax, total: subtotal - discount + shipping + tax, count: lines.reduce((a, l) => a + l.qty, 0) };
 }

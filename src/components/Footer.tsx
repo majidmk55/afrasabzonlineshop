@@ -109,7 +109,10 @@ export default function Footer({ count, onCategory, onBrand, onAdmin }: FooterPr
               <p className="mt-6 text-[11px] font-extrabold tracking-wide text-white">تماس با آزمایشگاه</p>
               <ul className="mt-3 space-y-2 text-xs text-skywash/70">
                 <li>تهران، خیابان ولیعصر، مرکز خرید پایتخت، پلاک ۱۲۸</li>
-                <li dir="ltr" className="font-mono text-start">021-9100-4820 · 7 روزه، ۹ تا ۲۱</li>
+                <li dir="ltr" className="font-mono text-start">تلفن: 021-9100-4820</li>
+                <li dir="ltr" className="font-mono text-start">موبایل پشتیبانی: 0912-123-4567</li>
+                <li dir="ltr" className="font-mono text-start">واتساپ: 0912-123-4567</li>
+                <li>۷ روز هفته، ساعت ۹ تا ۲۱</li>
                 <li dir="ltr" className="font-mono text-start">hello@corehaus.ir</li>
               </ul>
             </nav>
