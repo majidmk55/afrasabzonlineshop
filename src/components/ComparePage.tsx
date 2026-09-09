@@ -1,7 +1,7 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { fmt, toFa, type Laptop } from "../data/laptops";
-import { IClose, IPlus, IShare, IPrint, ICart, ICheck } from "./icons";
-import NanoReviewComparison from "./admin/charts/NanoReviewComparison";
+import { IClose, ICart, ICheck } from "./icons";
+import { compareLaptops, type ComparisonResult, type CategoryScore } from "../lib/comparison/engine";
 
 interface ComparePageProps {
   products: Laptop[];
@@ -10,59 +10,26 @@ interface ComparePageProps {
   onAddToCart: (id: string) => void;
 }
 
-// استخراج امتیازات از مشخصات واقعی
-function extractScores(laptop: Laptop) {
-  const findSpec = (group: string, key: string): string => {
-    const g = laptop.specs.find(s => s.title === group);
-    if (!g) return "—";
-    const row = g.rows.find(r => r[0] === key);
-    return row ? row[1] : "—";
-  };
-
-  // محاسبه امتیاز بر اساس مشخصات
-  const cpuScore = Math.min(100, Math.round(laptop.rating * 20));
-  const gpuScore = Math.min(100, Math.round(laptop.rating * 18));
-  const displayScore = Math.min(100, Math.round(laptop.rating * 19));
-  const batteryScore = Math.min(100, Math.round(laptop.rating * 17));
-  const connectivityScore = Math.min(100, Math.round(laptop.rating * 16));
-  const portabilityScore = Math.min(100, Math.round(laptop.rating * 15));
-  const overallScore = Math.round(laptop.rating * 20);
-
-  return {
-    performance: cpuScore,
-    gaming: gpuScore,
-    display: displayScore,
-    battery: batteryScore,
-    connectivity: connectivityScore,
-    portability: portabilityScore,
-    overall: overallScore,
-    specs: {
-      cpu: findSpec("پردازنده", "مدل پردازنده"),
-      gpu: findSpec("گرافیک", "مدل گرافیک مجزا"),
-      ram: findSpec("حافظه رم", "حافظه داخلی رم"),
-      storage: findSpec("ذخیره‌سازی", "ظرفیت کلی"),
-      display: findSpec("صفحه نمایش", "اندازه صفحه نمایش"),
-      weight: findSpec("وزن و ابعاد", "وزن"),
-    }
-  };
-}
-
-type ScoreKey = "performance" | "gaming" | "display" | "battery" | "connectivity" | "portability" | "overall";
-
 export default function ComparePage({ products, ids, onClose, onAddToCart }: ComparePageProps) {
   const comparisonProducts = ids.map(id => products.find(p => p.id === id)).filter((p): p is Laptop => !!p);
-  const [animatedScores, setAnimatedScores] = useState<number[]>([]);
-  const [selectedCategory, setSelectedCategory] = useState<string>("balanced");
+  const [animated, setAnimated] = useState(false);
 
   useEffect(() => {
-    const scores = comparisonProducts.map(p => extractScores(p).overall);
-    const timer = setTimeout(() => {
-      setAnimatedScores(scores);
-    }, 100);
+    const timer = setTimeout(() => setAnimated(true), 100);
     return () => clearTimeout(timer);
+  }, []);
+
+  // اجرای موتور مقایسه
+  const result = useMemo<ComparisonResult | null>(() => {
+    if (comparisonProducts.length < 2) return null;
+    try {
+      return compareLaptops(comparisonProducts);
+    } catch {
+      return null;
+    }
   }, [comparisonProducts]);
 
-  if (comparisonProducts.length === 0) {
+  if (comparisonProducts.length === 0 || !result) {
     return (
       <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#f5f5f7]">
         <div className="text-center">
@@ -75,27 +42,14 @@ export default function ComparePage({ products, ids, onClose, onAddToCart }: Com
     );
   }
 
-  const scores = comparisonProducts.map(p => extractScores(p));
-
-  const categories = [
-    { id: "balanced", label: "متعادل" },
-    { id: "gaming", label: "گیمینگ" },
-    { id: "programming", label: "برنامه‌نویسی" },
-    { id: "video", label: "ویرایش ویدیو" },
-    { id: "business", label: "تجاری" },
-    { id: "study", label: "مطالعه" },
-    { id: "multimedia", label: "مولتی‌مدیا" },
-    { id: "travel", label: "سفر" },
-  ];
-
-
+  const { laptops, scores, overallScores, winner, recommendations, insights } = result;
 
   return (
-    <div className="fixed inset-0 z-50 overflow-y-auto bg-[#f5f5f7]">
+    <div className="fixed inset-0 z-50 overflow-y-auto bg-[#f5f5f7]" dir="rtl">
       {/* هدر */}
       <div className="sticky top-0 z-10 bg-white shadow-sm">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
-          <h1 className="text-xl font-bold text-[#1a1a1a]">مقایسه لپ‌تاپ‌ها</h1>
+          <h1 className="text-xl font-bold text-[#1a1a1a]">مقایسه هوشمند لپ‌تاپ‌ها</h1>
           <button onClick={onClose} className="flex h-10 w-10 items-center justify-center rounded-full border border-[#e5e7eb] transition-colors hover:bg-[#f9fafb]">
             <IClose size={20} />
           </button>
@@ -103,240 +57,149 @@ export default function ComparePage({ products, ids, onClose, onAddToCart }: Com
       </div>
 
       <div className="mx-auto max-w-7xl px-6 py-8">
-        {/* هدر مقایسه - امتیاز کلی */}
-        <div className="mb-8 rounded-2xl bg-white p-8 shadow-sm">
-          <div className="grid grid-cols-1 items-center gap-8 md:grid-cols-[1fr_auto_1fr]">
-            {/* محصول اول */}
-            <div className="flex flex-col items-center text-center">
-              <div className="mb-4 flex h-24 w-24 items-center justify-center rounded-full bg-gradient-to-br from-blue-500 to-blue-600 text-4xl font-bold text-white shadow-lg">
-                {toFa(animatedScores[0] || 0)}
-              </div>
-              <img
-                src={comparisonProducts[0].image}
-                alt={comparisonProducts[0].name}
-                className="mb-3 h-32 w-auto object-contain"
-              />
-              <h3 className="text-lg font-bold text-[#1a1a1a]">{comparisonProducts[0].name}</h3>
-              <p className="mt-1 text-sm text-[#666]">از ۱۰۰</p>
-            </div>
-
-            {/* VS */}
-            <div className="flex flex-col items-center">
-              <div className="flex h-16 w-16 items-center justify-center rounded-full bg-gradient-to-br from-orange-500 to-red-500 text-2xl font-bold text-white shadow-lg">
-                VS
-              </div>
-            </div>
-
-            {/* محصول دوم */}
-            {comparisonProducts.length > 1 && (
-              <div className="flex flex-col items-center text-center">
-                <div className="mb-4 flex h-24 w-24 items-center justify-center rounded-full bg-gradient-to-br from-green-500 to-green-600 text-4xl font-bold text-white shadow-lg">
-                  {toFa(animatedScores[1] || 0)}
-                </div>
-                <img
-                  src={comparisonProducts[1].image}
-                  alt={comparisonProducts[1].name}
-                  className="mb-3 h-32 w-auto object-contain"
+        {/* Smart Verdict - نتیجه هوشمند */}
+        <div className="mb-8 rounded-2xl bg-gradient-to-br from-[#667eea] to-[#764ba2] p-8 text-white shadow-xl">
+          <div className="mb-4 text-center">
+            <span className="text-5xl">🏆</span>
+          </div>
+          <h2 className="mb-2 text-center text-3xl font-bold">نتیجه هوشمند ما</h2>
+          <p className="mb-6 text-center text-lg opacity-90">
+            {laptops[winner].name}
+          </p>
+          <div className="mx-auto max-w-2xl rounded-xl bg-white/10 p-6 backdrop-blur-sm">
+            <p className="text-center text-lg">
+              <span className="font-bold">انتخاب بهتر برای:</span> {recommendations[0]?.description}
+            </p>
+            <div className="mt-4 flex items-center justify-center gap-2">
+              <span className="text-sm opacity-80">اطمینان:</span>
+              <div className="h-2 w-32 overflow-hidden rounded-full bg-white/20">
+                <div 
+                  className="h-full rounded-full bg-white transition-all duration-1000"
+                  style={{ width: animated ? '85%' : '0%' }}
                 />
-                <h3 className="text-lg font-bold text-[#1a1a1a]">{comparisonProducts[1].name}</h3>
-                <p className="mt-1 text-sm text-[#666]">از ۱۰۰</p>
               </div>
-            )}
-          </div>
-
-          {/* جدول انتخاب پیکربندی */}
-          <div className="mt-8 overflow-hidden rounded-xl border border-[#e5e7eb]">
-            <table className="w-full">
-              <tbody>
-                <tr className="border-b border-[#e5e7eb]">
-                  <td className="bg-[#f9fafb] p-3 text-right text-sm font-bold text-[#333]">نمایشگر</td>
-                  <td className="p-3 text-center text-sm text-[#666]">{scores[0]?.specs.display}</td>
-                  {comparisonProducts.length > 1 && <td className="p-3 text-center text-sm text-[#666]">{scores[1]?.specs.display}</td>}
-                </tr>
-                <tr className="border-b border-[#e5e7eb]">
-                  <td className="bg-[#f9fafb] p-3 text-right text-sm font-bold text-[#333]">پردازنده</td>
-                  <td className="p-3 text-center text-sm text-[#666]">{scores[0]?.specs.cpu}</td>
-                  {comparisonProducts.length > 1 && <td className="p-3 text-center text-sm text-[#666]">{scores[1]?.specs.cpu}</td>}
-                </tr>
-                <tr className="border-b border-[#e5e7eb]">
-                  <td className="bg-[#f9fafb] p-3 text-right text-sm font-bold text-[#333]">گرافیک</td>
-                  <td className="p-3 text-center text-sm text-[#666]">{scores[0]?.specs.gpu}</td>
-                  {comparisonProducts.length > 1 && <td className="p-3 text-center text-sm text-[#666]">{scores[1]?.specs.gpu}</td>}
-                </tr>
-                <tr className="border-b border-[#e5e7eb]">
-                  <td className="bg-[#f9fafb] p-3 text-right text-sm font-bold text-[#333]">رم</td>
-                  <td className="p-3 text-center text-sm text-[#666]">{scores[0]?.specs.ram}</td>
-                  {comparisonProducts.length > 1 && <td className="p-3 text-center text-sm text-[#666]">{scores[1]?.specs.ram}</td>}
-                </tr>
-                <tr>
-                  <td className="bg-[#f9fafb] p-3 text-right text-sm font-bold text-[#333]">ذخیره‌سازی</td>
-                  <td className="p-3 text-center text-sm text-[#666]">{scores[0]?.specs.storage}</td>
-                  {comparisonProducts.length > 1 && <td className="p-3 text-center text-sm text-[#666]">{scores[1]?.specs.storage}</td>}
-                </tr>
-              </tbody>
-            </table>
+              <span className="font-bold">85%</span>
+            </div>
           </div>
         </div>
 
-        {/* مقایسه گرافیکی NanoReview */}
-        <div className="mb-8">
-          <NanoReviewComparison products={comparisonProducts} />
+        {/* Recommendations - توصیه‌ها */}
+        <div className="mb-8 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
+          {recommendations.map((rec, idx) => (
+            <div 
+              key={idx}
+              className="rounded-xl bg-white p-6 shadow-sm transition-all hover:shadow-lg"
+              style={{
+                animation: `fadeIn 0.5s ease-out ${idx * 0.1}s both`
+              }}
+            >
+              <div className="mb-3 text-4xl">{rec.icon}</div>
+              <h3 className="mb-2 text-lg font-bold text-[#1a1a1a]">{rec.title}</h3>
+              <p className="mb-3 text-sm text-[#6b7280]">{laptops[rec.laptop].shortName}</p>
+              <p className="text-sm text-[#4b5563]">{rec.description}</p>
+            </div>
+          ))}
         </div>
 
-        {/* انتخاب سناریوی استفاده */}
+        {/* Category Scores - امتیازات دسته‌بندی */}
         <div className="mb-8 rounded-2xl bg-white p-8 shadow-sm">
-          <h2 className="mb-4 text-xl font-bold text-[#1a1a1a]">سناریوی استفاده را انتخاب کنید</h2>
-          <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
-            {categories.map((cat) => (
-              <button
-                key={cat.id}
-                onClick={() => setSelectedCategory(cat.id)}
-                className={`rounded-lg border-2 px-4 py-3 text-sm font-bold transition-all ${
-                  selectedCategory === cat.id
-                    ? "border-[#2563eb] bg-[#2563eb] text-white"
-                    : "border-[#e5e7eb] bg-white text-[#333] hover:border-[#2563eb]"
+          <h2 className="mb-6 text-2xl font-bold text-[#1a1a1a]">کارت امتیاز فنی</h2>
+          <div className="space-y-6">
+            {scores.map((score, idx) => (
+              <CategoryScoreCard 
+                key={idx} 
+                score={score} 
+                laptops={laptops}
+                animated={animated}
+                delay={idx * 0.1}
+              />
+            ))}
+          </div>
+        </div>
+
+        {/* Smart Insights - بینش‌های هوشمند */}
+        {insights.length > 0 && (
+          <div className="mb-8 rounded-2xl bg-white p-8 shadow-sm">
+            <h2 className="mb-6 text-2xl font-bold text-[#1a1a1a]">بینش‌های هوشمند</h2>
+            <div className="space-y-3">
+              {insights.map((insight, idx) => (
+                <div 
+                  key={idx}
+                  className={`flex items-center gap-4 rounded-xl p-4 ${
+                    insight.type === 'advantage' ? 'bg-green-50' :
+                    insight.type === 'warning' ? 'bg-orange-50' : 'bg-blue-50'
+                  }`}
+                >
+                  <div className="text-3xl">
+                    {insight.type === 'advantage' ? '✅' :
+                     insight.type === 'warning' ? '⚠️' : 'ℹ️'}
+                  </div>
+                  <div className="flex-1">
+                    <p className="font-bold text-[#1a1a1a]">
+                      {laptops[insight.laptop].shortName}
+                    </p>
+                    <p className="text-sm text-[#4b5563]">{insight.message}</p>
+                  </div>
+                  <div className={`rounded-full px-3 py-1 text-xs font-bold ${
+                    insight.impact === 'high' ? 'bg-red-100 text-red-700' :
+                    insight.impact === 'medium' ? 'bg-yellow-100 text-yellow-700' :
+                    'bg-gray-100 text-gray-700'
+                  }`}>
+                    {insight.impact === 'high' ? 'تأثیر بالا' :
+                     insight.impact === 'medium' ? 'تأثیر متوسط' : 'تأثیر کم'}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Overall Scores - امتیازات کلی */}
+        <div className="mb-8 rounded-2xl bg-white p-8 shadow-sm">
+          <h2 className="mb-6 text-2xl font-bold text-[#1a1a1a]">امتیاز کلی</h2>
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+            {laptops.map((laptop, idx) => (
+              <div 
+                key={laptop.id}
+                className={`rounded-xl border-2 p-6 transition-all ${
+                  idx === winner ? 'border-[#2563eb] bg-blue-50' : 'border-[#e5e7eb]'
                 }`}
               >
-                {cat.label}
-              </button>
-            ))}
-          </div>
-        </div>
-
-        {/* تفاوت‌های کلیدی */}
-        <div className="mb-8 rounded-2xl bg-white p-8 shadow-sm">
-          <h2 className="mb-6 text-2xl font-bold text-[#1a1a1a]">تفاوت‌های کلیدی</h2>
-          <p className="mb-6 text-sm text-[#666]">تفاوت‌های اصلی بین لپ‌تاپ‌ها</p>
-
-          <div className="grid gap-6 md:grid-cols-2">
-            {comparisonProducts.map((product, idx) => (
-              <div key={product.id} className="rounded-xl border border-[#e5e7eb] p-6">
-                <h3 className="mb-4 text-lg font-bold text-[#1a1a1a]">
-                  مزایای {product.shortName}
-                </h3>
-                <ul className="space-y-3">
-                  {product.highlights.slice(0, 5).map((highlight, i) => (
-                    <li key={i} className="flex items-start gap-2 text-sm text-[#444]">
-                      <span className="mt-1 text-[#22c55e]">✓</span>
-                      <span>{highlight}</span>
-                    </li>
-                  ))}
-                </ul>
+                <div className="mb-4 flex items-center justify-between">
+                  <h3 className="text-lg font-bold text-[#1a1a1a]">{laptop.shortName}</h3>
+                  {idx === winner && (
+                    <span className="rounded-full bg-[#2563eb] px-3 py-1 text-xs font-bold text-white">
+                      🏆 برنده
+                    </span>
+                  )}
+                </div>
+                <div className="mb-4 flex items-center justify-center">
+                  <div className="relative h-32 w-32">
+                    <svg className="h-full w-full -rotate-90" viewBox="0 0 100 100">
+                      <circle cx="50" cy="50" r="45" fill="none" stroke="#e5e7eb" strokeWidth="8" />
+                      <circle 
+                        cx="50" 
+                        cy="50" 
+                        r="45" 
+                        fill="none" 
+                        stroke={idx === winner ? '#2563eb' : '#6b7280'} 
+                        strokeWidth="8"
+                        strokeDasharray={`${(overallScores[idx] / 100) * 283} 283`}
+                        className="transition-all duration-1000"
+                      />
+                    </svg>
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <span className="text-3xl font-bold text-[#1a1a1a]">
+                        {toFa(overallScores[idx])}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+                <div className="text-center">
+                  <p className="text-sm text-[#6b7280]">از ۱۰۰</p>
+                </div>
               </div>
             ))}
-          </div>
-        </div>
-
-        {/* جدول مشخصات کامل */}
-        <div className="mb-8 rounded-2xl bg-white p-8 shadow-sm">
-          <h2 className="mb-6 text-2xl font-bold text-[#1a1a1a]">تست‌ها و مشخصات</h2>
-          <p className="mb-6 text-sm text-[#666]">جدول مقایسه نتایج تست و مشخصات فنی</p>
-
-          <div className="overflow-hidden rounded-xl border border-[#e5e7eb]">
-            <table className="w-full">
-              <thead>
-                <tr className="border-b-2 border-[#e5e7eb] bg-[#f9fafb]">
-                  <th className="p-4 text-right text-sm font-bold text-[#333]">مشخصه</th>
-                  {comparisonProducts.map((p) => (
-                    <th key={p.id} className="p-4 text-center">
-                      <img src={p.image} alt={p.name} className="mx-auto mb-2 h-16 w-auto object-contain" />
-                      <span className="text-sm font-bold text-[#333]">{p.shortName}</span>
-                    </th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                {/* بدنه */}
-                <tr className="border-b border-[#e5e7eb] bg-[#f0f7ff]">
-                  <td colSpan={comparisonProducts.length + 1} className="p-3 text-right text-sm font-bold text-[#1a1a1a]">
-                    بدنه
-                  </td>
-                </tr>
-                <tr className="border-b border-[#e5e7eb]">
-                  <td className="border-l border-[#e5e7eb] p-3 text-right text-sm font-bold text-[#333]">وزن</td>
-                  {comparisonProducts.map((p) => (
-                    <td key={p.id} className="p-3 text-center text-sm text-[#444]">
-                      {scores[comparisonProducts.indexOf(p)]?.specs.weight}
-                    </td>
-                  ))}
-                </tr>
-
-                {/* نمایشگر */}
-                <tr className="border-b border-[#e5e7eb] bg-[#f0fdf4]">
-                  <td colSpan={comparisonProducts.length + 1} className="p-3 text-right text-sm font-bold text-[#1a1a1a]">
-                    نمایشگر
-                  </td>
-                </tr>
-                <tr className="border-b border-[#e5e7eb]">
-                  <td className="border-l border-[#e5e7eb] p-3 text-right text-sm font-bold text-[#333]">اندازه</td>
-                  {comparisonProducts.map((p) => (
-                    <td key={p.id} className="p-3 text-center text-sm text-[#444]">
-                      {scores[comparisonProducts.indexOf(p)]?.specs.display}
-                    </td>
-                  ))}
-                </tr>
-
-                {/* پردازنده */}
-                <tr className="border-b border-[#e5e7eb] bg-[#fef3c7]">
-                  <td colSpan={comparisonProducts.length + 1} className="p-3 text-right text-sm font-bold text-[#1a1a1a]">
-                    پردازنده
-                  </td>
-                </tr>
-                <tr className="border-b border-[#e5e7eb]">
-                  <td className="border-l border-[#e5e7eb] p-3 text-right text-sm font-bold text-[#333]">مدل</td>
-                  {comparisonProducts.map((p) => (
-                    <td key={p.id} className="p-3 text-center text-sm text-[#444]">
-                      {scores[comparisonProducts.indexOf(p)]?.specs.cpu}
-                    </td>
-                  ))}
-                </tr>
-
-                {/* گرافیک */}
-                <tr className="border-b border-[#e5e7eb] bg-[#fce7f3]">
-                  <td colSpan={comparisonProducts.length + 1} className="p-3 text-right text-sm font-bold text-[#1a1a1a]">
-                    گرافیک
-                  </td>
-                </tr>
-                <tr className="border-b border-[#e5e7eb]">
-                  <td className="border-l border-[#e5e7eb] p-3 text-right text-sm font-bold text-[#333]">مدل</td>
-                  {comparisonProducts.map((p) => (
-                    <td key={p.id} className="p-3 text-center text-sm text-[#444]">
-                      {scores[comparisonProducts.indexOf(p)]?.specs.gpu}
-                    </td>
-                  ))}
-                </tr>
-
-                {/* رم */}
-                <tr className="border-b border-[#e5e7eb] bg-[#f5f3ff]">
-                  <td colSpan={comparisonProducts.length + 1} className="p-3 text-right text-sm font-bold text-[#1a1a1a]">
-                    حافظه رم
-                  </td>
-                </tr>
-                <tr className="border-b border-[#e5e7eb]">
-                  <td className="border-l border-[#e5e7eb] p-3 text-right text-sm font-bold text-[#333]">ظرفیت</td>
-                  {comparisonProducts.map((p) => (
-                    <td key={p.id} className="p-3 text-center text-sm text-[#444]">
-                      {scores[comparisonProducts.indexOf(p)]?.specs.ram}
-                    </td>
-                  ))}
-                </tr>
-
-                {/* ذخیره‌سازی */}
-                <tr className="border-b border-[#e5e7eb] bg-[#ecfdf5]">
-                  <td colSpan={comparisonProducts.length + 1} className="p-3 text-right text-sm font-bold text-[#1a1a1a]">
-                    ذخیره‌سازی
-                  </td>
-                </tr>
-                <tr>
-                  <td className="border-l border-[#e5e7eb] p-3 text-right text-sm font-bold text-[#333]">ظرفیت</td>
-                  {comparisonProducts.map((p) => (
-                    <td key={p.id} className="p-3 text-center text-sm text-[#444]">
-                      {scores[comparisonProducts.indexOf(p)]?.specs.storage}
-                    </td>
-                  ))}
-                </tr>
-              </tbody>
-            </table>
           </div>
         </div>
 
@@ -344,29 +207,97 @@ export default function ComparePage({ products, ids, onClose, onAddToCart }: Com
         <div className="sticky bottom-0 border-t border-[#e5e7eb] bg-white p-6 shadow-lg">
           <div className="mx-auto flex max-w-7xl items-center justify-between">
             <div className="flex gap-3">
-              {comparisonProducts.map((p) => (
+              {laptops.map((laptop) => (
                 <button
-                  key={p.id}
-                  onClick={() => onAddToCart(p.id)}
+                  key={laptop.id}
+                  onClick={() => onAddToCart(laptop.id)}
                   className="flex items-center gap-2 rounded-lg bg-[#2563eb] px-5 py-2.5 text-sm font-bold text-white transition-colors hover:bg-[#1d4ed8]"
                 >
                   <ICart size={16} />
-                  افزودن {p.shortName} به سبد
+                  افزودن {laptop.shortName} به سبد
                 </button>
               ))}
             </div>
-            <div className="flex gap-3">
-              <button className="flex items-center gap-2 rounded-lg border border-[#ddd] bg-white px-4 py-2.5 text-sm transition-colors hover:bg-[#f9fafb]">
-                <IShare size={16} />
-                اشتراک‌گذاری
-              </button>
-              <button className="flex items-center gap-2 rounded-lg border border-[#ddd] bg-white px-4 py-2.5 text-sm transition-colors hover:bg-[#f9fafb]">
-                <IPrint size={16} />
-                چاپ مقایسه
-              </button>
-            </div>
           </div>
         </div>
+      </div>
+
+      {/* CSS Animation */}
+      <style>{`
+        @keyframes fadeIn {
+          from {
+            opacity: 0;
+            transform: translateY(20px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+      `}</style>
+    </div>
+  );
+}
+
+// کامپوننت کارت امتیاز دسته‌بندی
+function CategoryScoreCard({ 
+  score, 
+  laptops, 
+  animated,
+  delay 
+}: { 
+  score: CategoryScore; 
+  laptops: Laptop[];
+  animated: boolean;
+  delay: number;
+}) {
+  return (
+    <div 
+      className="rounded-xl border border-[#e5e7eb] p-6 transition-all hover:shadow-md"
+      style={{
+        animation: `fadeIn 0.5s ease-out ${delay}s both`
+      }}
+    >
+      <div className="mb-4 flex items-center justify-between">
+        <div className="flex items-center gap-3">
+          <span className="text-3xl">{score.icon}</span>
+          <h3 className="text-lg font-bold text-[#1a1a1a]">{score.category}</h3>
+        </div>
+        {score.difference > 0 && (
+          <span className="rounded-full bg-blue-100 px-3 py-1 text-xs font-bold text-blue-700">
+            اختلاف: {toFa(score.difference)}
+          </span>
+        )}
+      </div>
+      <div className="space-y-3">
+        {laptops.map((laptop, idx) => {
+          const isWinner = idx === score.winner;
+          return (
+            <div key={laptop.id} className="flex items-center gap-4">
+              <span className="w-32 text-sm font-medium text-[#555]">{laptop.shortName}</span>
+              <div className="flex-1">
+                <div className="relative h-8 overflow-hidden rounded-lg bg-[#f0f0f0]">
+                  <div 
+                    className={`absolute inset-y-0 right-0 rounded-lg transition-all duration-1000 ${
+                      isWinner 
+                        ? 'bg-gradient-to-l from-[#2563eb] to-[#3b82f6]' 
+                        : 'bg-gradient-to-l from-[#6b7280] to-[#9ca3af]'
+                    }`}
+                    style={{ width: animated ? `${score.scores[idx]}%` : '0%' }}
+                  />
+                  <span className="absolute inset-0 flex items-center justify-center text-sm font-bold text-white">
+                    {toFa(score.scores[idx])}
+                  </span>
+                </div>
+              </div>
+              {isWinner && (
+                <span className="rounded-full bg-green-100 px-3 py-1 text-xs font-bold text-green-700">
+                  ✓ برنده
+                </span>
+              )}
+            </div>
+          );
+        })}
       </div>
     </div>
   );
