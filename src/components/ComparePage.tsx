@@ -88,14 +88,7 @@ export default function ComparePage({ products, ids, onClose, onAddToCart }: Com
     { id: "travel", label: "سفر" },
   ];
 
-  const reviewCategories = [
-    { key: "performance", label: "عملکرد", desc: "عملکرد سیستم و برنامه‌ها" },
-    { key: "gaming", label: "بازی", desc: "عملکرد در بازی‌های سه‌بعدی" },
-    { key: "display", label: "نمایشگر", desc: "زاویه دید، دقت رنگ، روشنایی" },
-    { key: "battery", label: "عمر باتری", desc: "عمر باتری در استفاده سبک و متوسط" },
-    { key: "connectivity", label: "اتصالات", desc: "پورت‌ها، وب‌کم و سایر رابط‌ها" },
-    { key: "portability", label: "قابلیت حمل", desc: "طراحی، مواد، دوام و قابلیت استفاده" },
-  ];
+
 
   return (
     <div className="fixed inset-0 z-50 overflow-y-auto bg-[#f5f5f7]">
@@ -182,86 +175,6 @@ export default function ComparePage({ products, ids, onClose, onAddToCart }: Com
                 </tr>
               </tbody>
             </table>
-          </div>
-        </div>
-
-        {/* بخش Review - امتیازات */}
-        <div className="mb-8 rounded-2xl bg-white p-8 shadow-sm">
-          <h2 className="mb-6 text-2xl font-bold text-[#1a1a1a]">بررسی</h2>
-          <p className="mb-6 text-sm text-[#666]">ارزیابی ویژگی‌های مهم لپ‌تاپ‌ها</p>
-
-          <div className="space-y-6">
-            {reviewCategories.map((cat) => (
-              <div key={cat.key} className="border-b border-[#f0f0f0] pb-6 last:border-0">
-                <h3 className="mb-2 text-lg font-bold text-[#1a1a1a]">{cat.label}</h3>
-                <p className="mb-4 text-sm text-[#666]">{cat.desc}</p>
-
-                <div className="space-y-3">
-                  {comparisonProducts.map((product, idx) => {
-                    const score = (scores[idx] as any)?.[cat.key] || 0;
-                    const allScores = scores.map(s => (s as any)?.[cat.key] || 0);
-                    const isWinner = comparisonProducts.length > 1 && score === Math.max(...allScores);
-                    return (
-                      <div key={product.id} className="flex items-center gap-4">
-                        <span className="w-32 text-sm text-[#555]">{product.shortName}</span>
-                        <div className="flex-1">
-                          <div className="relative h-8 overflow-hidden rounded-lg bg-[#f0f0f0]">
-                            <div
-                              className={`absolute inset-y-0 right-0 rounded-lg transition-all duration-1000 ${
-                                idx === 0 ? "bg-gradient-to-l from-blue-500 to-blue-600" : "bg-gradient-to-l from-green-500 to-green-600"
-                              }`}
-                              style={{ width: `${score}%` }}
-                            />
-                            <span className="absolute inset-0 flex items-center justify-center text-sm font-bold text-white">
-                              {toFa(score)}
-                            </span>
-                          </div>
-                        </div>
-                        {isWinner && (
-                          <span className="rounded-full bg-[#fbbf24] px-3 py-1 text-xs font-bold text-white">
-                            برنده
-                          </span>
-                        )}
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
-            ))}
-
-            {/* امتیاز کلی */}
-            <div className="border-t-2 border-[#e5e7eb] pt-6">
-              <h3 className="mb-4 text-lg font-bold text-[#1a1a1a]">امتیاز NanoReview</h3>
-              <div className="space-y-3">
-                {comparisonProducts.map((product, idx) => {
-                  const score = scores[idx]?.overall || 0;
-                  const isWinner = comparisonProducts.length > 1 && score === Math.max(...scores.map(s => s.overall));
-                  return (
-                    <div key={product.id} className="flex items-center gap-4">
-                      <span className="w-32 text-sm text-[#555]">{product.shortName}</span>
-                      <div className="flex-1">
-                        <div className="relative h-10 overflow-hidden rounded-lg bg-[#f0f0f0]">
-                          <div
-                            className={`absolute inset-y-0 right-0 rounded-lg transition-all duration-1000 ${
-                              idx === 0 ? "bg-gradient-to-l from-blue-600 to-blue-700" : "bg-gradient-to-l from-green-600 to-green-700"
-                            }`}
-                            style={{ width: `${score}%` }}
-                          />
-                          <span className="absolute inset-0 flex items-center justify-center text-base font-bold text-white">
-                            {toFa(score)}
-                          </span>
-                        </div>
-                      </div>
-                      {isWinner && (
-                        <span className="rounded-full bg-[#fbbf24] px-3 py-1 text-xs font-bold text-white">
-                          برنده
-                        </span>
-                      )}
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
           </div>
         </div>
 

@@ -56,11 +56,11 @@ export default function Dashboard() {
   const sortedKPIs = [...mockKPIs].sort((a, b) => b.weight - a.weight);
 
   return (
-    <div className="min-h-screen bg-foam p-6">
+    <div className="min-h-screen bg-foam p-6 font-nazanin">
       {/* Header */}
       <div className="mb-6 flex items-center justify-between">
         <div>
-          <h1 className="flex items-center gap-2 font-display text-3xl font-bold text-ink">
+          <h1 className="flex items-center gap-2 font-nazanin text-3xl font-bold text-ink">
             <BarChart3 size={32} className="text-sea" />
             داشبورد تحلیلی
           </h1>

@@ -28,7 +28,7 @@ export default function Admin({ products, orders, settings, onProducts, onSettin
 
   if (!authed) {
     return (
-      <div className="dark-panel flex min-h-screen items-center justify-center p-4">
+      <div className="dark-panel font-nazanin flex min-h-screen items-center justify-center p-4">
         <form
           onSubmit={(e) => {
             e.preventDefault();
@@ -79,7 +79,7 @@ export default function Admin({ products, orders, settings, onProducts, onSettin
   ];
 
   return (
-    <div className="min-h-screen bg-foam">
+    <div className="min-h-screen bg-foam font-nazanin">
       <header className="sticky top-0 z-30 border-b border-line bg-white/95 backdrop-blur-sm">
         <div className="mx-auto flex max-w-7xl items-center gap-3 px-4 py-3 sm:px-6">
           <LogoMark size={28} className="text-sea" />
