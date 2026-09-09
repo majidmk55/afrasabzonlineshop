@@ -36,8 +36,8 @@ export default function Footer({ count, onCategory, onBrand, onAdmin }: FooterPr
               <div className="flex items-center gap-2.5">
                 <LogoMark size={34} className="text-sea" />
                 <span className="flex flex-col leading-none">
-                  <span className="font-display text-3xl text-white">افرالیک</span>
-                  <span className="font-mono text-[9px] tracking-[0.3em] text-skywash/60">AFRALIK · SPECIALTY LAPTOPS</span>
+                  <span className="font-nazanin text-3xl font-bold text-white">افرالینک</span>
+                  <span className="font-mono text-[9px] tracking-[0.3em] text-skywash/60">AFRALINK · SPECIALTY LAPTOPS</span>
                 </span>
               </div>
               <p className="mt-4 max-w-xs text-xs leading-7 text-skywash/70">
@@ -99,7 +99,7 @@ export default function Footer({ count, onCategory, onBrand, onAdmin }: FooterPr
 
             {/* services */}
             <nav aria-label="خدمات">
-              <p className="text-[11px] font-extrabold tracking-wide text-white">خدمات افرالیک</p>
+              <p className="text-[11px] font-extrabold tracking-wide text-white">خدمات افرالینک</p>
               <ul className="mt-3 space-y-2.5 text-xs text-skywash/70">
                 <li className="flex items-center gap-2"><ITruck size={14} className="text-sea" /> ارسال ۴۸ ساعته به سراسر ایران</li>
                 <li className="flex items-center gap-2"><IReturn size={14} className="text-sea" /> ۷ روز مرجوعی بدون قیدوشرط</li>
@@ -158,7 +158,7 @@ export default function Footer({ count, onCategory, onBrand, onAdmin }: FooterPr
           {/* SEO paragraph + keyword index */}
           <div className="mt-8 rounded-2xl border border-white/10 bg-white/5 p-5">
             <p className="text-[11px] leading-7 text-skywash/60">
-              فروشگاه اینترنتی افرالیک، بورس تخصصی خرید لپ‌تاپ در ایران؛ از لپ‌تاپ گیمینگ با گرافیک
+              فروشگاه اینترنتی افرالینک، بورس تخصصی خرید لپ‌تاپ در ایران؛ از لپ‌تاپ گیمینگ با گرافیک
               RTX 5090 و RTX 4090 برای گیمرها و استریمرها، تا مک‌بوک پرو و ورک‌استیشن‌های سبک برای
               تدوین، رندر سه‌بعدی و طراحی. لپ‌تاپ‌های مهندسی با پردازنده‌های Intel Core Ultra و
               Ryzen AI برای نرم‌افزارهای سالیدورکس، کتیا و متلب؛ اولترابوک‌های زیر ۱.۵ کیلوگرم
@@ -178,7 +178,7 @@ export default function Footer({ count, onCategory, onBrand, onAdmin }: FooterPr
 
           {/* مارکت‌پلیس‌ها */}
           <div className="mt-8 rounded-2xl border border-white/10 bg-white/5 p-5">
-            <p className="mb-4 text-[12px] font-extrabold text-white">افرالیک را در مارکت‌پلیس‌های معتبر دنبال کنید:</p>
+            <p className="mb-4 text-[12px] font-extrabold text-white">افرالینک را در مارکت‌پلیس‌های معتبر دنبال کنید:</p>
             <div className="flex flex-wrap gap-3">
               <a
                 href="https://emalls.ir/"
@@ -203,7 +203,7 @@ export default function Footer({ count, onCategory, onBrand, onAdmin }: FooterPr
 
           <div className="mt-8 flex flex-wrap items-center justify-between gap-3 border-t border-white/10 pt-6">
             <p className="text-[11px] text-skywash/60">
-              © {toFa(1404)} افرالیک — کلیه حقوق محفوظ است. قیمت‌ها به ریال و شامل مالیات بر ارزش افزوده. · {count.toLocaleString("fa-IR")} دستگاه فعال روی ویترین
+              © {toFa(1404)} افرالینک — کلیه حقوق محفوظ است. قیمت‌ها به ریال و شامل مالیات بر ارزش افزوده. · {count.toLocaleString("fa-IR")} دستگاه فعال روی ویترین
             </p>
             <div className="flex items-center gap-4">
               <button onClick={onAdmin} className="text-[11px] font-bold text-skywash/60 underline-offset-4 transition-colors hover:text-sea hover:underline">

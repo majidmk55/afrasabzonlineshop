@@ -2247,9 +2247,9 @@ export const FAQS = [
 
 /* ---------- helpers ---------- */
 
-// تابع جایگزینی "کورهِوس" با "افرالیک" در همه متن‌ها
+// تابع جایگزینی "کورهِوس" با "افرالینک" در همه متن‌ها
 function replaceBrandName(text: string): string {
-  return text.replace(/کورهِوس/g, "افرالیک");
+  return text.replace(/کورهِوس/g, "افرالینک");
 }
 
 const FA_DIGITS = "۰۱۲۳۴۵۶۷۸۹";

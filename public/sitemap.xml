@@ -6,7 +6,7 @@
   
   <!-- صفحه اصلی -->
   <url>
-    <loc>https://afralik.ir/</loc>
+    <loc>https://afralink.ir/</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
@@ -14,13 +14,13 @@
 
   <!-- دسته‌بندی‌های اصلی -->
   <url>
-    <loc>https://afralik.ir/category/gaming</loc>
+    <loc>https://afralink.ir/category/gaming</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://afralik.ir/category/business</loc>
+    <loc>https://afralink.ir/category/business</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>

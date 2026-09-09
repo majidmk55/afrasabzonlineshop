@@ -42,7 +42,7 @@ export default function Admin({ products, orders, settings, onProducts, onSettin
           <div className="flex items-center gap-3">
             <LogoMark size={34} className="text-paper" />
             <div>
-              <p className="font-display text-xl font-bold text-paper">پنل مدیریت افرالیک</p>
+              <p className="font-nazanin text-xl font-bold text-paper">پنل مدیریت افرالینک</p>
               <p className="font-mono text-[11px] tracking-wider text-mist">COREHAUS ADMIN CONSOLE</p>
             </div>
           </div>
@@ -84,7 +84,7 @@ export default function Admin({ products, orders, settings, onProducts, onSettin
         <div className="mx-auto flex max-w-7xl items-center gap-3 px-4 py-3 sm:px-6">
           <LogoMark size={28} className="text-sea" />
           <div className="leading-tight">
-            <p className="font-display text-base font-bold">پنل مدیریت افرالیک</p>
+            <p className="font-nazanin text-base font-bold">پنل مدیریت افرالینک</p>
             <p className="font-mono text-[10px] tracking-wider text-mist">تغییرات بلافاصله در سایت اعمال می‌شوند</p>
           </div>
           <nav className="mr-4 hidden items-center gap-1 md:flex">
@@ -531,7 +531,7 @@ function ProductForm({ initial, products, onSave, onClose }: { initial?: Laptop;
     mem: initial?.brief.find((b) => b[0] === "رم / حافظه")?.[1] ?? "",
     display: initial?.brief.find((b) => b[0] === "نمایشگر")?.[1] ?? "",
     weight: initial?.brief.find((b) => b[0] === "وزن")?.[1] ?? "",
-    warrantyCompany: initial?.warrantyCompany ?? "افرالیک",
+    warrantyCompany: initial?.warrantyCompany ?? "افرالینک",
   });
   const [err, setErr] = useState("");
   useLockBody(true);
@@ -564,7 +564,7 @@ function ProductForm({ initial, products, onSave, onClose }: { initial?: Laptop;
       rating: Math.min(5, Math.max(1, Number(f.rating) || 4.5)),
       reviews: initial?.reviews ?? 0,
       image: f.image.trim() || placeholderImage(shortName),
-      tagline: f.tagline.trim() || "جدیدترین ورودی فروشگاه افرالیک با کارنامه آزمایشگاه.",
+      tagline: f.tagline.trim() || "جدیدترین ورودی فروشگاه افرالینک با کارنامه آزمایشگاه.",
       highlights: f.highlights.split(/[،,]/).map((s) => s.trim()).filter(Boolean).slice(0, 4),
       brief: [
         ["پردازنده", dash(f.cpu)],
@@ -585,15 +585,15 @@ function ProductForm({ initial, products, onSave, onClose }: { initial?: Laptop;
         { title: "شبکه", icon: "wifi", rows: [["بالاترین استاندارد Wi-Fi", "—"], ["بلوتوث", "بله"]] },
         { title: "پورت‌ها و اتصالات", icon: "plug", rows: [["پورت‌ها", "—"], ["جک ترکیبی هدفون/میکروفون", "بله"]] },
         { title: "کیبورد", icon: "keyboard", rows: [["نور پس‌زمینه کیبورد", "—"], ["صفحه‌کلید عددی", "—"]] },
-        { title: "نرم‌افزار", icon: "info", rows: [["سیستم‌عامل نصب‌شده", "Windows 11"], ["گارانتی", "۲ سال افرالیک + گارانتی رسمی"]] },
+        { title: "نرم‌افزار", icon: "info", rows: [["سیستم‌عامل نصب‌شده", "Windows 11"], ["گارانتی", "۲ سال افرالینک + گارانتی رسمی"]] },
         { title: "باتری و شارژ", icon: "battery", rows: [["نوع باتری", "—"], ["ظرفیت باتری", "—"], ["ولتاژ", "—"], ["تعداد سل‌ها", "—"], ["تکنولوژی شارژ", "—"], ["حداکثر توان شارژ", "—"], ["نوع اتصال شارژر", "—"], ["تعداد حداکثر دفعات شارژ", "—"], ["زمان شارژ کامل", "—"], ["عمر شارژ", "—"], ["توان آداپتور", "—"]] },
         { title: "امنیت", icon: "shield", rows: [["ماژول امنیتی TPM", "بله"]] },
         { title: "وزن و ابعاد", icon: "scale", rows: [["وزن", dash(f.weight)], ["ابعاد", "—"]] },
       ],
-      inBox: initial?.inBox ?? ["خود دستگاه", "شارژر اصلی", "کابل برق", "دفترچه راهنما", "گزارش آزمایشگاه افرالیک"],
-      pros: initial?.pros ?? ["جدیدترین ورودی فروشگاه افرالیک", "دارای کارنامه آزمایشگاه"],
+      inBox: initial?.inBox ?? ["خود دستگاه", "شارژر اصلی", "کابل برق", "دفترچه راهنما", "گزارش آزمایشگاه افرالینک"],
+      pros: initial?.pros ?? ["جدیدترین ورودی فروشگاه افرالینک", "دارای کارنامه آزمایشگاه"],
       cons: initial?.cons ?? ["هنوز دیدگاه ثبت نشده است"],
-      warrantyCompany: f.warrantyCompany.trim() || "افرالیک",
+      warrantyCompany: f.warrantyCompany.trim() || "افرالینک",
       active: initial?.active ?? true,
     };
     onSave(p);
@@ -637,7 +637,7 @@ function ProductForm({ initial, products, onSave, onClose }: { initial?: Laptop;
           <Field label="نمایشگر"><input className={inputCls} value={f.display} onChange={(e) => set("display", e.target.value)} placeholder="15.6&quot; FHD IPS 144Hz" /></Field>
           <Field label="وزن"><input className={inputCls} value={f.weight} onChange={(e) => set("weight", e.target.value)} placeholder="۱.۸ کیلوگرم" /></Field>
           <div className="sm:col-span-2">
-            <Field label="شرکت گارانتی‌کننده"><input className={inputCls} value={f.warrantyCompany} onChange={(e) => set("warrantyCompany", e.target.value)} placeholder="افرالیک" /></Field>
+            <Field label="شرکت گارانتی‌کننده"><input className={inputCls} value={f.warrantyCompany} onChange={(e) => set("warrantyCompany", e.target.value)} placeholder="افرالینک" /></Field>
           </div>
         </div>
         {err && <p className="mt-3 text-sm text-red-500">{err}</p>}
@@ -686,9 +686,9 @@ function BulkImport({ products, onAdd, onClose }: { products: Laptop[]; onAdd: (
         rating: 4.5,
         reviews: 0,
         image: placeholderImage(name.split(" ").slice(-2).join(" ")),
-        tagline: "ورودی تازه فروشگاه افرالیک — به‌زودی با کارنامه کامل آزمایشگاه.",
+        tagline: "ورودی تازه فروشگاه افرالینک — به‌زودی با کارنامه کامل آزمایشگاه.",
         highlights: [brand, category || "اولترابوک"],
-        pros: ["جدیدترین ورودی فروشگاه افرالیک"],
+        pros: ["جدیدترین ورودی فروشگاه افرالینک"],
         cons: ["کارنامه آزمایشگاه به‌زودی"],
         brief: [["پردازنده", "—"], ["گرافیک", "—"], ["رم / حافظه", "—"], ["نمایشگر", "—"], ["وزن", "—"]],
         specs: [
@@ -699,10 +699,10 @@ function BulkImport({ products, onAdd, onClose }: { products: Laptop[]; onAdd: (
           { title: "ذخیره‌سازی", icon: "drive", rows: [["مدل و نوع حافظه", "به‌زودی"], ["ظرفیت کلی", "—"], ["فرم فاکتور (Form Factor)", "—"], ["رابط SSD", "—"], ["نسخه NVMe", "—"], ["سرعت خوانش و نوشتن", "—"], ["نوع و نسل NAND", "—"], ["تعداد لایه‌های NAND (NAND Layer)", "—"], ["تعداد اسلات‌ها", "—"], ["عمر نوشتاری (TBW)", "—"], ["میانگین زمان بین خرابی (MTBF)", "—"]] },
           { title: "گرافیک", icon: "gpu", rows: [["مدل گرافیک مجزا", "به‌زودی"], ["سطح فناوری ساخت تراشه", "—"], ["معماری", "—"], ["حافظه گرافیک مجزا", "—"], ["نوع حافظه گرافیک", "—"], ["تعداد هسته‌های اصلی", "—"], ["فرکانس پایه", "—"], ["توان مصرفی", "—"], ["باس حافظه", "—"], ["پهنای باند حافظه", "—"], ["تعداد هسته‌های RT", "—"], ["تعداد هسته‌های تنسور", "—"], ["تاریخ شروع تولید", "—"], ["سرعت پردازش AI", "—"], ["فناوری‌ها", "—"]] },
           { title: "صدا", icon: "speaker", rows: [["تعداد بلندگوهای داخلی", "2"]] },
-          { title: "نرم‌افزار", icon: "info", rows: [["سیستم‌عامل نصب‌شده", "Windows 11"], ["گارانتی", "۲ سال افرالیک + گارانتی رسمی"]] },
+          { title: "نرم‌افزار", icon: "info", rows: [["سیستم‌عامل نصب‌شده", "Windows 11"], ["گارانتی", "۲ سال افرالینک + گارانتی رسمی"]] },
           { title: "وزن و ابعاد", icon: "scale", rows: [["وزن", "به‌زودی"]] },
         ],
-        inBox: ["خود دستگاه", "شارژر اصلی", "گزارش آزمایشگاه افرالیک"],
+        inBox: ["خود دستگاه", "شارژر اصلی", "گزارش آزمایشگاه افرالینک"],
         active: true,
       });
     }
