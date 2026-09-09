@@ -72,7 +72,15 @@ const IMG = {
 
 /* سازنده بخش‌های برگه مشخصات کامل (۱۶ بخش استاندارد) */
 const DESIGN = (rows: [string, string][]): SpecGroup => ({ title: "طراحی", icon: "tag", rows });
-const SCREEN = (rows: [string, string][]): SpecGroup => ({ title: "صفحه نمایش", icon: "display", rows });
+const SCREEN = (rows: [string, string][]): SpecGroup => ({ 
+  title: "صفحه نمایش", 
+  icon: "display", 
+  rows: [
+    ...rows,
+    ["زاویه دید", "178 درجه افقی / 178 درجه عمودی"],
+    ["Color Gamut", "100% sRGB · 100% DCI-P3"],
+  ]
+});
 const CPU = (rows: [string, string][]): SpecGroup => ({ title: "پردازنده", icon: "cpu", rows });
 const RAM = (rows: [string, string][]): SpecGroup => ({ title: "حافظه رم", icon: "ram", rows });
 const STORAGE = (rows: [string, string][]): SpecGroup => ({ title: "ذخیره‌سازی", icon: "drive", rows });

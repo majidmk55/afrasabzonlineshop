@@ -1,13 +1,15 @@
-import { useMemo, useState } from "react";
+import { lazy, Suspense, useMemo, useState } from "react";
 import { fmt, fmtShort, toFa, type Laptop } from "../data/laptops";
 import { compactIRR, placeholderImage, resetAll, type OrderRecord, type Settings } from "../lib/store";
 import { useLockBody } from "../lib/motion";
 import { IBox, IChart, ICheck, IClose, IGear, ILock, IPencil, IPlus, ITrash, ITruck, IUpload, LogoMark } from "./icons";
 
+const AnalyticsDashboard = lazy(() => import("./admin/Dashboard"));
+
 /* ------------------------------------------------------------------ */
 
 const PIN = "1234";
-type Tab = "dashboard" | "products" | "orders" | "settings";
+type Tab = "dashboard" | "analytics" | "products" | "orders" | "settings";
 
 interface AdminProps {
   products: Laptop[];
@@ -70,6 +72,7 @@ export default function Admin({ products, orders, settings, onProducts, onSettin
 
   const TABS: { id: Tab; label: string; icon: (p: { size?: number; className?: string }) => JSX.Element }[] = [
     { id: "dashboard", label: "داشبورد فروش", icon: IChart },
+    { id: "analytics", label: "داشبورد تحلیلی", icon: IChart },
     { id: "products", label: "مدیریت کالاها", icon: IBox },
     { id: "orders", label: "سفارش‌ها", icon: ITruck },
     { id: "settings", label: "تنظیمات", icon: IGear },
@@ -113,6 +116,18 @@ export default function Admin({ products, orders, settings, onProducts, onSettin
 
       <main className="mx-auto max-w-7xl px-4 py-8 sm:px-6">
         {tab === "dashboard" && <Dashboard products={products} orders={orders} />}
+        {tab === "analytics" && (
+          <Suspense fallback={
+            <div className="flex min-h-[400px] items-center justify-center">
+              <div className="flex flex-col items-center gap-3">
+                <div className="h-10 w-10 animate-spin rounded-full border-4 border-sea border-t-transparent" />
+                <p className="text-sm text-mist">در حال بارگذاری داشبورد تحلیلی...</p>
+              </div>
+            </div>
+          }>
+            <AnalyticsDashboard />
+          </Suspense>
+        )}
         {tab === "products" && <Products products={products} onProducts={onProducts} />}
         {tab === "orders" && <Orders orders={orders} />}
         {tab === "settings" && <SettingsTab settings={settings} onSettings={onSettings} />}
