@@ -4,6 +4,7 @@ import { IClose, ICart } from "./icons";
 import Review from "./Review";
 import NanoReviewScore from "./NanoReviewScore";
 import KeyDifferences from "./KeyDifferences";
+import CaseComparisonTable from "./CaseComparisonTable";
 
 interface ComparePageProps {
   products: Laptop[];
@@ -351,6 +352,11 @@ export default function ComparePage({ products, ids, onClose, onAddToCart }: Com
               advantages: generateAdvantagesForAll(laptop, laptops),
             }))}
           />
+        </div>
+
+        {/* Case Comparison Table - جدول مقایسه بدنه */}
+        <div className="mb-8">
+          <CaseComparisonTable laptops={laptops} />
         </div>
 
         {/* Technical Specifications */}
