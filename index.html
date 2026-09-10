@@ -160,38 +160,6 @@
     </script>
   </head>
   <body>
-    <!-- SVG Filters for Metal Effect -->
-    <svg style="display:none">
-      <defs>
-        <filter id="metal-emboss">
-          <!-- بافت فلز -->
-          <feTurbulence type="fractalNoise" baseFrequency="0.8 0.02" numOctaves="4" result="texture"/>
-          <feColorMatrix type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.12 0" in="texture" result="coloredTexture"/>
-          
-          <!-- برجستگی -->
-          <feGaussianBlur in="SourceAlpha" stdDeviation="1" result="blur"/>
-          <feSpecularLighting in="blur" surfaceScale="3" specularConstant="0.5" specularExponent="20" result="spec">
-            <fePointLight x="-80" y="-80" z="150"/>
-          </feSpecularLighting>
-          <feComposite in="spec" in2="SourceAlpha" operator="in" result="specOut"/>
-          
-          <!-- سایه -->
-          <feOffset dx="2" dy="3" in="SourceAlpha" result="offsetAlpha"/>
-          <feGaussianBlur in="offsetAlpha" stdDeviation="2.5" result="shadow"/>
-          <feFlood flood-color="#000" flood-opacity="0.35" result="shadowColor"/>
-          <feComposite in="shadowColor" in2="shadow" operator="in" result="finalShadow"/>
-          
-          <!-- ترکیب -->
-          <feMerge>
-            <feMergeNode in="finalShadow"/>
-            <feMergeNode in="SourceGraphic"/>
-            <feMergeNode in="coloredTexture"/>
-            <feMergeNode in="specOut"/>
-          </feMerge>
-        </filter>
-      </defs>
-    </svg>
-    
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
