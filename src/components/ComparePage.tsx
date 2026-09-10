@@ -7,6 +7,7 @@ import KeyDifferences from "./KeyDifferences";
 import CaseComparisonTable from "./CaseComparisonTable";
 import SizeComparison from "./SizeComparison";
 import CoolingSolution from "./CoolingSolution";
+import DisplayComparison from "./DisplayComparison";
 
 interface ComparePageProps {
   products: Laptop[];
@@ -369,6 +370,7 @@ export default function ComparePage({ products, ids, onClose, onAddToCart }: Com
         {/* Cooling Solution - راه حل خنک‌کنندگی */}
         <div className="mb-8">
           <CoolingSolution laptops={laptops} maxLaptops={4} />
+          <DisplayComparison laptops={laptops} />
         </div>
 
         {/* Technical Specifications */}
