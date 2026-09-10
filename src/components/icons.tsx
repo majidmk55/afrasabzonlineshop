@@ -63,6 +63,8 @@ export const IPenNib = (p: P) => <svg {...base(p)}><path d="m12 2.5 5 6.5-3.2 12
 export const ICap = (p: P) => <svg {...base(p)}><path d="m12 4.5 9.5 4.5L12 13.5 2.5 9 12 4.5Z" /><path d="M6.5 11.3v4.2c0 1.4 2.5 2.7 5.5 2.7s5.5-1.3 5.5-2.7v-4.2" /><path d="M21.5 9v5.5" /></svg>;
 export const IBriefGear = (p: P) => <svg {...base(p)}><rect x="2.5" y="7.5" width="19" height="12.5" rx="1.5" /><path d="M9 7.5V5h6v2.5" /><circle cx="17.3" cy="16.2" r="2.3" /><path d="M17.3 12.9v-1.2M17.3 20.7v-1.2M14 16.2h-1.2M21.8 16.2h-1.2" /></svg>;
 export const ICode = (p: P) => <svg {...base(p)}><path d="m8 8.5-4.5 3.5L8 15.5M16 8.5l4.5 3.5L16 15.5M13.4 5.5l-2.8 13" /></svg>;
+export const IUser = (p: P) => <svg {...base(p)}><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" /><circle cx="12" cy="7" r="4" /></svg>;
+export const IPhone = (p: P) => <svg {...base(p)}><rect x="5" y="2" width="14" height="20" rx="2" /><line x1="12" y1="18" x2="12" y2="18" /></svg>;
 export const ISpeaker = (p: P) => <svg {...base(p)}><rect x="7" y="3" width="10" height="18" rx="2" /><circle cx="12" cy="14" r="3.2" /><circle cx="12" cy="7.5" r="1.2" /></svg>;
 export const ICamera = (p: P) => <svg {...base(p)}><rect x="3" y="7" width="18" height="13" rx="2" /><circle cx="12" cy="13.5" r="3.5" /><path d="M8.5 7 10 4.5h4L15.5 7" /></svg>;
 export const IPlug = (p: P) => <svg {...base(p)}><path d="M9 3v5M15 3v5" /><path d="M7 8h10v3a5 5 0 0 1-10 0V8Z" /><path d="M12 16v5" /></svg>;

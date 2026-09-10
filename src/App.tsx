@@ -10,6 +10,7 @@ import ComparePage from "./components/ComparePage";
 import Guide from "./components/Guide";
 import Footer from "./components/Footer";
 import LiveChat from "./components/LiveChat";
+import AuthModal from "./components/AuthModal";
 import { ErrorBoundary } from "./components/ErrorBoundary";
 import { PROMOS, type CartLine, type Laptop } from "./data/laptops";
 import { loadOrders, loadProducts, loadSettings, saveOrders, saveProducts, saveSettings, visibleProducts, type OrderRecord, type Settings } from "./lib/store";
@@ -28,6 +29,8 @@ export default function App() {
   const [cart, setCart] = useState<Record<string, CartEntry>>({});
   const [cartOpen, setCartOpen] = useState(false);
   const [checkoutOpen, setCheckoutOpen] = useState(false);
+  const [authModalOpen, setAuthModalOpen] = useState(false);
+  const [authMode, setAuthMode] = useState<"login" | "register">("login");
   const [productId, setProductId] = useState<string | null>(null);
   const [compareIds, setCompareIds] = useState<string[]>([]);
   const [comparePageOpen, setComparePageOpen] = useState(false);
@@ -224,6 +227,10 @@ export default function App() {
         }}
         onHome={() => window.scrollTo({ top: 0, behavior: "smooth" })}
         onAdmin={() => setAdminOpen(true)}
+        onAuthOpen={(mode) => {
+          setAuthMode(mode);
+          setAuthModalOpen(true);
+        }}
       />
 
       <main>
@@ -291,6 +298,13 @@ export default function App() {
             setCart({});
             setPromo(null);
           }}
+        />
+      )}
+
+      {authModalOpen && (
+        <AuthModal
+          onClose={() => setAuthModalOpen(false)}
+          initialMode={authMode}
         />
       )}
 

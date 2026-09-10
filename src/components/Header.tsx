@@ -1,6 +1,6 @@
 import { useMemo, useRef, useState } from "react";
 import { fmt, type Laptop } from "../data/laptops";
-import { ICart, IChevron, IClose, ICompare, IGear, IMenu, ISearch, LogoMark } from "./icons";
+import { ICart, IChevron, IClose, ICompare, IGear, IMenu, ISearch, LogoMark, IUser } from "./icons";
 
 const CATEGORIES = ["گیمینگ", "خلاقیت و رندر", "بیزنس و اداری", "اولترابوک"];
 
@@ -15,9 +15,10 @@ interface HeaderProps {
   onCompareOpen: () => void;
   onHome: () => void;
   onAdmin: () => void;
+  onAuthOpen: (mode: "login" | "register") => void;
 }
 
-export default function Header({ products, cartCount, compareCount, onCartOpen, onSearch, onOpenProduct, onCategory, onCompareOpen, onHome, onAdmin }: HeaderProps) {
+export default function Header({ products, cartCount, compareCount, onCartOpen, onSearch, onOpenProduct, onCategory, onCompareOpen, onHome, onAdmin, onAuthOpen }: HeaderProps) {
   const [text, setText] = useState("");
   const [focused, setFocused] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
@@ -46,6 +47,20 @@ export default function Header({ products, cartCount, compareCount, onCartOpen, 
   return (
     <header className="sticky top-0 z-40 border-b border-line bg-white/90 backdrop-blur-sm">
       <div className="mx-auto flex max-w-[70%] items-center gap-3 px-2 py-3 sm:px-4">
+        {/* دکمه‌های ورود و ثبت‌نام */}
+        <div className="flex items-center gap-2">
+          <button 
+            onClick={() => onAuthOpen("login")}
+            className="rounded-full border border-sea px-4 py-2 text-xs font-bold text-sea transition-colors hover:bg-sea hover:text-white">
+            ورود
+          </button>
+          <button 
+            onClick={() => onAuthOpen("register")}
+            className="rounded-full bg-sea px-4 py-2 text-xs font-bold text-white transition-colors hover:bg-seadeep">
+            ثبت‌نام
+          </button>
+        </div>
+
         <button onClick={onHome} className="group flex items-center gap-2.5" aria-label="افرالینک — صفحه اصلی">
           <LogoMark size={30} className="text-ink transition-transform duration-300 group-hover:-rotate-12" />
           <span className="font-nazanin text-xl font-bold tracking-tight">
