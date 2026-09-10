@@ -5,6 +5,7 @@ import Review from "./Review";
 import NanoReviewScore from "./NanoReviewScore";
 import KeyDifferences from "./KeyDifferences";
 import CaseComparisonTable from "./CaseComparisonTable";
+import SizeComparison from "./SizeComparison";
 
 interface ComparePageProps {
   products: Laptop[];
@@ -357,6 +358,11 @@ export default function ComparePage({ products, ids, onClose, onAddToCart }: Com
         {/* Case Comparison Table - جدول مقایسه بدنه */}
         <div className="mb-8">
           <CaseComparisonTable laptops={laptops} />
+        </div>
+
+        {/* Size Comparison - مقایسه اندازه سه‌بعدی */}
+        <div className="mb-8">
+          <SizeComparison laptops={laptops} maxLaptops={4} />
         </div>
 
         {/* Technical Specifications */}
