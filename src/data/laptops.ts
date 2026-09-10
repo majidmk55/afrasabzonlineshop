@@ -57,18 +57,44 @@ export const PROMOS: Record<string, { pct?: number; freeShip?: boolean }> = {
 export const CATEGORIES = ["گیمینگ", "خلاقیت و رندر", "بیزنس و اداری", "اولترابوک"];
 export const BRANDS = ["اپل", "ایسوس", "لنوو", "دل", "اچ‌پی", "مایکروسافت", "ایسر", "ام‌اس‌آی", "ریزر", "فریم‌ورک", "ال‌جی", "گیگابایت"];
 
+// تابع ساخت تصویر SVG حرفه‌ای لپ‌تاپ
+function laptopSVG(bodyColor: string, screenColor: string, accentColor: string, name: string): string {
+  return `image/svg+xml,${encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600">
+  <defs>
+    <linearGradient id="screen" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:${screenColor};stop-opacity:1" />
+      <stop offset="100%" style="stop-color:${accentColor};stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="body" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:${bodyColor};stop-opacity:1" />
+      <stop offset="100%" style="stop-color:${bodyColor};stop-opacity:0.85" />
+    </linearGradient>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="140%">
+      <feDropShadow dx="0" dy="8" stdDeviation="12" flood-opacity="0.25"/>
+    </filter>
+  </defs>
+  <rect fill="#f8f9fa" width="800" height="600"/>
+  <g filter="url(#shadow)">
+    <rect x="140" y="120" width="520" height="340" rx="12" fill="url(#body)"/>
+    <rect x="160" y="140" width="480" height="290" rx="6" fill="url(#screen)"/>
+    <rect x="180" y="470" width="440" height="14" rx="7" fill="${bodyColor}" opacity="0.7"/>
+    <rect x="320" y="488" width="160" height="6" rx="3" fill="${bodyColor}" opacity="0.5"/>
+  </g>
+  <text x="400" y="540" font-family="Arial,sans-serif" font-size="28" font-weight="bold" fill="#333" text-anchor="middle">${name}</text>
+</svg>`)}`;
+}
+
 const IMG = {
-  // تصاویر از سایت‌های معتبر عکس استوک (Unsplash, Pexels)
-  blade16: "https://images.unsplash.com/photo-1603302576837-37561b2e2302?w=800&q=80&auto=format&fit=crop",
-  pro14: "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=800&q=80&auto=format&fit=crop",
-  g14: "https://images.unsplash.com/photo-1593642632559-0c6d3fc62b89?w=800&q=80&auto=format&fit=crop",
-  thinkpad: "https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?w=800&q=80&auto=format&fit=crop",
-  xps13: "https://images.unsplash.com/photo-1593642632823-8f785ba67e45?w=800&q=80&auto=format&fit=crop",
-  prestige16: "https://images.unsplash.com/photo-1541807084-5c52b6b3adef?w=800&q=80&auto=format&fit=crop",
-  framework16: "https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=800&q=80&auto=format&fit=crop",
-  gram17: "https://images.unsplash.com/photo-1525547719571-a2d4ac8945e2?w=800&q=80&auto=format&fit=crop",
-  spectre14: "https://images.unsplash.com/photo-1587614382346-4ec70e388b28?w=800&q=80&auto=format&fit=crop",
-  aorus17: "https://images.unsplash.com/photo-1593642632559-0c6d3fc62b89?w=800&q=80&auto=format&fit=crop",
+  blade16: laptopSVG("#1a1a1a", "#0a0a2e", "#00d4ff", "Razer Blade 16"),
+  pro14: laptopSVG("#c0c0c0", "#1a1a2e", "#4a90d9", "MacBook Pro 14"),
+  g14: laptopSVG("#2a2a2a", "#1a0a2e", "#ff0080", "ASUS ROG G14"),
+  thinkpad: laptopSVG("#1a1a1a", "#0a1a2e", "#3366aa", "ThinkPad X1 Carbon"),
+  xps13: laptopSVG("#d0d0d0", "#0a2a4a", "#0066cc", "Dell XPS 13"),
+  prestige16: laptopSVG("#3a3a4a", "#1a1a3e", "#667eea", "MSI Prestige 16"),
+  framework16: laptopSVG("#505050", "#0a2a3e", "#00d9ff", "Framework 16"),
+  gram17: laptopSVG("#c8c8c8", "#1a2a4a", "#4a90e2", "LG Gram 17"),
+  spectre14: laptopSVG("#b8941f", "#0a0a1e", "#c9a961", "HP Spectre x360"),
+  aorus17: laptopSVG("#1a1a1a", "#2a0a0a", "#ff4500", "Gigabyte Aorus 17X"),
 };
 
 /* سازنده بخش‌های برگه مشخصات کامل (۱۶ بخش استاندارد) */
