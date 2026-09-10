@@ -206,7 +206,7 @@ function FilterSidebar() {
   };
 
   return (
-    <aside className="sticky top-5 w-[270px] rounded-xl border border-[#e5e7eb] bg-white" style={{ maxHeight: "calc(100vh - 40px)" }}>
+    <aside className="sticky top-5 w-[230px] rounded-xl border border-[#e5e7eb] bg-white" style={{ maxHeight: "calc(100vh - 40px)" }}>
       {/* هدر */}
       <div className="flex h-[52px] items-center justify-between border-b border-[#e8e8e8] px-4">
         <div className="flex items-center gap-2">
