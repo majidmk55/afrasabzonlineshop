@@ -58,16 +58,16 @@ export const CATEGORIES = ["گیمینگ", "خلاقیت و رندر", "بیزن
 export const BRANDS = ["اپل", "ایسوس", "لنوو", "دل", "اچ‌پی", "مایکروسافت", "ایسر", "ام‌اس‌آی", "ریزر", "فریم‌ورک", "ال‌جی", "گیگابایت"];
 
 const IMG = {
-  blade16: "/images/blade16.svg",
-  pro14: "/images/pro14.svg",
-  g14: "/images/g14.svg",
-  thinkpad: "/images/thinkpad.svg",
-  xps13: "/images/xps13.svg",
-  prestige16: "/images/prestige16.svg",
-  framework16: "/images/framework16.svg",
-  gram17: "/images/gram17.svg",
-  spectre14: "/images/spectre14.svg",
-  aorus17: "/images/aorus17.svg",
+  blade16: "https://image.qwenlm.ai/generated-images/b7a9f6e5-2dea-45f6-a18f-d523b3d46b8f/_result.png",
+  pro14: "https://image.qwenlm.ai/generated-images/5adfcdc5-f12b-4c86-b548-9f83ad5b058e/_result.png",
+  g14: "https://image.qwenlm.ai/generated-images/3f0bc926-bf5c-4d92-b197-cd31c8a93661/_result.png",
+  thinkpad: "https://image.qwenlm.ai/generated-images/73133f33-ab71-4cfd-a6bd-6a4303491689/_result.png",
+  xps13: "https://image.qwenlm.ai/generated-images/f415f6e0-9052-49e9-8031-24fbbbab8248/_result.png",
+  prestige16: "https://image.qwenlm.ai/generated-images/bb1ce07a-30bf-4140-beb9-4b38b4d8d678/_result.png",
+  framework16: "https://image.qwenlm.ai/generated-images/1c838756-4add-4143-8d25-7651e2b260ca/_result.png",
+  gram17: "https://image.qwenlm.ai/generated-images/97e9a1f8-2055-4867-be50-9437622f33c5/_result.png",
+  spectre14: "https://image.qwenlm.ai/generated-images/fdc29bf6-b23b-46a6-a1e6-0d0bcaceb509/_result.png",
+  aorus17: "https://image.qwenlm.ai/generated-images/f7e0b0cd-481c-4f56-8f23-307af4778b32/_result.png",
 };
 
 /* سازنده بخش‌های برگه مشخصات کامل (۱۶ بخش استاندارد) */

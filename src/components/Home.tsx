@@ -6,7 +6,7 @@ import DigiShop from "./DigiShop";
 import { IArrowR, IBolt, IBriefGear, ICap, ICode, IDisplay, IGamepad, IPenNib, IShield, ITruck, LogoMark } from "./icons";
 
 /* تصویر بیلبورد */
-const BILLBOARD_IMG = "/images/billboard.svg";
+const BILLBOARD_IMG = "https://image.qwenlm.ai/generated-images/0b75deac-5240-448d-9fee-9be385ab6b54/_result.png";
 
 /* ---------- بازه‌های قیمت ---------- */
 
