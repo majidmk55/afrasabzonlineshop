@@ -486,21 +486,29 @@ export default function DigiShop({ products, onSpecs, onBrand, onToggleCompare, 
 
   return (
     <div className="mx-auto max-w-[80%] px-2 py-6 sm:px-4">
-      {/* نوار لوگو برندها با افکت فلز برس‌خورده */}
-      <section className="mb-4 flex items-center justify-center gap-8 rounded-xl bg-white py-4">
-        {BRANDS.map((brand) => (
-          <button
-            key={brand.en}
-            onClick={() => onBrand(brand.fa)}
-            className="group transition-all hover:scale-110"
-            title={brand.fa}
-          >
-            <BrushedMetalLogo className="text-2xl">
-              {brand.en}
-            </BrushedMetalLogo>
-          </button>
-        ))}
-      </section>
+      {/* Sidebar لوگوهای برندها در سمت چپ */}
+      <div className="flex gap-4">
+        {/* Sidebar چپ - لوگوهای برندها */}
+        <aside className="sticky top-24 h-fit w-48 shrink-0 rounded-xl border border-line bg-white p-4">
+          <h3 className="mb-4 text-center font-display text-lg font-bold">برندها</h3>
+          <div className="flex flex-col gap-3">
+            {BRANDS.map((brand) => (
+              <button
+                key={brand.en}
+                onClick={() => onBrand(brand.fa)}
+                className="group transition-all hover:scale-105"
+                title={brand.fa}
+              >
+                <div className="logo-metal text-center" data-text={brand.en}>
+                  {brand.en}
+                </div>
+              </button>
+            ))}
+          </div>
+        </aside>
+
+        {/* محتوای اصلی */}
+        <div className="flex-1">
 
       {/* بخش ۲: نوار ابزار */}
       <section className="mb-4 flex items-center justify-between rounded-[10px] bg-[#f3f4f6] px-4 py-3">
@@ -553,6 +561,8 @@ export default function DigiShop({ products, onSpecs, onBrand, onToggleCompare, 
             ))}
           </div>
         </div>
+      </div>
+      </div>
       </div>
     </div>
   );
