@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { fmt, toFa, type Laptop } from "../data/laptops";
 import { ICpu, IDisplay, IGpu, IRam, IFilter, IChevron, ICompare } from "./icons";
+import BrushedMetalLogo from "./BrushedMetalLogo";
 
 interface DigiShopProps {
   products: Laptop[];
@@ -485,7 +486,7 @@ export default function DigiShop({ products, onSpecs, onBrand, onToggleCompare, 
 
   return (
     <div className="mx-auto max-w-[80%] px-2 py-6 sm:px-4">
-      {/* نوار لوگو برندها */}
+      {/* نوار لوگو برندها با افکت فلز برس‌خورده */}
       <section className="mb-4 flex items-center justify-center gap-8 rounded-xl bg-white py-4">
         {BRANDS.map((brand) => (
           <button
@@ -494,15 +495,9 @@ export default function DigiShop({ products, onSpecs, onBrand, onToggleCompare, 
             className="group transition-all hover:scale-110"
             title={brand.fa}
           >
-            <img
-              src={brand.src}
-              alt={brand.en}
-              className="h-14 w-auto object-contain opacity-80 transition-opacity group-hover:opacity-100"
-              style={{
-                filter: "brightness(0) saturate(100%) invert(75%) sepia(10%) saturate(500%) hue-rotate(180deg) brightness(60%) contrast(90%)"
-              }}
-              loading="lazy"
-            />
+            <BrushedMetalLogo className="text-2xl">
+              {brand.en}
+            </BrushedMetalLogo>
           </button>
         ))}
       </section>
