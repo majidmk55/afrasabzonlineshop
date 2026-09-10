@@ -26,68 +26,76 @@ function extractNumber(text: string): number {
   return match ? parseFloat(match[1]) : 0;
 }
 
-// تولید مزایای هر لپ‌تاپ بر اساس مقایسه
-function generateAdvantages(laptop: Laptop, otherLaptop: Laptop): string[] {
+// تولید مزایای هر لپ‌تاپ بر اساس مقایسه با همه لپ‌تاپ‌های دیگر
+function generateAdvantagesForAll(laptop: Laptop, allLaptops: Laptop[]): string[] {
   const advantages: string[] = [];
+  const otherLaptops = allLaptops.filter(l => l.id !== laptop.id);
   
-  // مقایسه وزن
-  const weight1 = extractNumber(extractSpec(laptop, "وزن و ابعاد", "وزن"));
-  const weight2 = extractNumber(extractSpec(otherLaptop, "وزن و ابعاد", "وزن"));
-  if (weight1 > 0 && weight2 > 0 && weight1 < weight2) {
-    const diff = weight2 - weight1;
-    advantages.push(`${diff.toFixed(2)} کیلوگرم سبک‌تر`);
+  if (otherLaptops.length === 0) return [];
+  
+  // مقایسه وزن - آیا سبک‌ترین است؟
+  const weights = allLaptops.map(l => extractNumber(extractSpec(l, "وزن و ابعاد", "وزن")));
+  const myWeight = extractNumber(extractSpec(laptop, "وزن و ابعاد", "وزن"));
+  const minWeight = Math.min(...weights);
+  if (myWeight > 0 && myWeight === minWeight && weights.filter(w => w === minWeight).length === 1) {
+    const maxWeight = Math.max(...weights);
+    const diff = maxWeight - myWeight;
+    advantages.push(`سبک‌ترین: ${diff.toFixed(2)} کیلوگرم سبک‌تر از سنگین‌ترین`);
   }
   
-  // مقایسه باتری
-  const battery1 = extractNumber(extractSpec(laptop, "باتری و شارژ", "ظرفیت باتری"));
-  const battery2 = extractNumber(extractSpec(otherLaptop, "باتری و شارژ", "ظرفیت باتری"));
-  if (battery1 > 0 && battery2 > 0 && battery1 > battery2) {
-    const percent = Math.round(((battery1 - battery2) / battery2) * 100);
-    advantages.push(`${percent}% باتری بزرگ‌تر – ${battery1} در مقابل ${battery2} وات‌ساعت`);
+  // مقایسه باتری - آیا بیشترین ظرفیت را دارد؟
+  const batteries = allLaptops.map(l => extractNumber(extractSpec(l, "باتری و شارژ", "ظرفیت باتری")));
+  const myBattery = extractNumber(extractSpec(laptop, "باتری و شارژ", "ظرفیت باتری"));
+  const maxBattery = Math.max(...batteries);
+  if (myBattery > 0 && myBattery === maxBattery && batteries.filter(b => b === maxBattery).length === 1) {
+    const minBattery = Math.min(...batteries.filter(b => b > 0));
+    const percent = Math.round(((myBattery - minBattery) / minBattery) * 100);
+    advantages.push(`بیشترین ظرفیت باتری: ${percent}% بیشتر از کمترین`);
   }
   
-  // مقایسه نمایشگر
-  const display1 = extractSpec(laptop, "صفحه نمایش", "اندازه صفحه نمایش");
-  const display2 = extractSpec(otherLaptop, "صفحه نمایش", "اندازه صفحه نمایش");
-  if (display1 && display2 && display1 !== display2) {
-    advantages.push(`نمایشگر ${display1} در مقابل ${display2}`);
+  // مقایسه نمایشگر - آیا بزرگ‌ترین است؟
+  const displays = allLaptops.map(l => extractNumber(extractSpec(l, "صفحه نمایش", "اندازه صفحه نمایش")));
+  const myDisplay = extractNumber(extractSpec(laptop, "صفحه نمایش", "اندازه صفحه نمایش"));
+  const maxDisplay = Math.max(...displays);
+  if (myDisplay > 0 && myDisplay === maxDisplay && displays.filter(d => d === maxDisplay).length === 1) {
+    advantages.push(`بزرگ‌ترین نمایشگر: ${myDisplay} اینچ`);
   }
   
-  // مقایسه رزولوشن
-  const res1 = extractSpec(laptop, "صفحه نمایش", "رزولوشن");
-  const res2 = extractSpec(otherLaptop, "صفحه نمایش", "رزولوشن");
-  if (res1 && res2 && res1 !== res2) {
-    advantages.push(`رزولوشن ${res1} در مقابل ${res2}`);
+  // مقایسه نرخ نوسازی - آیا بالاترین است؟
+  const refreshRates = allLaptops.map(l => extractNumber(extractSpec(l, "صفحه نمایش", "نرخ نوسازی (Refresh Rate)")));
+  const myRefresh = extractNumber(extractSpec(laptop, "صفحه نمایش", "نرخ نوسازی (Refresh Rate)"));
+  const maxRefresh = Math.max(...refreshRates);
+  if (myRefresh > 0 && myRefresh === maxRefresh && refreshRates.filter(r => r === maxRefresh).length === 1) {
+    advantages.push(`بالاترین نرخ نوسازی: ${myRefresh} هرتز`);
   }
   
-  // مقایسه نرخ نوسازی
-  const refresh1 = extractNumber(extractSpec(laptop, "صفحه نمایش", "نرخ نوسازی (Refresh Rate)"));
-  const refresh2 = extractNumber(extractSpec(otherLaptop, "صفحه نمایش", "نرخ نوسازی (Refresh Rate)"));
-  if (refresh1 > 0 && refresh2 > 0 && refresh1 > refresh2) {
-    advantages.push(`نرخ نوسازی بالاتر: ${refresh1} در مقابل ${refresh2} هرتز`);
+  // مقایسه رم - آیا بیشترین را دارد؟
+  const rams = allLaptops.map(l => extractNumber(extractSpec(l, "حافظه رم", "حافظه داخلی رم")));
+  const myRam = extractNumber(extractSpec(laptop, "حافظه رم", "حافظه داخلی رم"));
+  const maxRam = Math.max(...rams);
+  if (myRam > 0 && myRam === maxRam && rams.filter(r => r === maxRam).length === 1) {
+    advantages.push(`بیشترین حافظه رم: ${myRam}GB`);
   }
   
-  // مقایسه رم
-  const ram1 = extractNumber(extractSpec(laptop, "حافظه رم", "حافظه داخلی رم"));
-  const ram2 = extractNumber(extractSpec(otherLaptop, "حافظه رم", "حافظه داخلی رم"));
-  if (ram1 > 0 && ram2 > 0 && ram1 > ram2) {
-    advantages.push(`حافظه رم بیشتر: ${ram1}GB در مقابل ${ram2}GB`);
+  // مقایسه ذخیره‌سازی - آیا بیشترین را دارد؟
+  const storages = allLaptops.map(l => extractNumber(extractSpec(l, "ذخیره‌سازی", "ظرفیت کلی")));
+  const myStorage = extractNumber(extractSpec(laptop, "ذخیره‌سازی", "ظرفیت کلی"));
+  const maxStorage = Math.max(...storages);
+  if (myStorage > 0 && myStorage === maxStorage && storages.filter(s => s === maxStorage).length === 1) {
+    advantages.push(`بیشترین حافظه ذخیره‌سازی: ${myStorage}GB`);
   }
   
-  // مقایسه ذخیره‌سازی
-  const storage1 = extractNumber(extractSpec(laptop, "ذخیره‌سازی", "ظرفیت کلی"));
-  const storage2 = extractNumber(extractSpec(otherLaptop, "ذخیره‌سازی", "ظرفیت کلی"));
-  if (storage1 > 0 && storage2 > 0 && storage1 > storage2) {
-    advantages.push(`حافظه ذخیره‌سازی بیشتر: ${storage1}GB در مقابل ${storage2}GB`);
+  // مقایسه قیمت - آیا ارزان‌ترین است؟
+  const prices = allLaptops.map(l => l.price);
+  const myPrice = laptop.price;
+  const minPrice = Math.min(...prices);
+  if (myPrice === minPrice && prices.filter(p => p === minPrice).length === 1) {
+    const maxPrice = Math.max(...prices);
+    const diff = maxPrice - myPrice;
+    advantages.push(`ارزان‌ترین: ${fmt(diff)} ارزان‌تر از گران‌ترین`);
   }
   
-  // مقایسه قیمت
-  if (laptop.price < otherLaptop.price) {
-    const diff = otherLaptop.price - laptop.price;
-    advantages.push(`قیمت مناسب‌تر: ${fmt(diff)} ارزان‌تر`);
-  }
-  
-  return advantages.slice(0, 5); // حداکثر 5 مزیت
+  return advantages.slice(0, 6); // حداکثر 6 مزیت
 }
 
 // محاسبه امتیاز دسته‌ها
@@ -297,16 +305,10 @@ export default function ComparePage({ products, ids, onClose, onAddToCart }: Com
         {/* Key Differences - پیکسل پرفکت مطابق NanoReview */}
         <div className="mb-8">
           <KeyDifferences
-            laptops={[
-              {
-                name: laptopA.name,
-                advantages: generateAdvantages(laptopA, laptopB),
-              },
-              {
-                name: laptopB.name,
-                advantages: generateAdvantages(laptopB, laptopA),
-              },
-            ]}
+            laptops={laptops.map(laptop => ({
+              name: laptop.name,
+              advantages: generateAdvantagesForAll(laptop, laptops),
+            }))}
           />
         </div>
 

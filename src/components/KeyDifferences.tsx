@@ -79,55 +79,63 @@ export default function KeyDifferences({ laptops }: KeyDifferencesProps) {
         <div className="mt-4 h-px w-full bg-[#e5e7eb]" />
       </div>
 
-      {/* بخش‌های مزایا */}
-      {laptops.map((laptop, laptopIndex) => (
-        <div key={laptopIndex} className={laptopIndex > 0 ? "mt-8" : ""}>
-          <h3
-            className="mb-4 text-[17px] font-bold text-[#111827]"
-            style={{ letterSpacing: "-0.3px", lineHeight: "1.3" }}
-          >
-            مزایای {laptop.name}
-          </h3>
-          <ul className="list-none p-0">
-            {laptop.advantages.map((advantage, index) => (
-              <li
-                key={index}
-                className="mb-3.5 flex items-start opacity-0"
-                style={{
-                  lineHeight: "1.6",
-                  animation: animated
-                    ? `slideInLeft 0.4s ease-out ${0.1 + index * 0.05}s forwards`
-                    : "none",
-                }}
-              >
-                <svg
-                  className="mr-3 mt-0.5 h-5 w-5 shrink-0"
-                  viewBox="0 0 20 20"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                  style={{
-                    filter: "drop-shadow(0 1px 2px rgba(16, 185, 129, 0.2))",
-                  }}
-                >
-                  <circle cx="10" cy="10" r="10" fill="#10b981" />
-                  <path
-                    d="M10 6v8M6 10h8"
-                    stroke="#ffffff"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                  />
-                </svg>
-                <span
-                  className="flex-1 pt-0.5 text-[14px] font-normal text-[#374151]"
-                  style={{ lineHeight: "1.6" }}
-                >
-                  {advantage}
-                </span>
-              </li>
-            ))}
-          </ul>
-        </div>
-      ))}
+      {/* بخش‌های مزایا - پشتیبانی از تا 4 لپ‌تاپ */}
+      <div className={laptops.length > 2 ? "grid grid-cols-1 gap-8 md:grid-cols-2" : "space-y-8"}>
+        {laptops.map((laptop, laptopIndex) => (
+          <div key={laptopIndex}>
+            <h3
+              className="mb-4 text-[17px] font-bold text-[#111827]"
+              style={{ letterSpacing: "-0.3px", lineHeight: "1.3" }}
+            >
+              مزایای {laptop.name}
+            </h3>
+            {laptop.advantages.length > 0 ? (
+              <ul className="list-none p-0">
+                {laptop.advantages.map((advantage, index) => (
+                  <li
+                    key={index}
+                    className="mb-3.5 flex items-start opacity-0"
+                    style={{
+                      lineHeight: "1.6",
+                      animation: animated
+                        ? `slideInLeft 0.4s ease-out ${0.1 + index * 0.05}s forwards`
+                        : "none",
+                    }}
+                  >
+                    <svg
+                      className="mr-3 mt-0.5 h-5 w-5 shrink-0"
+                      viewBox="0 0 20 20"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                      style={{
+                        filter: "drop-shadow(0 1px 2px rgba(16, 185, 129, 0.2))",
+                      }}
+                    >
+                      <circle cx="10" cy="10" r="10" fill="#10b981" />
+                      <path
+                        d="M10 6v8M6 10h8"
+                        stroke="#ffffff"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                      />
+                    </svg>
+                    <span
+                      className="flex-1 pt-0.5 text-[14px] font-normal text-[#374151]"
+                      style={{ lineHeight: "1.6" }}
+                    >
+                      {advantage}
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p className="text-[14px] text-[#6b7280] italic">
+                مزیت خاصی نسبت به سایر لپ‌تاپ‌ها ندارد
+              </p>
+            )}
+          </div>
+        ))}
+      </div>
 
       <style>{`
         @keyframes slideInLeft {
