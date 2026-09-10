@@ -3,6 +3,7 @@ import { fmt, toFa, type Laptop } from "../data/laptops";
 import { IClose, ICart } from "./icons";
 import Review from "./Review";
 import NanoReviewScore from "./NanoReviewScore";
+import KeyDifferences from "./KeyDifferences";
 
 interface ComparePageProps {
   products: Laptop[];
@@ -23,6 +24,70 @@ function extractSpec(laptop: Laptop, group: string, key: string): string {
 function extractNumber(text: string): number {
   const match = text.match(/(\d+(?:\.\d+)?)/);
   return match ? parseFloat(match[1]) : 0;
+}
+
+// تولید مزایای هر لپ‌تاپ بر اساس مقایسه
+function generateAdvantages(laptop: Laptop, otherLaptop: Laptop): string[] {
+  const advantages: string[] = [];
+  
+  // مقایسه وزن
+  const weight1 = extractNumber(extractSpec(laptop, "وزن و ابعاد", "وزن"));
+  const weight2 = extractNumber(extractSpec(otherLaptop, "وزن و ابعاد", "وزن"));
+  if (weight1 > 0 && weight2 > 0 && weight1 < weight2) {
+    const diff = weight2 - weight1;
+    advantages.push(`${diff.toFixed(2)} کیلوگرم سبک‌تر`);
+  }
+  
+  // مقایسه باتری
+  const battery1 = extractNumber(extractSpec(laptop, "باتری و شارژ", "ظرفیت باتری"));
+  const battery2 = extractNumber(extractSpec(otherLaptop, "باتری و شارژ", "ظرفیت باتری"));
+  if (battery1 > 0 && battery2 > 0 && battery1 > battery2) {
+    const percent = Math.round(((battery1 - battery2) / battery2) * 100);
+    advantages.push(`${percent}% باتری بزرگ‌تر – ${battery1} در مقابل ${battery2} وات‌ساعت`);
+  }
+  
+  // مقایسه نمایشگر
+  const display1 = extractSpec(laptop, "صفحه نمایش", "اندازه صفحه نمایش");
+  const display2 = extractSpec(otherLaptop, "صفحه نمایش", "اندازه صفحه نمایش");
+  if (display1 && display2 && display1 !== display2) {
+    advantages.push(`نمایشگر ${display1} در مقابل ${display2}`);
+  }
+  
+  // مقایسه رزولوشن
+  const res1 = extractSpec(laptop, "صفحه نمایش", "رزولوشن");
+  const res2 = extractSpec(otherLaptop, "صفحه نمایش", "رزولوشن");
+  if (res1 && res2 && res1 !== res2) {
+    advantages.push(`رزولوشن ${res1} در مقابل ${res2}`);
+  }
+  
+  // مقایسه نرخ نوسازی
+  const refresh1 = extractNumber(extractSpec(laptop, "صفحه نمایش", "نرخ نوسازی (Refresh Rate)"));
+  const refresh2 = extractNumber(extractSpec(otherLaptop, "صفحه نمایش", "نرخ نوسازی (Refresh Rate)"));
+  if (refresh1 > 0 && refresh2 > 0 && refresh1 > refresh2) {
+    advantages.push(`نرخ نوسازی بالاتر: ${refresh1} در مقابل ${refresh2} هرتز`);
+  }
+  
+  // مقایسه رم
+  const ram1 = extractNumber(extractSpec(laptop, "حافظه رم", "حافظه داخلی رم"));
+  const ram2 = extractNumber(extractSpec(otherLaptop, "حافظه رم", "حافظه داخلی رم"));
+  if (ram1 > 0 && ram2 > 0 && ram1 > ram2) {
+    advantages.push(`حافظه رم بیشتر: ${ram1}GB در مقابل ${ram2}GB`);
+  }
+  
+  // مقایسه ذخیره‌سازی
+  const storage1 = extractNumber(extractSpec(laptop, "ذخیره‌سازی", "ظرفیت کلی"));
+  const storage2 = extractNumber(extractSpec(otherLaptop, "ذخیره‌سازی", "ظرفیت کلی"));
+  if (storage1 > 0 && storage2 > 0 && storage1 > storage2) {
+    advantages.push(`حافظه ذخیره‌سازی بیشتر: ${storage1}GB در مقابل ${storage2}GB`);
+  }
+  
+  // مقایسه قیمت
+  if (laptop.price < otherLaptop.price) {
+    const diff = otherLaptop.price - laptop.price;
+    advantages.push(`قیمت مناسب‌تر: ${fmt(diff)} ارزان‌تر`);
+  }
+  
+  return advantages.slice(0, 5); // حداکثر 5 مزیت
 }
 
 // محاسبه امتیاز دسته‌ها
@@ -229,84 +294,20 @@ export default function ComparePage({ products, ids, onClose, onAddToCart }: Com
           </div>
         </div>
 
-        {/* Key Differences */}
-        <div className="mb-8 rounded-2xl bg-white p-8 shadow-sm">
-          <h2 className="mb-2 text-2xl font-bold text-[#1a1a1a]">تفاوت‌های کلیدی</h2>
-          <p className="mb-6 text-sm text-[#6b7280]">تفاوت‌های اصلی بین دو لپ‌تاپ</p>
-
-          <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-            <div>
-              <h3 className="mb-3 text-lg font-bold text-[#1a1a1a]">مزایای {laptopA.shortName}</h3>
-              <ul className="space-y-2">
-                {scoresA.performance > scoresB.performance && (
-                  <li className="flex items-start gap-2 text-sm text-[#4b5563]">
-                    <span className="text-green-600">✓</span>
-                    <span>عملکرد پردازنده قوی‌تر</span>
-                  </li>
-                )}
-                {scoresA.gaming > scoresB.gaming && (
-                  <li className="flex items-start gap-2 text-sm text-[#4b5563]">
-                    <span className="text-green-600">✓</span>
-                    <span>عملکرد گرافیکی بهتر</span>
-                  </li>
-                )}
-                {scoresA.display > scoresB.display && (
-                  <li className="flex items-start gap-2 text-sm text-[#4b5563]">
-                    <span className="text-green-600">✓</span>
-                    <span>نمایشگر بهتر</span>
-                  </li>
-                )}
-                {scoresA.battery > scoresB.battery && (
-                  <li className="flex items-start gap-2 text-sm text-[#4b5563]">
-                    <span className="text-green-600">✓</span>
-                    <span>عمر باتری بیشتر</span>
-                  </li>
-                )}
-                {scoresA.portability > scoresB.portability && (
-                  <li className="flex items-start gap-2 text-sm text-[#4b5563]">
-                    <span className="text-green-600">✓</span>
-                    <span>سبک‌تر و قابل‌حمل‌تر</span>
-                  </li>
-                )}
-              </ul>
-            </div>
-
-            <div>
-              <h3 className="mb-3 text-lg font-bold text-[#1a1a1a]">مزایای {laptopB.shortName}</h3>
-              <ul className="space-y-2">
-                {scoresB.performance > scoresA.performance && (
-                  <li className="flex items-start gap-2 text-sm text-[#4b5563]">
-                    <span className="text-green-600">✓</span>
-                    <span>عملکرد پردازنده قوی‌تر</span>
-                  </li>
-                )}
-                {scoresB.gaming > scoresA.gaming && (
-                  <li className="flex items-start gap-2 text-sm text-[#4b5563]">
-                    <span className="text-green-600">✓</span>
-                    <span>عملکرد گرافیکی بهتر</span>
-                  </li>
-                )}
-                {scoresB.display > scoresA.display && (
-                  <li className="flex items-start gap-2 text-sm text-[#4b5563]">
-                    <span className="text-green-600">✓</span>
-                    <span>نمایشگر بهتر</span>
-                  </li>
-                )}
-                {scoresB.battery > scoresA.battery && (
-                  <li className="flex items-start gap-2 text-sm text-[#4b5563]">
-                    <span className="text-green-600">✓</span>
-                    <span>عمر باتری بیشتر</span>
-                  </li>
-                )}
-                {scoresB.portability > scoresA.portability && (
-                  <li className="flex items-start gap-2 text-sm text-[#4b5563]">
-                    <span className="text-green-600">✓</span>
-                    <span>سبک‌تر و قابل‌حمل‌تر</span>
-                  </li>
-                )}
-              </ul>
-            </div>
-          </div>
+        {/* Key Differences - پیکسل پرفکت مطابق NanoReview */}
+        <div className="mb-8">
+          <KeyDifferences
+            laptops={[
+              {
+                name: laptopA.name,
+                advantages: generateAdvantages(laptopA, laptopB),
+              },
+              {
+                name: laptopB.name,
+                advantages: generateAdvantages(laptopB, laptopA),
+              },
+            ]}
+          />
         </div>
 
         {/* Technical Specifications */}
