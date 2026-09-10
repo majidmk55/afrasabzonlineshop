@@ -18,20 +18,20 @@ export function CompareTray({ products, ids, onRemove, onClear, onOpen, onOpenPr
   return (
     <div className="panel-in fixed bottom-5 left-1/2 z-40 flex max-w-[94vw] -translate-x-1/2 items-center gap-3 rounded-2xl border border-line bg-white/95 py-3 pl-4 pr-5 shadow-2xl backdrop-blur-sm">
       <span className="flex items-center gap-2 text-sm font-bold"><ICompare size={17} className="text-sea" /> مقایسه</span>
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-1.5">
         {laptops.map((l) => (
           <button key={l.id} onClick={() => onOpenProduct(l.id)} className="group relative" title={l.name}>
-            <img src={l.image} alt={l.name} className="h-11 w-14 rounded-lg border border-line object-cover transition-transform hover:-translate-y-1" loading="lazy" />
+            <img src={l.image} alt={l.name} className="h-10 w-12 rounded-lg border border-line object-cover transition-transform hover:-translate-y-1" loading="lazy" />
             <span
               role="button"
               tabIndex={0}
               onClick={(e) => { e.stopPropagation(); onRemove(l.id); }}
               onKeyDown={(e) => { if (e.key === "Enter") { e.stopPropagation(); onRemove(l.id); } }}
-              className="absolute -left-1.5 -top-1.5 flex h-4.5 w-4.5 items-center justify-center rounded-full bg-ink text-white transition-colors hover:bg-red-500"
+              className="absolute -left-1 -top-1 flex items-center justify-center rounded-full bg-ink text-white transition-colors hover:bg-red-500"
               aria-label={`حذف ${l.name} از مقایسه`}
-              style={{ width: 18, height: 18 }}
+              style={{ width: 16, height: 16 }}
             >
-              <IClose size={10} />
+              <IClose size={9} />
             </span>
           </button>
         ))}

@@ -1,37 +1,32 @@
 import { useEffect, useRef, useState } from "react";
 
-interface ReviewProps {
-  laptopA: string;
-  laptopB: string;
-  scoresA: {
-    performance: number;
-    gaming: number;
-    display: number;
-    battery: number;
-    connectivity: number;
-    portability: number;
-  };
-  scoresB: {
-    performance: number;
-    gaming: number;
-    display: number;
-    battery: number;
-    connectivity: number;
-    portability: number;
-  };
+interface LaptopScores {
+  performance: number;
+  gaming: number;
+  display: number;
+  battery: number;
+  connectivity: number;
+  portability: number;
 }
 
-export default function Review({ laptopA, laptopB, scoresA, scoresB }: ReviewProps) {
+interface ReviewProps {
+  laptops: {
+    name: string;
+    scores: LaptopScores;
+  }[];
+}
+
+export default function Review({ laptops }: ReviewProps) {
   const [animated, setAnimated] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
 
   const categories = [
-    { key: "performance", category: "عملکرد", description: "عملکرد سیستم و برنامه‌ها", scoreA: scoresA.performance, scoreB: scoresB.performance },
-    { key: "gaming", category: "گیمینگ", description: "عملکرد در بازی‌های سه‌بعدی محبوب", scoreA: scoresA.gaming, scoreB: scoresB.gaming },
-    { key: "display", category: "نمایشگر", description: "زاویه دید، دقت رنگ، روشنایی", scoreA: scoresA.display, scoreB: scoresB.display },
-    { key: "battery", category: "عمر باتری", description: "عمر باتری در استفاده سبک و متوسط", scoreA: scoresA.battery, scoreB: scoresB.battery },
-    { key: "connectivity", category: "اتصالات", description: "پورت‌ها، وب‌کم و سایر رابط‌ها", scoreA: scoresA.connectivity, scoreB: scoresB.connectivity },
-    { key: "portability", category: "قابلیت حمل", description: "طراحی، مواد، دوام و کاربرد", scoreA: scoresA.portability, scoreB: scoresB.portability },
+    { key: "performance", category: "عملکرد", description: "عملکرد سیستم و برنامه‌ها" },
+    { key: "gaming", category: "گیمینگ", description: "عملکرد در بازی‌های سه‌بعدی محبوب" },
+    { key: "display", category: "نمایشگر", description: "زاویه دید، دقت رنگ، روشنایی" },
+    { key: "battery", category: "عمر باتری", description: "عمر باتری در استفاده سبک و متوسط" },
+    { key: "connectivity", category: "اتصالات", description: "پورت‌ها، وب‌کم و سایر رابط‌ها" },
+    { key: "portability", category: "قابلیت حمل", description: "طراحی، مواد، دوام و کاربرد" },
   ];
 
   useEffect(() => {
@@ -57,7 +52,7 @@ export default function Review({ laptopA, laptopB, scoresA, scoresB }: ReviewPro
   return (
     <div
       ref={containerRef}
-      className="mx-auto max-w-[1200px] rounded-xl bg-[#fafafa] p-8 font-sans antialiased shadow-sm"
+      className="mx-auto max-w-[1200px] rounded-xl bg-[#fafafa] p-6 font-sans antialiased shadow-sm"
       style={{
         fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
         textRendering: "optimizeLegibility",
@@ -87,7 +82,7 @@ export default function Review({ laptopA, laptopB, scoresA, scoresB }: ReviewPro
               className="max-w-full text-[13px] font-normal leading-relaxed text-[#6b7280]"
               style={{ lineHeight: "1.5" }}
             >
-              ارزیابی ویژگی‌های مهم {laptopA} و {laptopB}
+              ارزیابی ویژگی‌های مهم {laptops.map(l => l.name).join(" و ")}
             </p>
           </div>
         </div>
@@ -117,73 +112,40 @@ export default function Review({ laptopA, laptopB, scoresA, scoresB }: ReviewPro
             </p>
 
             <div className="flex flex-col gap-3.5">
-              {/* Laptop A */}
-              <div className="flex items-center gap-2.5">
-                <span
-                  className="w-[120px] shrink-0 overflow-hidden text-ellipsis whitespace-nowrap text-[11px] font-medium text-[#4b5563] sm:w-[140px] sm:text-[12px] md:w-[180px] md:text-[13px]"
-                  title={laptopA}
-                >
-                  {laptopA}
-                </span>
-                <div className="flex flex-1 items-center">
-                  <div
-                    className="relative h-[7px] w-full overflow-hidden rounded-md bg-[#e5e7eb] sm:h-2"
-                    style={{ boxShadow: "inset 0 1px 2px rgba(0,0,0,0.05)" }}
+              {laptops.map((laptop, laptopIndex) => (
+                <div key={laptopIndex} className="flex items-center gap-2.5">
+                  <span
+                    className="w-[120px] shrink-0 overflow-hidden text-ellipsis whitespace-nowrap text-[11px] font-medium text-[#4b5563] sm:w-[140px] sm:text-[12px] md:w-[180px] md:text-[13px]"
+                    title={laptop.name}
                   >
+                    {laptop.name}
+                  </span>
+                  <div className="flex flex-1 items-center">
                     <div
-                      className="absolute left-0 top-0 h-full rounded-md"
-                      style={{
-                        width: animated ? `${item.scoreA}%` : "0%",
-                        background: "linear-gradient(90deg, #3B5998 0%, #4a69a8 100%)",
-                        transition: "width 1.2s cubic-bezier(0.4, 0, 0.2, 1)",
-                        boxShadow: "0 0 0 1px rgba(59, 89, 152, 0.1)",
-                      }}
-                    />
+                      className="relative h-[7px] w-full overflow-hidden rounded-md bg-[#e5e7eb] sm:h-2"
+                      style={{ boxShadow: "inset 0 1px 2px rgba(0,0,0,0.05)" }}
+                    >
+                      <div
+                        className="absolute left-0 top-0 h-full rounded-md"
+                        style={{
+                          width: animated ? `${laptop.scores[item.key as keyof LaptopScores]}%` : "0%",
+                          background: "linear-gradient(90deg, #3B5998 0%, #4a69a8 100%)",
+                          transition: "width 1.2s cubic-bezier(0.4, 0, 0.2, 1)",
+                          boxShadow: "0 0 0 1px rgba(59, 89, 152, 0.1)",
+                        }}
+                      />
+                    </div>
+                  </div>
+                  <div
+                    className="flex h-[30px] w-[38px] items-center justify-center rounded-md border-2 border-[#3B5998] bg-white transition-all hover:-translate-y-0.5 sm:h-8 sm:w-[42px]"
+                    style={{ boxShadow: "0 2px 4px rgba(59, 89, 152, 0.1)" }}
+                  >
+                    <span className="text-[14px] font-bold leading-none text-[#3B5998] sm:text-[15px]">
+                      {laptop.scores[item.key as keyof LaptopScores]}
+                    </span>
                   </div>
                 </div>
-                <div
-                  className="flex h-[30px] w-[38px] items-center justify-center rounded-md border-2 border-[#3B5998] bg-white transition-all hover:-translate-y-0.5 sm:h-8 sm:w-[42px]"
-                  style={{ boxShadow: "0 2px 4px rgba(59, 89, 152, 0.1)" }}
-                >
-                  <span className="text-[14px] font-bold leading-none text-[#3B5998] sm:text-[15px]">
-                    {item.scoreA}
-                  </span>
-                </div>
-              </div>
-
-              {/* Laptop B */}
-              <div className="flex items-center gap-2.5">
-                <span
-                  className="w-[120px] shrink-0 overflow-hidden text-ellipsis whitespace-nowrap text-[11px] font-medium text-[#4b5563] sm:w-[140px] sm:text-[12px] md:w-[180px] md:text-[13px]"
-                  title={laptopB}
-                >
-                  {laptopB}
-                </span>
-                <div className="flex flex-1 items-center">
-                  <div
-                    className="relative h-[7px] w-full overflow-hidden rounded-md bg-[#e5e7eb] sm:h-2"
-                    style={{ boxShadow: "inset 0 1px 2px rgba(0,0,0,0.05)" }}
-                  >
-                    <div
-                      className="absolute left-0 top-0 h-full rounded-md"
-                      style={{
-                        width: animated ? `${item.scoreB}%` : "0%",
-                        background: "linear-gradient(90deg, #3B5998 0%, #4a69a8 100%)",
-                        transition: "width 1.2s cubic-bezier(0.4, 0, 0.2, 1)",
-                        boxShadow: "0 0 0 1px rgba(59, 89, 152, 0.1)",
-                      }}
-                    />
-                  </div>
-                </div>
-                <div
-                  className="flex h-[30px] w-[38px] items-center justify-center rounded-md border-2 border-[#3B5998] bg-white transition-all hover:-translate-y-0.5 sm:h-8 sm:w-[42px]"
-                  style={{ boxShadow: "0 2px 4px rgba(59, 89, 152, 0.1)" }}
-                >
-                  <span className="text-[14px] font-bold leading-none text-[#3B5998] sm:text-[15px]">
-                    {item.scoreB}
-                  </span>
-                </div>
-              </div>
+              ))}
             </div>
           </div>
         ))}

@@ -104,11 +104,15 @@ export default function ComparePage({ products, ids, onClose, onAddToCart }: Com
   const laptops = ids.map(id => products.find(p => p.id === id)).filter((p): p is Laptop => !!p);
   const [scenario, setScenario] = useState("gaming");
 
-  if (laptops.length < 2) {
+  if (laptops.length < 2 || laptops.length > 4) {
     return (
       <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#f5f5f7]">
         <div className="text-center">
-          <p className="text-xl font-bold text-gray-600">حداقل ۲ محصول برای مقایسه انتخاب کنید</p>
+          <p className="text-xl font-bold text-gray-600">
+            {laptops.length < 2 
+              ? "حداقل ۲ محصول برای مقایسه انتخاب کنید" 
+              : "حداکثر ۴ محصول برای مقایسه انتخاب کنید"}
+          </p>
           <button onClick={onClose} className="mt-4 rounded-lg bg-[#2563eb] px-6 py-3 text-white font-bold">
             بازگشت
           </button>
@@ -117,7 +121,8 @@ export default function ComparePage({ products, ids, onClose, onAddToCart }: Com
     );
   }
 
-  const [laptopA, laptopB] = laptops;
+  const laptopA = laptops[0];
+  const laptopB = laptops[1];
   const scoresA = calculateCategoryScores(laptopA);
   const scoresB = calculateCategoryScores(laptopB);
 
@@ -134,63 +139,51 @@ export default function ComparePage({ products, ids, onClose, onAddToCart }: Com
       </div>
 
       <div className="mx-auto max-w-7xl px-6 py-8">
-        {/* Two Products Header */}
-        <div className="mb-8 grid grid-cols-1 gap-6 md:grid-cols-[1fr_auto_1fr]">
-          {/* Laptop A */}
-          <div className="rounded-2xl bg-white p-6 shadow-sm">
-            <div className="mb-4 flex justify-center">
-              <img src={laptopA.image} alt={laptopA.name} className="h-40 w-auto object-contain" />
-            </div>
-            <h2 className="mb-2 text-center text-lg font-bold text-[#1a1a1a]">{laptopA.name}</h2>
-            <div className="flex justify-center">
-              <div className="rounded-full bg-[#2563eb] px-6 py-2 text-2xl font-bold text-white">
-                {toFa(scoresA.overall)} / ۱۰۰
-              </div>
-            </div>
-          </div>
-
-          {/* VS */}
-          <div className="flex items-center justify-center">
-            <div className="rounded-full bg-[#f59e0b] px-6 py-4 text-3xl font-bold text-white shadow-lg">
-              VS
-            </div>
-          </div>
-
-          {/* Laptop B */}
-          <div className="rounded-2xl bg-white p-6 shadow-sm">
-            <div className="mb-4 flex justify-center">
-              <img src={laptopB.image} alt={laptopB.name} className="h-40 w-auto object-contain" />
-            </div>
-            <h2 className="mb-2 text-center text-lg font-bold text-[#1a1a1a]">{laptopB.name}</h2>
-            <div className="flex justify-center">
-              <div className="rounded-full bg-[#2563eb] px-6 py-2 text-2xl font-bold text-white">
-                {toFa(scoresB.overall)} / ۱۰۰
-              </div>
-            </div>
+        {/* Products Header - تا ۴ لپ‌تاپ */}
+        <div className="mb-8">
+          <div className={`grid gap-4 ${
+            laptops.length === 2 ? 'grid-cols-1 md:grid-cols-2' :
+            laptops.length === 3 ? 'grid-cols-1 md:grid-cols-3' :
+            'grid-cols-2 md:grid-cols-4'
+          }`}>
+            {laptops.map((laptop, index) => {
+              const scores = calculateCategoryScores(laptop);
+              return (
+                <div key={laptop.id} className="rounded-2xl bg-white p-4 shadow-sm">
+                  <div className="mb-3 flex justify-center">
+                    <img src={laptop.image} alt={laptop.name} className="h-32 w-auto object-contain" />
+                  </div>
+                  <h2 className="mb-2 text-center text-sm font-bold text-[#1a1a1a] line-clamp-2">
+                    {laptop.name}
+                  </h2>
+                  <div className="flex justify-center">
+                    <div className="rounded-full bg-[#2563eb] px-4 py-1.5 text-lg font-bold text-white">
+                      {toFa(scores.overall)} / ۱۰۰
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
           </div>
         </div>
 
         {/* Review Section - پیکسل پرفکت مطابق NanoReview */}
         <div className="mb-8">
           <Review
-            laptopA={laptopA.name}
-            laptopB={laptopB.name}
-            scoresA={{
-              performance: scoresA.performance,
-              gaming: scoresA.gaming,
-              display: scoresA.display,
-              battery: scoresA.battery,
-              connectivity: scoresA.connectivity,
-              portability: scoresA.portability,
-            }}
-            scoresB={{
-              performance: scoresB.performance,
-              gaming: scoresB.gaming,
-              display: scoresB.display,
-              battery: scoresB.battery,
-              connectivity: scoresB.connectivity,
-              portability: scoresB.portability,
-            }}
+            laptops={laptops.map(laptop => {
+              const scores = calculateCategoryScores(laptop);
+              return {
+                name: laptop.name,
+                scores: {
+                  performance: scores.performance,
+                  gaming: scores.gaming,
+                  display: scores.display,
+                  battery: scores.battery,
+                  connectivity: scores.connectivity,
+                  portability: scores.portability,
+                },
+              };
+            })}
           />
         </div>
 
@@ -421,19 +414,17 @@ export default function ComparePage({ products, ids, onClose, onAddToCart }: Com
 
         {/* Action Buttons */}
         <div className="sticky bottom-0 border-t border-[#e5e7eb] bg-white p-6 shadow-lg">
-          <div className="mx-auto flex max-w-7xl items-center justify-between">
-            <div className="flex gap-3">
-              {laptops.map((laptop) => (
-                <button
-                  key={laptop.id}
-                  onClick={() => onAddToCart(laptop.id)}
-                  className="flex items-center gap-2 rounded-lg bg-[#2563eb] px-5 py-2.5 text-sm font-bold text-white transition-colors hover:bg-[#1d4ed8]"
-                >
-                  <ICart size={16} />
-                  افزودن {laptop.shortName} به سبد
-                </button>
-              ))}
-            </div>
+          <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-center gap-3">
+            {laptops.map((laptop) => (
+              <button
+                key={laptop.id}
+                onClick={() => onAddToCart(laptop.id)}
+                className="flex items-center gap-2 rounded-lg bg-[#2563eb] px-4 py-2.5 text-sm font-bold text-white transition-colors hover:bg-[#1d4ed8]"
+              >
+                <ICart size={16} />
+                افزودن {laptop.shortName} به سبد
+              </button>
+            ))}
           </div>
         </div>
       </div>

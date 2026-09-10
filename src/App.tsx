@@ -143,8 +143,8 @@ export default function App() {
   const toggleCompare = useCallback((id: string) => {
     setCompareIds((ids) => {
       if (ids.includes(id)) return ids.filter((x) => x !== id);
-      if (ids.length >= 3) {
-        notify("حداکثر ۳ کالا قابل مقایسه است");
+      if (ids.length >= 4) {
+        notify("حداکثر ۴ کالا قابل مقایسه است");
         return ids;
       }
       return [...ids, id];
