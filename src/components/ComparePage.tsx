@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { fmt, toFa, type Laptop } from "../data/laptops";
 import { IClose, ICart } from "./icons";
+import Review from "./Review";
 
 interface ComparePageProps {
   products: Laptop[];
@@ -65,56 +66,7 @@ function calculateCategoryScores(laptop: Laptop) {
   };
 }
 
-// کامپوننت Score Bar
-function ScoreBar({ label, scoreA, scoreB, laptopAName, laptopBName }: {
-  label: string;
-  scoreA: number;
-  scoreB: number;
-  laptopAName: string;
-  laptopBName: string;
-}) {
-  const winner = scoreA > scoreB ? 'A' : scoreB > scoreA ? 'B' : null;
-  
-  return (
-    <div className="mb-6">
-      <h4 className="mb-3 text-sm font-bold text-[#1a1a1a]">{label}</h4>
-      <div className="space-y-2">
-        <div className="flex items-center gap-3">
-          <span className="w-32 text-xs text-[#6b7280]">{laptopAName}</span>
-          <div className="flex-1">
-            <div className="relative h-8 overflow-hidden rounded-lg bg-[#f3f4f6]">
-              <div 
-                className={`absolute inset-y-0 right-0 rounded-lg transition-all duration-500 ${
-                  winner === 'A' ? 'bg-[#2563eb]' : 'bg-[#9ca3af]'
-                }`}
-                style={{ width: `${scoreA}%` }}
-              />
-              <span className="absolute inset-0 flex items-center justify-center text-xs font-bold text-white">
-                {toFa(scoreA)}
-              </span>
-            </div>
-          </div>
-        </div>
-        <div className="flex items-center gap-3">
-          <span className="w-32 text-xs text-[#6b7280]">{laptopBName}</span>
-          <div className="flex-1">
-            <div className="relative h-8 overflow-hidden rounded-lg bg-[#f3f4f6]">
-              <div 
-                className={`absolute inset-y-0 right-0 rounded-lg transition-all duration-500 ${
-                  winner === 'B' ? 'bg-[#2563eb]' : 'bg-[#9ca3af]'
-                }`}
-                style={{ width: `${scoreB}%` }}
-              />
-              <span className="absolute inset-0 flex items-center justify-center text-xs font-bold text-white">
-                {toFa(scoreB)}
-              </span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
+
 
 // کامپوننت جدول مقایسه
 function ComparisonTable({ title, rows }: {
@@ -218,36 +170,28 @@ export default function ComparePage({ products, ids, onClose, onAddToCart }: Com
           </div>
         </div>
 
-        {/* Review Section with Score Bars */}
-        <div className="mb-8 rounded-2xl bg-white p-8 shadow-sm">
-          <h2 className="mb-2 text-2xl font-bold text-[#1a1a1a]">بررسی</h2>
-          <p className="mb-6 text-sm text-[#6b7280]">ارزیابی ویژگی‌های مهم</p>
-
-          {/* Scenario Selector */}
-          <div className="mb-6 rounded-xl bg-[#f9fafb] p-4">
-            <p className="mb-3 text-sm font-bold text-[#1a1a1a]">سناریوی استفاده را انتخاب کنید:</p>
-            <select
-              value={scenario}
-              onChange={(e) => setScenario(e.target.value)}
-              className="w-full rounded-lg border border-[#e5e7eb] bg-white px-4 py-2 text-sm"
-            >
-              <option value="gaming">گیمینگ</option>
-              <option value="business">تجاری</option>
-              <option value="programming">برنامه‌نویسی</option>
-              <option value="student">دانشجویی</option>
-              <option value="content">تولید محتوا</option>
-              <option value="engineering">مهندسی</option>
-            </select>
-          </div>
-
-          {/* Score Bars */}
-          <ScoreBar label="عملکرد" scoreA={scoresA.performance} scoreB={scoresB.performance} laptopAName={laptopA.shortName} laptopBName={laptopB.shortName} />
-          <ScoreBar label="گیمینگ" scoreA={scoresA.gaming} scoreB={scoresB.gaming} laptopAName={laptopA.shortName} laptopBName={laptopB.shortName} />
-          <ScoreBar label="نمایشگر" scoreA={scoresA.display} scoreB={scoresB.display} laptopAName={laptopA.shortName} laptopBName={laptopB.shortName} />
-          <ScoreBar label="عمر باتری" scoreA={scoresA.battery} scoreB={scoresB.battery} laptopAName={laptopA.shortName} laptopBName={laptopB.shortName} />
-          <ScoreBar label="اتصالات" scoreA={scoresA.connectivity} scoreB={scoresB.connectivity} laptopAName={laptopA.shortName} laptopBName={laptopB.shortName} />
-          <ScoreBar label="قابلیت حمل" scoreA={scoresA.portability} scoreB={scoresB.portability} laptopAName={laptopA.shortName} laptopBName={laptopB.shortName} />
-          <ScoreBar label="امتیاز کلی" scoreA={scoresA.overall} scoreB={scoresB.overall} laptopAName={laptopA.shortName} laptopBName={laptopB.shortName} />
+        {/* Review Section - پیکسل پرفکت مطابق NanoReview */}
+        <div className="mb-8">
+          <Review
+            laptopA={laptopA.name}
+            laptopB={laptopB.name}
+            scoresA={{
+              performance: scoresA.performance,
+              gaming: scoresA.gaming,
+              display: scoresA.display,
+              battery: scoresA.battery,
+              connectivity: scoresA.connectivity,
+              portability: scoresA.portability,
+            }}
+            scoresB={{
+              performance: scoresB.performance,
+              gaming: scoresB.gaming,
+              display: scoresB.display,
+              battery: scoresB.battery,
+              connectivity: scoresB.connectivity,
+              portability: scoresB.portability,
+            }}
+          />
         </div>
 
         {/* Value for Money */}
