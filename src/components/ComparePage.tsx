@@ -6,6 +6,7 @@ import NanoReviewScore from "./NanoReviewScore";
 import KeyDifferences from "./KeyDifferences";
 import CaseComparisonTable from "./CaseComparisonTable";
 import SizeComparison from "./SizeComparison";
+import CoolingSolution from "./CoolingSolution";
 
 interface ComparePageProps {
   products: Laptop[];
@@ -363,6 +364,11 @@ export default function ComparePage({ products, ids, onClose, onAddToCart }: Com
         {/* Size Comparison - مقایسه اندازه سه‌بعدی */}
         <div className="mb-8">
           <SizeComparison laptops={laptops} maxLaptops={4} />
+        </div>
+
+        {/* Cooling Solution - راه حل خنک‌کنندگی */}
+        <div className="mb-8">
+          <CoolingSolution laptops={laptops} maxLaptops={4} />
         </div>
 
         {/* Technical Specifications */}
