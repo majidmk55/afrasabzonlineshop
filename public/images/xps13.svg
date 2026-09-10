@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600">
+  <defs>
+    <linearGradient id="screen" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0a2a4a;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#0066cc;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="body" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#d0d0d0;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#d0d0d0;stop-opacity:0.85" />
+    </linearGradient>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="140%">
+      <feDropShadow dx="0" dy="8" stdDeviation="12" flood-opacity="0.25"/>
+    </filter>
+  </defs>
+  <rect fill="#f8f9fa" width="800" height="600"/>
+  <g filter="url(#shadow)">
+    <rect x="140" y="120" width="520" height="340" rx="12" fill="url(#body)"/>
+    <rect x="160" y="140" width="480" height="290" rx="6" fill="url(#screen)"/>
+    <rect x="180" y="470" width="440" height="14" rx="7" fill="#d0d0d0" opacity="0.7"/>
+    <rect x="320" y="488" width="160" height="6" rx="3" fill="#d0d0d0" opacity="0.5"/>
+  </g>
+  <text x="400" y="540" font-family="Arial,sans-serif" font-size="28" font-weight="bold" fill="#333" text-anchor="middle">Dell XPS 13</text>
+</svg>
