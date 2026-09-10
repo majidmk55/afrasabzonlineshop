@@ -29,70 +29,111 @@ function extractNumber(text: string): number {
 // تولید مزایای هر لپ‌تاپ بر اساس مقایسه با همه لپ‌تاپ‌های دیگر
 function generateAdvantagesForAll(laptop: Laptop, allLaptops: Laptop[]): string[] {
   const advantages: string[] = [];
-  const otherLaptops = allLaptops.filter(l => l.id !== laptop.id);
   
-  if (otherLaptops.length === 0) return [];
+  if (allLaptops.length < 2) return [];
   
-  // مقایسه وزن - آیا سبک‌ترین است؟
-  const weights = allLaptops.map(l => extractNumber(extractSpec(l, "وزن و ابعاد", "وزن")));
-  const myWeight = extractNumber(extractSpec(laptop, "وزن و ابعاد", "وزن"));
-  const minWeight = Math.min(...weights);
-  if (myWeight > 0 && myWeight === minWeight && weights.filter(w => w === minWeight).length === 1) {
-    const maxWeight = Math.max(...weights);
-    const diff = maxWeight - myWeight;
-    advantages.push(`سبک‌ترین: ${diff.toFixed(2)} کیلوگرم سبک‌تر از سنگین‌ترین`);
-  }
+  // استخراج مقادیر برای همه لپ‌تاپ‌ها
+  const getWeight = (l: Laptop) => extractNumber(extractSpec(l, "وزن و ابعاد", "وزن"));
+  const getBattery = (l: Laptop) => extractNumber(extractSpec(l, "باتری و شارژ", "ظرفیت باتری"));
+  const getDisplay = (l: Laptop) => extractNumber(extractSpec(l, "صفحه نمایش", "اندازه صفحه نمایش"));
+  const getRefresh = (l: Laptop) => extractNumber(extractSpec(l, "صفحه نمایش", "نرخ نوسازی (Refresh Rate)"));
+  const getRam = (l: Laptop) => extractNumber(extractSpec(l, "حافظه رم", "حافظه داخلی رم"));
+  const getStorage = (l: Laptop) => extractNumber(extractSpec(l, "ذخیره‌سازی", "ظرفیت کلی"));
   
-  // مقایسه باتری - آیا بیشترین ظرفیت را دارد؟
-  const batteries = allLaptops.map(l => extractNumber(extractSpec(l, "باتری و شارژ", "ظرفیت باتری")));
-  const myBattery = extractNumber(extractSpec(laptop, "باتری و شارژ", "ظرفیت باتری"));
-  const maxBattery = Math.max(...batteries);
-  if (myBattery > 0 && myBattery === maxBattery && batteries.filter(b => b === maxBattery).length === 1) {
-    const minBattery = Math.min(...batteries.filter(b => b > 0));
-    const percent = Math.round(((myBattery - minBattery) / minBattery) * 100);
-    advantages.push(`بیشترین ظرفیت باتری: ${percent}% بیشتر از کمترین`);
-  }
-  
-  // مقایسه نمایشگر - آیا بزرگ‌ترین است؟
-  const displays = allLaptops.map(l => extractNumber(extractSpec(l, "صفحه نمایش", "اندازه صفحه نمایش")));
-  const myDisplay = extractNumber(extractSpec(laptop, "صفحه نمایش", "اندازه صفحه نمایش"));
-  const maxDisplay = Math.max(...displays);
-  if (myDisplay > 0 && myDisplay === maxDisplay && displays.filter(d => d === maxDisplay).length === 1) {
-    advantages.push(`بزرگ‌ترین نمایشگر: ${myDisplay} اینچ`);
-  }
-  
-  // مقایسه نرخ نوسازی - آیا بالاترین است؟
-  const refreshRates = allLaptops.map(l => extractNumber(extractSpec(l, "صفحه نمایش", "نرخ نوسازی (Refresh Rate)")));
-  const myRefresh = extractNumber(extractSpec(laptop, "صفحه نمایش", "نرخ نوسازی (Refresh Rate)"));
-  const maxRefresh = Math.max(...refreshRates);
-  if (myRefresh > 0 && myRefresh === maxRefresh && refreshRates.filter(r => r === maxRefresh).length === 1) {
-    advantages.push(`بالاترین نرخ نوسازی: ${myRefresh} هرتز`);
-  }
-  
-  // مقایسه رم - آیا بیشترین را دارد؟
-  const rams = allLaptops.map(l => extractNumber(extractSpec(l, "حافظه رم", "حافظه داخلی رم")));
-  const myRam = extractNumber(extractSpec(laptop, "حافظه رم", "حافظه داخلی رم"));
-  const maxRam = Math.max(...rams);
-  if (myRam > 0 && myRam === maxRam && rams.filter(r => r === maxRam).length === 1) {
-    advantages.push(`بیشترین حافظه رم: ${myRam}GB`);
-  }
-  
-  // مقایسه ذخیره‌سازی - آیا بیشترین را دارد؟
-  const storages = allLaptops.map(l => extractNumber(extractSpec(l, "ذخیره‌سازی", "ظرفیت کلی")));
-  const myStorage = extractNumber(extractSpec(laptop, "ذخیره‌سازی", "ظرفیت کلی"));
-  const maxStorage = Math.max(...storages);
-  if (myStorage > 0 && myStorage === maxStorage && storages.filter(s => s === maxStorage).length === 1) {
-    advantages.push(`بیشترین حافظه ذخیره‌سازی: ${myStorage}GB`);
-  }
-  
-  // مقایسه قیمت - آیا ارزان‌ترین است؟
-  const prices = allLaptops.map(l => l.price);
+  // مقادیر لپ‌تاپ فعلی
+  const myWeight = getWeight(laptop);
+  const myBattery = getBattery(laptop);
+  const myDisplay = getDisplay(laptop);
+  const myRefresh = getRefresh(laptop);
+  const myRam = getRam(laptop);
+  const myStorage = getStorage(laptop);
   const myPrice = laptop.price;
-  const minPrice = Math.min(...prices);
-  if (myPrice === minPrice && prices.filter(p => p === minPrice).length === 1) {
-    const maxPrice = Math.max(...prices);
+  
+  // مقادیر همه لپ‌تاپ‌ها
+  const allWeights = allLaptops.map(getWeight);
+  const allBatteries = allLaptops.map(getBattery);
+  const allDisplays = allLaptops.map(getDisplay);
+  const allRefreshes = allLaptops.map(getRefresh);
+  const allRams = allLaptops.map(getRam);
+  const allStorages = allLaptops.map(getStorage);
+  const allPrices = allLaptops.map(l => l.price);
+  
+  // 1. سبک‌ترین وزن
+  if (myWeight > 0) {
+    const minWeight = Math.min(...allWeights.filter(w => w > 0));
+    if (myWeight === minWeight) {
+      const maxWeight = Math.max(...allWeights);
+      const diff = maxWeight - myWeight;
+      if (diff > 0.1) {
+        advantages.push(`سبک‌ترین: ${diff.toFixed(2)} کیلوگرم سبک‌تر از سنگین‌ترین`);
+      }
+    }
+  }
+  
+  // 2. بیشترین ظرفیت باتری
+  if (myBattery > 0) {
+    const maxBattery = Math.max(...allBatteries);
+    if (myBattery === maxBattery) {
+      const minBattery = Math.min(...allBatteries.filter(b => b > 0));
+      const percent = Math.round(((myBattery - minBattery) / minBattery) * 100);
+      if (percent > 10) {
+        advantages.push(`بیشترین ظرفیت باتری: ${percent}% بیشتر از کمترین`);
+      }
+    }
+  }
+  
+  // 3. بزرگ‌ترین نمایشگر
+  if (myDisplay > 0) {
+    const maxDisplay = Math.max(...allDisplays);
+    if (myDisplay === maxDisplay) {
+      const minDisplay = Math.min(...allDisplays.filter(d => d > 0));
+      if (myDisplay - minDisplay > 0.5) {
+        advantages.push(`بزرگ‌ترین نمایشگر: ${myDisplay} اینچ`);
+      }
+    }
+  }
+  
+  // 4. بالاترین نرخ نوسازی
+  if (myRefresh > 0) {
+    const maxRefresh = Math.max(...allRefreshes);
+    if (myRefresh === maxRefresh) {
+      const minRefresh = Math.min(...allRefreshes.filter(r => r > 0));
+      if (myRefresh - minRefresh > 30) {
+        advantages.push(`بالاترین نرخ نوسازی: ${myRefresh} هرتز`);
+      }
+    }
+  }
+  
+  // 5. بیشترین رم
+  if (myRam > 0) {
+    const maxRam = Math.max(...allRams);
+    if (myRam === maxRam) {
+      const minRam = Math.min(...allRams.filter(r => r > 0));
+      if (myRam > minRam) {
+        advantages.push(`بیشترین حافظه رم: ${myRam}GB`);
+      }
+    }
+  }
+  
+  // 6. بیشترین ذخیره‌سازی
+  if (myStorage > 0) {
+    const maxStorage = Math.max(...allStorages);
+    if (myStorage === maxStorage) {
+      const minStorage = Math.min(...allStorages.filter(s => s > 0));
+      if (myStorage > minStorage) {
+        advantages.push(`بیشترین حافظه ذخیره‌سازی: ${myStorage}GB`);
+      }
+    }
+  }
+  
+  // 7. ارزان‌ترین قیمت
+  const minPrice = Math.min(...allPrices);
+  if (myPrice === minPrice) {
+    const maxPrice = Math.max(...allPrices);
     const diff = maxPrice - myPrice;
-    advantages.push(`ارزان‌ترین: ${fmt(diff)} ارزان‌تر از گران‌ترین`);
+    if (diff > 10000000) { // حداقل 10 میلیون تومان تفاوت
+      advantages.push(`ارزان‌ترین: ${fmt(diff)} ارزان‌تر از گران‌ترین`);
+    }
   }
   
   return advantages.slice(0, 6); // حداکثر 6 مزیت

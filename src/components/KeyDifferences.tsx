@@ -34,7 +34,7 @@ export default function KeyDifferences({ laptops }: KeyDifferencesProps) {
   return (
     <div
       ref={containerRef}
-      className="mx-auto w-full max-w-[800px] bg-white p-8 sm:p-10"
+      className="mx-auto w-full max-w-[1200px] bg-white p-8 sm:p-10"
       style={{
         fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
         WebkitFontSmoothing: "antialiased",
@@ -80,9 +80,14 @@ export default function KeyDifferences({ laptops }: KeyDifferencesProps) {
       </div>
 
       {/* بخش‌های مزایا - پشتیبانی از تا 4 لپ‌تاپ */}
-      <div className={laptops.length > 2 ? "grid grid-cols-1 gap-8 md:grid-cols-2" : "space-y-8"}>
+      <div className={`grid gap-8 ${
+        laptops.length === 1 ? 'grid-cols-1' :
+        laptops.length === 2 ? 'grid-cols-1 md:grid-cols-2' :
+        laptops.length === 3 ? 'grid-cols-1 md:grid-cols-3' :
+        'grid-cols-1 md:grid-cols-2 lg:grid-cols-2'
+      }`}>
         {laptops.map((laptop, laptopIndex) => (
-          <div key={laptopIndex}>
+          <div key={laptopIndex} className="bg-gray-50 rounded-lg p-5">
             <h3
               className="mb-4 text-[17px] font-bold text-[#111827]"
               style={{ letterSpacing: "-0.3px", lineHeight: "1.3" }}
