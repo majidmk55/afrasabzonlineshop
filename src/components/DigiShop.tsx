@@ -206,7 +206,7 @@ function FilterSidebar() {
   };
 
   return (
-    <aside className="sticky top-5 w-[300px] rounded-xl border border-[#e5e7eb] bg-white" style={{ maxHeight: "calc(100vh - 40px)" }}>
+    <aside className="sticky top-5 w-[270px] rounded-xl border border-[#e5e7eb] bg-white" style={{ maxHeight: "calc(100vh - 40px)" }}>
       {/* هدر */}
       <div className="flex h-[52px] items-center justify-between border-b border-[#e8e8e8] px-4">
         <div className="flex items-center gap-2">
@@ -484,7 +484,7 @@ export default function DigiShop({ products, onSpecs, onBrand, onToggleCompare, 
   const displayProducts = products.slice(0, 10); // فقط ۱۰ محصول
 
   return (
-    <div className="mx-auto max-w-[64%] px-2 py-6 sm:px-4">
+    <div className="mx-auto max-w-[40%] px-2 py-6 sm:px-4">
       {/* نوار لوگو برندها */}
       <section className="mb-4 flex items-center justify-center gap-8 rounded-xl bg-white py-4">
         {BRANDS.map((brand) => (
