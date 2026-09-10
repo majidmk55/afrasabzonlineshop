@@ -253,7 +253,7 @@ export default function ComparePage({ products, ids, onClose, onAddToCart }: Com
         </div>
       </div>
 
-      <div className="mx-auto max-w-7xl px-6 py-8">
+      <div className="mx-auto max-w-[70%] px-2 py-8 sm:px-4">
         {/* Products Header - تا ۴ لپ‌تاپ */}
         <div className="mb-8">
           <div className={`grid gap-4 ${

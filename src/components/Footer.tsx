@@ -29,7 +29,7 @@ export default function Footer({ count, onCategory, onBrand, onAdmin }: FooterPr
           <path d="M0 40 C 240 70, 480 10, 720 32 C 960 54, 1200 16, 1440 42 L 1440 70 L 0 70 Z" fill="currentColor" />
         </svg>
 
-        <div className="mx-auto max-w-[80%] px-2 pb-10 pt-6 sm:px-4">
+        <div className="mx-auto max-w-[70%] px-2 pb-10 pt-6 sm:px-4">
           <div className="grid gap-10 lg:grid-cols-[1.2fr_0.8fr_1fr_1.1fr]">
             {/* brand + newsletter */}
             <div>

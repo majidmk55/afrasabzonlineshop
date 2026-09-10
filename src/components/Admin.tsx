@@ -114,7 +114,7 @@ export default function Admin({ products, orders, settings, onProducts, onSettin
         </nav>
       </header>
 
-      <main className="mx-auto max-w-7xl px-4 py-8 sm:px-6">
+      <main className="mx-auto max-w-[70%] px-2 py-8 sm:px-4">
         {tab === "dashboard" && <Dashboard products={products} orders={orders} />}
         {tab === "analytics" && (
           <Suspense fallback={
