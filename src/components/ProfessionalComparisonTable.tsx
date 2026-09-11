@@ -28,15 +28,6 @@ interface BrightnessData {
   percentage?: number;
 }
 
-interface CoolingData {
-  type: string;
-  fans: string;
-  heatPipes: string;
-  vaporChamber: string;
-  liquidMetal: string;
-  noiseLevel: string;
-}
-
 interface ComparisonTableProps {
   products: Laptop[];
 }
@@ -168,22 +159,9 @@ export default function ComparisonTable({ products }: ComparisonTableProps) {
     };
   };
 
-  // Extract cooling data
-  const getCoolingData = (laptop: Laptop): CoolingData => {
-    return {
-      type: "Active",
-      fans: "—",
-      heatPipes: "—",
-      vaporChamber: "—",
-      liquidMetal: "—",
-      noiseLevel: "—",
-    };
-  };
-
   const displayData = products.map(getDisplayData);
   const displayTestsData = products.map(getDisplayTestsData);
   const brightnessData = products.map(getBrightnessData);
-  const coolingData = products.map(getCoolingData);
 
   // Calculate max brightness for percentage calculation
   const maxBrightness = Math.max(...brightnessData.map(d => d.nits));
@@ -419,64 +397,6 @@ export default function ComparisonTable({ products }: ComparisonTableProps) {
               </div>
             );
           })}
-        </div>
-      </div>
-
-      {/* SECTION 4: Cooling Solution */}
-      <div className="border-t border-gray-200">
-        <div className="flex items-center border-b border-gray-100 px-6 py-4">
-          <div className="mr-2 h-4 w-4 bg-sea" />
-          <h3 className="text-lg font-bold text-ink">راه حل خنک‌کنندگی</h3>
-        </div>
-
-        <div className="flex flex-col">
-          {/* Cooling type */}
-          <div className="grid border-b border-gray-100" style={{ gridTemplateColumns: `180px repeat(${products.length}, 1fr)` }}>
-            <div className="flex items-center p-3 pr-6 font-medium text-ink">نوع خنک‌کنندگی</div>
-            {coolingData.map((data, idx) => (
-              <div key={idx} className="flex items-center justify-end p-3 px-4 text-ink">{data.type}</div>
-            ))}
-          </div>
-
-          {/* Fans */}
-          <div className="grid border-b border-gray-100" style={{ gridTemplateColumns: `180px repeat(${products.length}, 1fr)` }}>
-            <div className="flex items-center p-3 pr-6 font-medium text-ink">تعداد فن‌ها</div>
-            {coolingData.map((data, idx) => (
-              <div key={idx} className="flex items-center justify-end p-3 px-4 text-ink">{data.fans}</div>
-            ))}
-          </div>
-
-          {/* Heat pipes */}
-          <div className="grid border-b border-gray-100" style={{ gridTemplateColumns: `180px repeat(${products.length}, 1fr)` }}>
-            <div className="flex items-center p-3 pr-6 font-medium text-ink">لوله‌های حرارتی</div>
-            {coolingData.map((data, idx) => (
-              <div key={idx} className="flex items-center justify-end p-3 px-4 text-ink">{data.heatPipes}</div>
-            ))}
-          </div>
-
-          {/* Vapor chamber */}
-          <div className="grid border-b border-gray-100" style={{ gridTemplateColumns: `180px repeat(${products.length}, 1fr)` }}>
-            <div className="flex items-center p-3 pr-6 font-medium text-ink">محفظه بخار</div>
-            {coolingData.map((data, idx) => (
-              <div key={idx} className="flex items-center justify-end p-3 px-4 text-ink">{data.vaporChamber}</div>
-            ))}
-          </div>
-
-          {/* Liquid metal */}
-          <div className="grid border-b border-gray-100" style={{ gridTemplateColumns: `180px repeat(${products.length}, 1fr)` }}>
-            <div className="flex items-center p-3 pr-6 font-medium text-ink">فلز مایع</div>
-            {coolingData.map((data, idx) => (
-              <div key={idx} className="flex items-center justify-end p-3 px-4 text-ink">{data.liquidMetal}</div>
-            ))}
-          </div>
-
-          {/* Noise level */}
-          <div className="grid" style={{ gridTemplateColumns: `180px repeat(${products.length}, 1fr)` }}>
-            <div className="flex items-center p-3 pr-6 font-medium text-ink">سطح نویز</div>
-            {coolingData.map((data, idx) => (
-              <div key={idx} className="flex items-center justify-end p-3 px-4 text-ink">{data.noiseLevel}</div>
-            ))}
-          </div>
         </div>
       </div>
     </div>
