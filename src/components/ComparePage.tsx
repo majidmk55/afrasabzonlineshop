@@ -366,7 +366,7 @@ export default function ComparePage({ products, ids, onClose, onAddToCart }: Com
 
         {/* Size Comparison - مقایسه اندازه سه‌بعدی */}
         <div className="mb-8">
-          <SizeComparison laptops={laptops} maxLaptops={4} />
+          <SizeComparison laptops={laptops} />
         </div>
 
         {/* Cooling Solution - راه حل خنک‌کنندگی */}
