@@ -25,6 +25,11 @@
   --color-deeplit: #0a3d5e;
 }
 
+/* Utility class for Nazanin font */
+.font-nazanin {
+  font-family: var(--font-nazanin);
+}
+
 html {
   scroll-behavior: smooth;
 }
