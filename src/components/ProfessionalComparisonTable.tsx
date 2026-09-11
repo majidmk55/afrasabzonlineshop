@@ -378,7 +378,7 @@ export default function ComparisonTable({ products }: ComparisonTableProps) {
                 <div className="w-48 text-sm font-medium text-ink">{data.name}</div>
                 <div className="flex flex-1 items-center gap-3">
                   <div className="flex-1">
-                    <div className="h-6 overflow-hidden rounded bg-gray-100">
+                    <div className="h-4 overflow-hidden rounded bg-gray-100">
                       <div 
                         className="h-full rounded bg-sea transition-all duration-500"
                         style={{ width: `${percentage}%` }}
@@ -597,7 +597,7 @@ export default function ComparisonTable({ products }: ComparisonTableProps) {
                       <div className="w-48 text-xs font-medium text-ink">{laptop.shortName}</div>
                       <div className="flex flex-1 items-center gap-2">
                         <div className="flex-1">
-                          <div className="h-6 overflow-hidden rounded bg-gray-100">
+                          <div className="h-4 overflow-hidden rounded bg-gray-100">
                             <div 
                               className="h-full rounded bg-sea transition-all duration-500"
                               style={{ width: `${percentage}%` }}
@@ -628,7 +628,7 @@ export default function ComparisonTable({ products }: ComparisonTableProps) {
                       <div className="w-48 text-xs font-medium text-ink">{laptop.shortName}</div>
                       <div className="flex flex-1 items-center gap-2">
                         <div className="flex-1">
-                          <div className="h-6 overflow-hidden rounded bg-gray-100">
+                          <div className="h-4 overflow-hidden rounded bg-gray-100">
                             <div 
                               className="h-full rounded bg-sea transition-all duration-500"
                               style={{ width: `${percentage}%` }}
@@ -660,7 +660,7 @@ export default function ComparisonTable({ products }: ComparisonTableProps) {
                       <div className="w-48 text-xs font-medium text-ink">{laptop.shortName}</div>
                       <div className="flex flex-1 items-center gap-2">
                         <div className="flex-1">
-                          <div className="h-6 overflow-hidden rounded bg-gray-100">
+                          <div className="h-4 overflow-hidden rounded bg-gray-100">
                             <div 
                               className="h-full rounded bg-sea transition-all duration-500"
                               style={{ width: `${percentage}%` }}
@@ -692,7 +692,7 @@ export default function ComparisonTable({ products }: ComparisonTableProps) {
                       <div className="w-48 text-xs font-medium text-ink">{laptop.shortName}</div>
                       <div className="flex flex-1 items-center gap-2">
                         <div className="flex-1">
-                          <div className="h-6 overflow-hidden rounded bg-gray-100">
+                          <div className="h-4 overflow-hidden rounded bg-gray-100">
                             <div 
                               className="h-full rounded bg-sea transition-all duration-500"
                               style={{ width: `${percentage}%` }}
