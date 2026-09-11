@@ -125,7 +125,7 @@ export default function Admin({ products, orders, settings, onProducts, onSettin
               </div>
             </div>
           }>
-            <AnalyticsDashboard />
+            <AnalyticsDashboard products={products} orders={orders} />
           </Suspense>
         )}
         {tab === "products" && <Products products={products} onProducts={onProducts} />}
@@ -208,7 +208,7 @@ function Dashboard({ products, orders }: { products: Laptop[]; orders: OrderReco
     <div className="space-y-6">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <h1 className="font-display text-2xl font-bold">هوش تجاری فروش</h1>
+          <h1 className="font-nazanin text-2xl font-bold">هوش تجاری فروش</h1>
           <p className="mt-1 text-sm text-mist">نمای زنده عملکرد فروشگاه — داده‌های نمایشی + سفارش‌های واقعی شما</p>
         </div>
         <div className="flex rounded-full border border-line bg-white p-1">
@@ -230,7 +230,7 @@ function Dashboard({ products, orders }: { products: Laptop[]; orders: OrderReco
         ].map((k) => (
           <div key={k.label} className="card-lift border border-line bg-white p-5">
             <p className="text-xs font-bold text-mist">{k.label}</p>
-            <p className="mt-2 font-display text-xl font-bold text-ink sm:text-2xl">{k.value}</p>
+            <p className="mt-2 font-nazanin text-xl font-bold text-ink sm:text-2xl">{k.value}</p>
             <p className={`mt-1 text-[11px] ${k.up === false ? "text-red-500" : k.up === true ? "text-moss" : "text-mist"}`}>{k.note}</p>
           </div>
         ))}
@@ -239,7 +239,7 @@ function Dashboard({ products, orders }: { products: Laptop[]; orders: OrderReco
       {/* chart */}
       <div className="border border-line bg-white p-5">
         <div className="flex items-center justify-between">
-          <h2 className="font-display text-lg font-bold">روند فروش {buckets.step > 1 ? "(هفتگی)" : "(روزانه)"}</h2>
+          <h2 className="font-nazanin text-lg font-bold">روند فروش {buckets.step > 1 ? "(هفتگی)" : "(روزانه)"}</h2>
           <span className="font-mono text-[11px] text-mist">اوج: {compactIRR(maxBar)}</span>
         </div>
         <svg viewBox={`0 0 ${W} ${H + 26}`} className="mt-4 w-full" role="img" aria-label="نمودار فروش">
@@ -268,7 +268,7 @@ function Dashboard({ products, orders }: { products: Laptop[]; orders: OrderReco
       <div className="grid gap-6 lg:grid-cols-2">
         {/* top sellers */}
         <div className="border border-line bg-white p-5">
-          <h2 className="font-display text-lg font-bold">پرفروش‌ترین کالاها</h2>
+          <h2 className="font-nazanin text-lg font-bold">پرفروش‌ترین کالاها</h2>
           <ol className="mt-4 space-y-3">
             {top.map(([id, t], i) => {
               const maxRev = top[0][1].revenue || 1;
@@ -294,7 +294,7 @@ function Dashboard({ products, orders }: { products: Laptop[]; orders: OrderReco
         {/* category share + low stock */}
         <div className="space-y-6">
           <div className="border border-line bg-white p-5">
-            <h2 className="font-display text-lg font-bold">سهم دسته‌ها از فروش</h2>
+            <h2 className="font-nazanin text-lg font-bold">سهم دسته‌ها از فروش</h2>
             <div className="mt-4 space-y-3">
               {catShare.map(([c, pct]) => (
                 <div key={c}>
@@ -307,7 +307,7 @@ function Dashboard({ products, orders }: { products: Laptop[]; orders: OrderReco
             </div>
           </div>
           <div className="border border-line bg-white p-5">
-            <h2 className="flex items-center justify-between font-display text-lg font-bold">
+            <h2 className="flex items-center justify-between font-nazanin text-lg font-bold">
               هشدار موجودی کم
               <span className="rounded-full bg-skywash px-2.5 py-0.5 font-mono text-xs text-sea">{toFa(lowStock.length)} کالا</span>
             </h2>
@@ -328,7 +328,7 @@ function Dashboard({ products, orders }: { products: Laptop[]; orders: OrderReco
 
       {/* recent orders */}
       <div className="border border-line bg-white p-5">
-        <h2 className="font-display text-lg font-bold">آخرین سفارش‌ها</h2>
+        <h2 className="font-nazanin text-lg font-bold">آخرین سفارش‌ها</h2>
         <div className="mt-3 divide-y divide-line">
           {orders.slice(0, 6).map((o) => (
             <div key={o.id} className="flex flex-wrap items-center gap-3 py-2.5 text-sm">
@@ -384,7 +384,7 @@ function Products({ products, onProducts }: { products: Laptop[]; onProducts: (n
     <div className="space-y-5">
       <div className="flex flex-wrap items-center gap-3">
         <div>
-          <h1 className="font-display text-2xl font-bold">مدیریت کالاها</h1>
+          <h1 className="font-nazanin text-2xl font-bold">مدیریت کالاها</h1>
           <p className="mt-1 text-sm text-mist">ویرایش قیمت و موجودی با یک کلیک — خاموش/روشن کردن نمایش در سایت</p>
         </div>
         <div className="mr-auto flex flex-wrap gap-2">
@@ -604,7 +604,7 @@ function ProductForm({ initial, products, onSave, onClose }: { initial?: Laptop;
       <div className="overlay-in fixed inset-0 bg-ink/60" onClick={onClose} />
       <div className="panel-in relative mx-auto my-8 w-[min(720px,94vw)] border border-line bg-white p-6 shadow-2xl sm:p-8">
         <div className="flex items-center justify-between">
-          <h2 className="font-display text-xl font-bold">{initial ? "ویرایش کالا" : "افزودن کالای جدید"}</h2>
+          <h2 className="font-nazanin text-xl font-bold">{initial ? "ویرایش کالا" : "افزودن کالای جدید"}</h2>
           <button onClick={onClose} className="flex h-9 w-9 items-center justify-center rounded-full border border-line hover:border-red-400 hover:text-red-500"><IClose size={16} /></button>
         </div>
         <div className="mt-5 grid gap-4 sm:grid-cols-2">
@@ -714,7 +714,7 @@ function BulkImport({ products, onAdd, onClose }: { products: Laptop[]; onAdd: (
       <div className="overlay-in fixed inset-0 bg-ink/60" onClick={onClose} />
       <div className="panel-in relative mx-auto my-8 w-[min(680px,94vw)] border border-line bg-white p-6 shadow-2xl sm:p-8">
         <div className="flex items-center justify-between">
-          <h2 className="flex items-center gap-2 font-display text-xl font-bold"><IUpload size={20} className="text-sea" /> ورود دسته‌جمعی کالاها</h2>
+          <h2 className="flex items-center gap-2 font-nazanin text-xl font-bold"><IUpload size={20} className="text-sea" /> ورود دسته‌جمعی کالاها</h2>
           <button onClick={onClose} className="flex h-9 w-9 items-center justify-center rounded-full border border-line hover:border-red-400 hover:text-red-500"><IClose size={16} /></button>
         </div>
         <p className="mt-2 text-sm leading-relaxed text-mist">
@@ -754,7 +754,7 @@ function Orders({ orders }: { orders: OrderRecord[] }) {
   return (
     <div className="space-y-5">
       <div>
-        <h1 className="font-display text-2xl font-bold">سفارش‌ها</h1>
+        <h1 className="font-nazanin text-2xl font-bold">سفارش‌ها</h1>
         <p className="mt-1 text-sm text-mist">{toFa(orders.length)} سفارش ثبت‌شده — برای جزئیات روی هر ردیف کلیک کنید</p>
       </div>
       <div className="divide-y divide-line border border-line bg-white">
@@ -799,7 +799,7 @@ function SettingsTab({ settings, onSettings }: { settings: Settings; onSettings:
   return (
     <div className="max-w-2xl space-y-5">
       <div>
-        <h1 className="font-display text-2xl font-bold">تنظیمات فروشگاه</h1>
+        <h1 className="font-nazanin text-2xl font-bold">تنظیمات فروشگاه</h1>
         <p className="mt-1 text-sm text-mist">رفتار نمایش کالاها در سایت مشتریان</p>
       </div>
 
