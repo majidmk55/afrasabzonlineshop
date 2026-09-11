@@ -830,6 +830,271 @@ export default function ComparisonTable({ products }: ComparisonTableProps) {
           </div>
         </div>
       </div>
+
+      {/* SECTION 6: Graphics Card */}
+      <div className="border-t border-[#e8e8e8]">
+        <div className="flex items-center border-b border-[#e8e8e8] px-6 py-4">
+          <div className="mr-2 h-4 w-4 bg-sea" />
+          <h3 className="text-lg font-bold text-[#1a1a2e]">کارت گرافیک</h3>
+        </div>
+
+        {/* GPU Name Selector with Radio Buttons */}
+        <div className="grid border-b border-[#e8e8e8]" style={{ gridTemplateColumns: `30% 35% 35%` }}>
+          <div className="flex items-center p-3 px-4 text-[#666666] text-sm">نام GPU</div>
+          {products.slice(0, 2).map((laptop, idx) => {
+            const gpuSpec = laptop.specs.find(s => s.title === "گرافیک");
+            const gpuName = gpuSpec?.rows.find(r => r[0] === "مدل گرافیک مجزا")?.[1] || "—";
+            
+            return (
+              <div key={laptop.id} className="flex items-center p-3 px-4">
+                <div className={`flex h-4 w-4 items-center justify-center rounded-full border-2 ${
+                  idx === 0 ? "border-[#1a73e8] bg-[#1a73e8]" : "border-[#cccccc]"
+                }`}>
+                  {idx === 0 && <div className="h-1.5 w-1.5 rounded-full bg-white" />}
+                </div>
+                <span className="ml-2 text-sm text-[#1a73e8]">{gpuName}</span>
+              </div>
+            );
+          })}
+        </div>
+
+        <div className="flex flex-col">
+          {/* TGP */}
+          <div className="grid border-b border-[#e8e8e8]" style={{ gridTemplateColumns: `30% 35% 35%` }}>
+            <div className="flex items-center p-3 px-4 text-[#666666] text-sm">TGP</div>
+            {products.slice(0, 2).map((laptop, idx) => {
+              const gpuSpec = laptop.specs.find(s => s.title === "گرافیک");
+              const tgp = gpuSpec?.rows.find(r => r[0] === "توان مصرفی")?.[1] || "—";
+              
+              return (
+                <div key={laptop.id} className="flex items-center p-3 px-4 text-[#333333] text-sm">{tgp}</div>
+              );
+            })}
+          </div>
+
+          {/* Type */}
+          <div className="grid border-b border-[#e8e8e8]" style={{ gridTemplateColumns: `30% 35% 35%` }}>
+            <div className="flex items-center p-3 px-4 text-[#666666] text-sm">نوع</div>
+            {products.slice(0, 2).map((laptop, idx) => {
+              const gpuSpec = laptop.specs.find(s => s.title === "گرافیک");
+              const type = gpuSpec?.rows.find(r => r[0] === "نوع")?.[1] || "Integrated";
+              
+              return (
+                <div key={laptop.id} className="flex items-center p-3 px-4 text-[#333333] text-sm">{type}</div>
+              );
+            })}
+          </div>
+
+          {/* Fabrication process - Highlighted (smaller is better) */}
+          <div className="grid border-b border-[#e8e8e8]" style={{ gridTemplateColumns: `30% 35% 35%` }}>
+            <div className="flex items-center p-3 px-4 text-[#666666] text-sm">فرآیند ساخت</div>
+            {products.slice(0, 2).map((laptop, idx) => {
+              const gpuSpec = laptop.specs.find(s => s.title === "گرافیک");
+              const processText = gpuSpec?.rows.find(r => r[0] === "فرآیند ساخت")?.[1] || "—";
+              const processMatch = processText.match(/(\d+)/);
+              const process = processMatch ? parseInt(processMatch[1]) : 999;
+              const minProcess = Math.min(...products.slice(0, 2).map(p => {
+                const spec = p.specs.find(s => s.title === "گرافیک");
+                const proc = spec?.rows.find(r => r[0] === "فرآیند ساخت")?.[1] || "999";
+                const match = proc.match(/(\d+)/);
+                return match ? parseInt(match[1]) : 999;
+              }));
+              const isSmallest = process === minProcess && process < 999;
+              
+              return (
+                <div key={laptop.id} className={`flex items-center p-3 px-4 text-[#333333] text-sm ${isSmallest ? "bg-[#d4edda]" : ""}`}>
+                  {processText}
+                </div>
+              );
+            })}
+          </div>
+
+          {/* GPU base clock */}
+          <div className="grid border-b border-[#e8e8e8]" style={{ gridTemplateColumns: `30% 35% 35%` }}>
+            <div className="flex items-center p-3 px-4 text-[#666666] text-sm">فرکانس پایه GPU</div>
+            {products.slice(0, 2).map((laptop, idx) => {
+              const gpuSpec = laptop.specs.find(s => s.title === "گرافیک");
+              const clockText = gpuSpec?.rows.find(r => r[0] === "فرکانس پایه")?.[1] || "—";
+              const clockMatch = clockText.match(/(\d+)/);
+              const clock = clockMatch ? parseInt(clockMatch[1]) : 0;
+              const maxClock = Math.max(...products.slice(0, 2).map(p => {
+                const spec = p.specs.find(s => s.title === "گرافیک");
+                const clk = spec?.rows.find(r => r[0] === "فرکانس پایه")?.[1] || "0";
+                const match = clk.match(/(\d+)/);
+                return match ? parseInt(match[1]) : 0;
+              }));
+              const isHighest = clock === maxClock && clock > 0;
+              
+              return (
+                <div key={laptop.id} className={`flex items-center p-3 px-4 text-[#333333] text-sm ${isHighest ? "bg-[#d4edda]" : ""}`}>
+                  {clockText}
+                </div>
+              );
+            })}
+          </div>
+
+          {/* GPU boost clock */}
+          <div className="grid border-b border-[#e8e8e8]" style={{ gridTemplateColumns: `30% 35% 35%` }}>
+            <div className="flex items-center p-3 px-4 text-[#666666] text-sm">فرکانس بوست GPU</div>
+            {products.slice(0, 2).map((laptop, idx) => {
+              const gpuSpec = laptop.specs.find(s => s.title === "گرافیک");
+              const clockText = gpuSpec?.rows.find(r => r[0] === "فرکانس بوست")?.[1] || "—";
+              const clockMatch = clockText.match(/(\d+)/);
+              const clock = clockMatch ? parseInt(clockMatch[1]) : 0;
+              const maxClock = Math.max(...products.slice(0, 2).map((p) => {
+                const spec = p.specs.find(s => s.title === "گرافیک");
+                const clk = spec?.rows.find(r => r[0] === "فرکانس بوست")?.[1] || "0";
+                const match = clk.match(/(\d+)/);
+                return match ? parseInt(match[1]) : 0;
+              }));
+              const isHighest = clock === maxClock && clock > 0;
+              
+              return (
+                <div key={laptop.id} className={`flex items-center p-3 px-4 text-[#333333] text-sm ${isHighest ? "bg-[#d4edda]" : ""}`}>
+                  {clockText}
+                </div>
+              );
+            })}
+          </div>
+
+          {/* FLOPS */}
+          <div className="grid border-b border-[#e8e8e8]" style={{ gridTemplateColumns: `30% 35% 35%` }}>
+            <div className="flex items-center p-3 px-4 text-[#666666] text-sm">FLOPS</div>
+            {products.slice(0, 2).map((laptop, idx) => {
+              const gpuSpec = laptop.specs.find(s => s.title === "گرافیک");
+              const flopsText = gpuSpec?.rows.find(r => r[0] === "FLOPS")?.[1] || "—";
+              const flopsMatch = flopsText.match(/([\d.]+)/);
+              const flops = flopsMatch ? parseFloat(flopsMatch[1]) : 0;
+              const maxFlops = Math.max(...products.slice(0, 2).map((p) => {
+                const spec = p.specs.find(s => s.title === "گرافیک");
+                const fl = spec?.rows.find(r => r[0] === "FLOPS")?.[1] || "0";
+                const match = fl.match(/([\d.]+)/);
+                return match ? parseFloat(match[1]) : 0;
+              }));
+              const isHighest = flops === maxFlops && flops > 0;
+              
+              return (
+                <div key={laptop.id} className={`flex items-center p-3 px-4 text-[#333333] text-sm ${isHighest ? "bg-[#d4edda]" : ""}`}>
+                  {flopsText}
+                </div>
+              );
+            })}
+          </div>
+
+          {/* Memory size */}
+          <div className="grid border-b border-[#e8e8e8]" style={{ gridTemplateColumns: `30% 35% 35%` }}>
+            <div className="flex items-center p-3 px-4 text-[#666666] text-sm">حافظه</div>
+            {products.slice(0, 2).map((laptop, idx) => {
+              const gpuSpec = laptop.specs.find(s => s.title === "گرافیک");
+              const memSize = gpuSpec?.rows.find(r => r[0] === "حافظه گرافیک مجزا")?.[1] || "—";
+              
+              return (
+                <div key={laptop.id} className="flex items-center p-3 px-4 text-[#333333] text-sm">{memSize}</div>
+              );
+            })}
+          </div>
+
+          {/* Memory type */}
+          <div className="grid border-b border-[#e8e8e8]" style={{ gridTemplateColumns: `30% 35% 35%` }}>
+            <div className="flex items-center p-3 px-4 text-[#666666] text-sm">نوع حافظه</div>
+            {products.slice(0, 2).map((laptop, idx) => {
+              const gpuSpec = laptop.specs.find(s => s.title === "گرافیک");
+              const memType = gpuSpec?.rows.find(r => r[0] === "نوع حافظه گرافیک")?.[1] || "—";
+              
+              return (
+                <div key={laptop.id} className="flex items-center p-3 px-4 text-[#333333] text-sm">{memType}</div>
+              );
+            })}
+          </div>
+
+          {/* Memory speed */}
+          <div className="grid border-b border-[#e8e8e8]" style={{ gridTemplateColumns: `30% 35% 35%` }}>
+            <div className="flex items-center p-3 px-4 text-[#666666] text-sm">سرعت حافظه</div>
+            {products.slice(0, 2).map((laptop, idx) => {
+              const gpuSpec = laptop.specs.find(s => s.title === "گرافیک");
+              const memSpeed = gpuSpec?.rows.find(r => r[0] === "سرعت حافظه")?.[1] || "—";
+              
+              return (
+                <div key={laptop.id} className="flex items-center p-3 px-4 text-[#333333] text-sm">{memSpeed}</div>
+              );
+            })}
+          </div>
+
+          {/* Shading units (cores) */}
+          <div className="grid border-b border-[#e8e8e8]" style={{ gridTemplateColumns: `30% 35% 35%` }}>
+            <div className="flex items-center p-3 px-4 text-[#666666] text-sm">واحدهای سایه‌زنی (هسته‌ها)</div>
+            {products.slice(0, 2).map((laptop, idx) => {
+              const gpuSpec = laptop.specs.find(s => s.title === "گرافیک");
+              const coresText = gpuSpec?.rows.find(r => r[0] === "تعداد هسته")?.[1] || "—";
+              const coresMatch = coresText.match(/(\d+)/);
+              const cores = coresMatch ? parseInt(coresMatch[1]) : 0;
+              const maxCores = Math.max(...products.slice(0, 2).map((p) => {
+                const spec = p.specs.find(s => s.title === "گرافیک");
+                const cr = spec?.rows.find(r => r[0] === "تعداد هسته")?.[1] || "0";
+                const match = cr.match(/(\d+)/);
+                return match ? parseInt(match[1]) : 0;
+              }));
+              const isHighest = cores === maxCores && cores > 0;
+              
+              return (
+                <div key={laptop.id} className={`flex items-center p-3 px-4 text-[#333333] text-sm ${isHighest ? "bg-[#d4edda]" : ""}`}>
+                  {coresText}
+                </div>
+              );
+            })}
+          </div>
+
+          {/* Texture mapping units (TMUs) */}
+          <div className="grid border-b border-[#e8e8e8]" style={{ gridTemplateColumns: `30% 35% 35%` }}>
+            <div className="flex items-center p-3 px-4 text-[#666666] text-sm">واحدهای نگاشت بافت (TMUs)</div>
+            {products.slice(0, 2).map((laptop, idx) => {
+              const gpuSpec = laptop.specs.find(s => s.title === "گرافیک");
+              const tmus = gpuSpec?.rows.find(r => r[0] === "TMUs")?.[1] || "—";
+              
+              return (
+                <div key={laptop.id} className="flex items-center p-3 px-4 text-[#333333] text-sm">{tmus}</div>
+              );
+            })}
+          </div>
+
+          {/* Raster operations pipelines (ROPs) */}
+          <div className="grid border-b border-[#e8e8e8]" style={{ gridTemplateColumns: `30% 35% 35%` }}>
+            <div className="flex items-center p-3 px-4 text-[#666666] text-sm">خطوط عملیات رستر (ROPs)</div>
+            {products.slice(0, 2).map((laptop, idx) => {
+              const gpuSpec = laptop.specs.find(s => s.title === "گرافیک");
+              const rops = gpuSpec?.rows.find(r => r[0] === "ROPs")?.[1] || "—";
+              
+              return (
+                <div key={laptop.id} className="flex items-center p-3 px-4 text-[#333333] text-sm">{rops}</div>
+              );
+            })}
+          </div>
+
+          {/* GPU performance */}
+          <div className="grid" style={{ gridTemplateColumns: `30% 35% 35%` }}>
+            <div className="flex items-center p-3 px-4 text-[#666666] text-sm">عملکرد GPU</div>
+            {products.slice(0, 2).map((laptop, idx) => {
+              const gpuSpec = laptop.specs.find(s => s.title === "گرافیک");
+              const perfText = gpuSpec?.rows.find(r => r[0] === "عملکرد")?.[1] || "—";
+              const perfMatch = perfText.match(/([\d.]+)/);
+              const perf = perfMatch ? parseFloat(perfMatch[1]) : 0;
+              const maxPerf = Math.max(...products.slice(0, 2).map((p) => {
+                const spec = p.specs.find(s => s.title === "گرافیک");
+                const pf = spec?.rows.find(r => r[0] === "عملکرد")?.[1] || "0";
+                const match = pf.match(/([\d.]+)/);
+                return match ? parseFloat(match[1]) : 0;
+              }));
+              const isHighest = perf === maxPerf && perf > 0;
+              
+              return (
+                <div key={laptop.id} className={`flex items-center p-3 px-4 text-[#333333] text-sm ${isHighest ? "bg-[#d4edda]" : ""}`}>
+                  {perfText}
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
