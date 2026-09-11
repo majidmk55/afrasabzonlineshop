@@ -6,6 +6,7 @@ import NanoReviewScore from "./NanoReviewScore";
 import KeyDifferences from "./KeyDifferences";
 import CaseComparisonTable from "./CaseComparisonTable";
 import SizeComparison from "./SizeComparison";
+import RamStorageComparison from "./RamStorageComparison";
 import CoolingSolution from "./CoolingSolution";
 import Display from "./Display";
 import DisplayComparison from "./DisplayComparison";
@@ -367,6 +368,11 @@ export default function ComparePage({ products, ids, onClose, onAddToCart }: Com
         {/* Size Comparison - مقایسه اندازه سه‌بعدی */}
         <div className="mb-8">
           <SizeComparison laptops={laptops} />
+        </div>
+
+        {/* RAM & Storage Comparison - مقایسه RAM و Storage */}
+        <div className="mb-8">
+          <RamStorageComparison laptops={laptops} />
         </div>
 
         {/* Cooling Solution - راه حل خنک‌کنندگی */}
