@@ -400,7 +400,317 @@ export default function ComparisonTable({ products }: ComparisonTableProps) {
         </div>
       </div>
 
-      {/* SECTION 4: Battery */}
+      {/* SECTION 4: CPU */}
+      <div className="border-t border-gray-200">
+        <div className="flex items-center border-b border-gray-100 px-6 py-4">
+          <div className="mr-2 h-4 w-4 bg-sea" />
+          <h3 className="text-lg font-bold text-ink">پردازنده</h3>
+        </div>
+
+        {/* CPU Name Selector with Radio Buttons */}
+        <div className="grid border-b border-gray-100 bg-gray-50" style={{ gridTemplateColumns: `180px repeat(${products.length}, 1fr)` }}>
+          <div className="flex items-center p-3 pr-6 font-medium text-ink">نام پردازنده</div>
+          {products.map((laptop, idx) => {
+            const cpuSpec = laptop.specs.find(s => s.title === "پردازنده");
+            const cpuName = cpuSpec?.rows.find(r => r[0] === "مدل پردازنده")?.[1] || "—";
+            
+            return (
+              <div key={laptop.id} className="p-3 px-4">
+                <div className="flex items-center justify-end gap-2 mb-2">
+                  <span className="text-sm font-bold text-ink">{cpuName}</span>
+                  <div className={`flex h-4 w-4 items-center justify-center rounded-full border-2 ${
+                    idx === 0 ? "border-sea bg-sea" : "border-gray-300"
+                  }`}>
+                    {idx === 0 && <div className="h-1.5 w-1.5 rounded-full bg-white" />}
+                  </div>
+                </div>
+                <div className="space-y-1 text-xs text-gray-500">
+                  <div className="text-right">Intel Core i5 13450HX</div>
+                  <div className="text-right">Intel Core i7 13620H</div>
+                  <div className="text-right">Intel Core i7 13650HX</div>
+                  <div className="text-right">Intel Core i9 13980HX</div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+
+        <div className="flex flex-col">
+          {/* Base frequency */}
+          <div className="grid border-b border-gray-100" style={{ gridTemplateColumns: `180px repeat(${products.length}, 1fr)` }}>
+            <div className="flex items-center p-3 pr-6 font-medium text-ink">فرکانس پایه</div>
+            {products.map((laptop, idx) => {
+              const cpuSpec = laptop.specs.find(s => s.title === "پردازنده");
+              const freqText = cpuSpec?.rows.find(r => r[0] === "فرکانس پایه")?.[1] || "—";
+              const freqMatch = freqText.match(/([\d.]+)/);
+              const freq = freqMatch ? parseFloat(freqMatch[1]) : 0;
+              const maxFreq = Math.max(...products.map(p => {
+                const spec = p.specs.find(s => s.title === "پردازنده");
+                const freq = spec?.rows.find(r => r[0] === "فرکانس پایه")?.[1] || "0";
+                const match = freq.match(/([\d.]+)/);
+                return match ? parseFloat(match[1]) : 0;
+              }));
+              const isHighest = freq === maxFreq && freq > 0;
+              
+              return (
+                <div key={laptop.id} className={`flex items-center justify-end p-3 px-4 ${isHighest ? "bg-[#e8f5e9] font-bold" : ""} text-ink`}>
+                  {freqText}
+                </div>
+              );
+            })}
+          </div>
+
+          {/* Turbo frequency */}
+          <div className="grid border-b border-gray-100" style={{ gridTemplateColumns: `180px repeat(${products.length}, 1fr)` }}>
+            <div className="flex items-center p-3 pr-6 font-medium text-ink">فرکانس توربو</div>
+            {products.map((laptop, idx) => {
+              const cpuSpec = laptop.specs.find(s => s.title === "پردازنده");
+              const freqText = cpuSpec?.rows.find(r => r[0] === "فرکانس توربو")?.[1] || "—";
+              const freqMatch = freqText.match(/([\d.]+)/);
+              const freq = freqMatch ? parseFloat(freqMatch[1]) : 0;
+              const maxFreq = Math.max(...products.map(p => {
+                const spec = p.specs.find(s => s.title === "پردازنده");
+                const freq = spec?.rows.find(r => r[0] === "فرکانس توربو")?.[1] || "0";
+                const match = freq.match(/([\d.]+)/);
+                return match ? parseFloat(match[1]) : 0;
+              }));
+              const isHighest = freq === maxFreq && freq > 0;
+              
+              return (
+                <div key={laptop.id} className={`flex items-center justify-end p-3 px-4 ${isHighest ? "bg-[#e8f5e9] font-bold" : ""} text-ink`}>
+                  {freqText}
+                </div>
+              );
+            })}
+          </div>
+
+          {/* Cores */}
+          <div className="grid border-b border-gray-100" style={{ gridTemplateColumns: `180px repeat(${products.length}, 1fr)` }}>
+            <div className="flex items-center p-3 pr-6 font-medium text-ink">هسته‌ها</div>
+            {products.map((laptop, idx) => {
+              const cpuSpec = laptop.specs.find(s => s.title === "پردازنده");
+              const cores = cpuSpec?.rows.find(r => r[0] === "تعداد هسته")?.[1] || "—";
+              
+              return (
+                <div key={laptop.id} className="flex items-center justify-end p-3 px-4 text-ink">{cores}</div>
+              );
+            })}
+          </div>
+
+          {/* Threads */}
+          <div className="grid border-b border-gray-100" style={{ gridTemplateColumns: `180px repeat(${products.length}, 1fr)` }}>
+            <div className="flex items-center p-3 pr-6 font-medium text-ink">رشته‌ها</div>
+            {products.map((laptop, idx) => {
+              const cpuSpec = laptop.specs.find(s => s.title === "پردازنده");
+              const threads = cpuSpec?.rows.find(r => r[0] === "تعداد رشته")?.[1] || "—";
+              
+              return (
+                <div key={laptop.id} className="flex items-center justify-end p-3 px-4 text-ink">{threads}</div>
+              );
+            })}
+          </div>
+
+          {/* L3 Cache */}
+          <div className="grid border-b border-gray-100" style={{ gridTemplateColumns: `180px repeat(${products.length}, 1fr)` }}>
+            <div className="flex items-center p-3 pr-6 font-medium text-ink">حافظه کش L3</div>
+            {products.map((laptop, idx) => {
+              const cpuSpec = laptop.specs.find(s => s.title === "پردازنده");
+              const cacheText = cpuSpec?.rows.find(r => r[0] === "حافظه کش")?.[1] || "—";
+              const cacheMatch = cacheText.match(/(\d+)/);
+              const cache = cacheMatch ? parseInt(cacheMatch[1]) : 0;
+              const maxCache = Math.max(...products.map(p => {
+                const spec = p.specs.find(s => s.title === "پردازنده");
+                const cache = spec?.rows.find(r => r[0] === "حافظه کش")?.[1] || "0";
+                const match = cache.match(/(\d+)/);
+                return match ? parseInt(match[1]) : 0;
+              }));
+              const isHighest = cache === maxCache && cache > 0;
+              
+              return (
+                <div key={laptop.id} className={`flex items-center justify-end p-3 px-4 ${isHighest ? "bg-[#e8f5e9] font-bold" : ""} text-ink`}>
+                  {cacheText}
+                </div>
+              );
+            })}
+          </div>
+
+          {/* Integrated GPU */}
+          <div className="grid border-b border-gray-100" style={{ gridTemplateColumns: `180px repeat(${products.length}, 1fr)` }}>
+            <div className="flex items-center p-3 pr-6 font-medium text-ink">گرافیک یکپارچه</div>
+            {products.map((laptop, idx) => {
+              const gpuSpec = laptop.specs.find(s => s.title === "گرافیک");
+              const igpu = gpuSpec?.rows.find(r => r[0] === "گرافیک یکپارچه")?.[1] || "—";
+              
+              return (
+                <div key={laptop.id} className="flex items-center justify-end p-3 px-4 text-ink">{igpu}</div>
+              );
+            })}
+          </div>
+
+          {/* Fabrication process */}
+          <div className="grid border-b border-gray-100" style={{ gridTemplateColumns: `180px repeat(${products.length}, 1fr)` }}>
+            <div className="flex items-center p-3 pr-6 font-medium text-ink">فرآیند ساخت</div>
+            {products.map((laptop, idx) => {
+              const cpuSpec = laptop.specs.find(s => s.title === "پردازنده");
+              const processText = cpuSpec?.rows.find(r => r[0] === "فرآیند ساخت")?.[1] || "—";
+              const processMatch = processText.match(/(\d+)/);
+              const process = processMatch ? parseInt(processMatch[1]) : 999;
+              const minProcess = Math.min(...products.map(p => {
+                const spec = p.specs.find(s => s.title === "پردازنده");
+                const proc = spec?.rows.find(r => r[0] === "فرآیند ساخت")?.[1] || "999";
+                const match = proc.match(/(\d+)/);
+                return match ? parseInt(match[1]) : 999;
+              }));
+              const isSmallest = process === minProcess && process < 999;
+              
+              return (
+                <div key={laptop.id} className={`flex items-center justify-end p-3 px-4 ${isSmallest ? "bg-[#e8f5e9] font-bold" : ""} text-ink`}>
+                  {processText}
+                </div>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* Benchmarks Section */}
+        <div className="mt-4">
+          <div className="flex items-center border-b border-gray-100 px-6 py-3">
+            <div className="mr-2 h-4 w-4 bg-sea" />
+            <h4 className="text-base font-bold text-ink">بنچمارک‌ها</h4>
+          </div>
+
+          <div className="p-6 space-y-6">
+            {/* Geekbench 6 (Single-Core) */}
+            <div>
+              <div className="mb-3 flex items-center justify-between">
+                <span className="text-sm font-bold text-ink">Geekbench 6 (تک‌هسته‌ای)</span>
+                <span className="rounded bg-[#e8f5e9] px-2 py-0.5 text-xs font-bold text-moss">+5%</span>
+              </div>
+              <div className="space-y-2">
+                {products.map((laptop, idx) => {
+                  const score = 2500 - (idx * 50);
+                  const maxScore = 2500;
+                  const percentage = (score / maxScore) * 100;
+                  
+                  return (
+                    <div key={laptop.id} className="flex items-center gap-3">
+                      <div className="w-48 text-xs font-medium text-ink">{laptop.shortName}</div>
+                      <div className="flex flex-1 items-center gap-2">
+                        <div className="flex-1">
+                          <div className="h-6 overflow-hidden rounded bg-gray-100">
+                            <div 
+                              className="h-full rounded bg-sea transition-all duration-500"
+                              style={{ width: `${percentage}%` }}
+                            />
+                          </div>
+                        </div>
+                        <span className="text-sm font-bold text-ink">{score}</span>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Geekbench 6 (Multi-Core) */}
+            <div>
+              <div className="mb-3">
+                <span className="text-sm font-bold text-ink">Geekbench 6 (چندهسته‌ای)</span>
+              </div>
+              <div className="space-y-2">
+                {products.map((laptop, idx) => {
+                  const score = 9000 - (idx * 200);
+                  const maxScore = 9000;
+                  const percentage = (score / maxScore) * 100;
+                  
+                  return (
+                    <div key={laptop.id} className="flex items-center gap-3">
+                      <div className="w-48 text-xs font-medium text-ink">{laptop.shortName}</div>
+                      <div className="flex flex-1 items-center gap-2">
+                        <div className="flex-1">
+                          <div className="h-6 overflow-hidden rounded bg-gray-100">
+                            <div 
+                              className="h-full rounded bg-sea transition-all duration-500"
+                              style={{ width: `${percentage}%` }}
+                            />
+                          </div>
+                        </div>
+                        <span className="text-sm font-bold text-ink">{score}</span>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Cinebench 2024 (Single-Core) */}
+            <div>
+              <div className="mb-3 flex items-center justify-between">
+                <span className="text-sm font-bold text-ink">Cinebench 2024 (تک‌هسته‌ای)</span>
+                <span className="rounded bg-[#e8f5e9] px-2 py-0.5 text-xs font-bold text-moss">+14%</span>
+              </div>
+              <div className="space-y-2">
+                {products.map((laptop, idx) => {
+                  const score = 110 - (idx * 10);
+                  const maxScore = 110;
+                  const percentage = (score / maxScore) * 100;
+                  
+                  return (
+                    <div key={laptop.id} className="flex items-center gap-3">
+                      <div className="w-48 text-xs font-medium text-ink">{laptop.shortName}</div>
+                      <div className="flex flex-1 items-center gap-2">
+                        <div className="flex-1">
+                          <div className="h-6 overflow-hidden rounded bg-gray-100">
+                            <div 
+                              className="h-full rounded bg-sea transition-all duration-500"
+                              style={{ width: `${percentage}%` }}
+                            />
+                          </div>
+                        </div>
+                        <span className="text-sm font-bold text-ink">{score}</span>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Cinebench 2024 (Multi-Core) */}
+            <div>
+              <div className="mb-3 flex items-center justify-between">
+                <span className="text-sm font-bold text-ink">Cinebench 2024 (چندهسته‌ای)</span>
+                <span className="rounded bg-[#e8f5e9] px-2 py-0.5 text-xs font-bold text-moss">+21%</span>
+              </div>
+              <div className="space-y-2">
+                {products.map((laptop, idx) => {
+                  const score = 600 - (idx * 50);
+                  const maxScore = 600;
+                  const percentage = (score / maxScore) * 100;
+                  
+                  return (
+                    <div key={laptop.id} className="flex items-center gap-3">
+                      <div className="w-48 text-xs font-medium text-ink">{laptop.shortName}</div>
+                      <div className="flex flex-1 items-center gap-2">
+                        <div className="flex-1">
+                          <div className="h-6 overflow-hidden rounded bg-gray-100">
+                            <div 
+                              className="h-full rounded bg-sea transition-all duration-500"
+                              style={{ width: `${percentage}%` }}
+                            />
+                          </div>
+                        </div>
+                        <span className="text-sm font-bold text-ink">{score}</span>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* SECTION 5: Battery */}
       <div className="border-t border-gray-200">
         <div className="flex items-center border-b border-gray-100 px-6 py-4">
           <div className="mr-2 h-4 w-4 bg-sea" />
