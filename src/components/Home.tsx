@@ -101,7 +101,7 @@ export default function Home({ products, onBrand, onCategory, onPrice, onExplore
           </p>
 
           <h1 className="mt-5 max-w-2xl text-4xl font-bold leading-[1.25] text-white sm:text-5xl lg:text-6xl" style={{ fontFamily: "var(--font-nazanin)" }}>
-            لپ‌تاپ را با <span className="text-sea" style={{ textShadow: "0 0 28px rgba(4,119,179,0.55)" }}>کارنامه</span> بخرید.
+            افرالینک مرجع تخصصی فنی لپ تاپ
           </h1>
 
           <div className="mt-6 flex flex-wrap items-center gap-3">

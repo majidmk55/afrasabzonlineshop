@@ -19,6 +19,13 @@ const mockKPIs = [
   { id: 'retention', label: 'نرخ بازگشت', value: 68, change: 3.5, icon: '🔄', weight: 7 },
 ];
 
+// داده‌های نمونه بازدید
+const visitStats = {
+  today: { visits: 1250, unique: 890, pageViews: 3420 },
+  week: { visits: 8750, unique: 5230, pageViews: 24500 },
+  month: { visits: 35230, unique: 21450, pageViews: 98700 },
+};
+
 // داده‌های نمونه فروش
 const salesData = [
   { date: '1', value: 120000000 },
@@ -161,6 +168,64 @@ export default function Dashboard({ products, orders }: DashboardProps = {}) {
             </p>
           </div>
         ))}
+      </div>
+
+      {/* Visit Statistics */}
+      <div className="mb-6 rounded-xl border border-line bg-white p-6">
+        <h2 className="mb-4 text-lg font-bold text-ink">آمار بازدید</h2>
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+          <div className="rounded-lg border border-line bg-foam p-4">
+            <p className="text-sm text-mist">یک روز اخیر</p>
+            <div className="mt-2 space-y-2">
+              <div className="flex justify-between">
+                <span className="text-xs text-mist">بازدید</span>
+                <span className="text-sm font-bold text-ink">{toFa(visitStats.today.visits)}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-xs text-mist">بازدیدکننده یکتا</span>
+                <span className="text-sm font-bold text-ink">{toFa(visitStats.today.unique)}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-xs text-mist">بازدید صفحه</span>
+                <span className="text-sm font-bold text-ink">{toFa(visitStats.today.pageViews)}</span>
+              </div>
+            </div>
+          </div>
+          <div className="rounded-lg border border-line bg-foam p-4">
+            <p className="text-sm text-mist">یک هفته اخیر</p>
+            <div className="mt-2 space-y-2">
+              <div className="flex justify-between">
+                <span className="text-xs text-mist">بازدید</span>
+                <span className="text-sm font-bold text-ink">{toFa(visitStats.week.visits)}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-xs text-mist">بازدیدکننده یکتا</span>
+                <span className="text-sm font-bold text-ink">{toFa(visitStats.week.unique)}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-xs text-mist">بازدید صفحه</span>
+                <span className="text-sm font-bold text-ink">{toFa(visitStats.week.pageViews)}</span>
+              </div>
+            </div>
+          </div>
+          <div className="rounded-lg border border-line bg-foam p-4">
+            <p className="text-sm text-mist">یک ماه اخیر</p>
+            <div className="mt-2 space-y-2">
+              <div className="flex justify-between">
+                <span className="text-xs text-mist">بازدید</span>
+                <span className="text-sm font-bold text-ink">{toFa(visitStats.month.visits)}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-xs text-mist">بازدیدکننده یکتا</span>
+                <span className="text-sm font-bold text-ink">{toFa(visitStats.month.unique)}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-xs text-mist">بازدید صفحه</span>
+                <span className="text-sm font-bold text-ink">{toFa(visitStats.month.pageViews)}</span>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
 
       {/* Charts Row 1 */}

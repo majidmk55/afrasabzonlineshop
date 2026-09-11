@@ -19,6 +19,7 @@ export interface Laptop {
   year: number;
   price: number; // ریال
   oldPrice?: number;
+  discount?: number; // درصد تخفیف
   stock: number;
   rating: number;
   reviews: number;

@@ -81,7 +81,7 @@ export default function Admin({ products, orders, settings, onProducts, onSettin
   return (
     <div className="min-h-screen bg-foam font-nazanin">
       <header className="sticky top-0 z-30 border-b border-line bg-white/95 backdrop-blur-sm">
-        <div className="mx-auto flex max-w-7xl items-center gap-3 px-4 py-3 sm:px-6">
+        <div className="mx-auto flex max-w-7xl items-center gap-3 px-2 py-3 sm:px-3">
           <LogoMark size={28} className="text-sea" />
           <div className="leading-tight">
             <p className="font-nazanin text-base font-bold">پنل مدیریت افرالینک</p>
@@ -114,7 +114,7 @@ export default function Admin({ products, orders, settings, onProducts, onSettin
         </nav>
       </header>
 
-      <main className="mx-auto max-w-[70%] px-2 py-8 sm:px-4">
+      <main className="mx-auto max-w-[85%] px-1 py-8 sm:px-2">
         {tab === "dashboard" && <Dashboard products={products} orders={orders} />}
         {tab === "analytics" && (
           <Suspense fallback={
@@ -521,6 +521,7 @@ function ProductForm({ initial, products, onSave, onClose }: { initial?: Laptop;
     year: initial?.year ?? 1404,
     price: initial ? String(initial.price) : "",
     oldPrice: initial?.oldPrice ? String(initial.oldPrice) : "",
+    discount: initial?.discount ? String(initial.discount) : "",
     stock: initial ? String(initial.stock) : "5",
     rating: initial ? String(initial.rating) : "4.5",
     image: initial?.image ?? "",
@@ -560,6 +561,7 @@ function ProductForm({ initial, products, onSave, onClose }: { initial?: Laptop;
       year: Number(f.year) || 1404,
       price,
       oldPrice: Number(f.oldPrice) > price ? Number(f.oldPrice) : undefined,
+      discount: Number(f.discount) > 0 ? Number(f.discount) : undefined,
       stock: Math.max(0, Math.round(Number(f.stock) || 0)),
       rating: Math.min(5, Math.max(1, Number(f.rating) || 4.5)),
       reviews: initial?.reviews ?? 0,
@@ -620,6 +622,7 @@ function ProductForm({ initial, products, onSave, onClose }: { initial?: Laptop;
           <Field label="سال"><input dir="ltr" type="number" className={inputCls} value={f.year} onChange={(e) => set("year", e.target.value)} /></Field>
           <Field label="قیمت (ریال) *"><input dir="ltr" type="number" className={inputCls} value={f.price} onChange={(e) => set("price", e.target.value)} placeholder="120000000" /></Field>
           <Field label="قیمت قبل (اختیاری)"><input dir="ltr" type="number" className={inputCls} value={f.oldPrice} onChange={(e) => set("oldPrice", e.target.value)} /></Field>
+          <Field label="درصد تخفیف (اختیاری)"><input dir="ltr" type="number" className={inputCls} value={f.discount} onChange={(e) => set("discount", e.target.value)} placeholder="10" /></Field>
           <Field label="موجودی"><input dir="ltr" type="number" className={inputCls} value={f.stock} onChange={(e) => set("stock", e.target.value)} /></Field>
           <Field label="امتیاز (از ۵)"><input dir="ltr" type="number" step="0.1" className={inputCls} value={f.rating} onChange={(e) => set("rating", e.target.value)} /></Field>
           <div className="sm:col-span-2">
