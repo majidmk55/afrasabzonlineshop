@@ -8,6 +8,7 @@ import CaseComparisonTable from "./CaseComparisonTable";
 import SizeComparison from "./SizeComparison";
 import CoolingSolution from "./CoolingSolution";
 import DisplayComparison from "./DisplayComparison";
+import ProfessionalComparisonTable from "./ProfessionalComparisonTable";
 
 interface ComparePageProps {
   products: Laptop[];
@@ -371,6 +372,7 @@ export default function ComparePage({ products, ids, onClose, onAddToCart }: Com
         <div className="mb-8">
           <CoolingSolution laptops={laptops} maxLaptops={4} />
           <DisplayComparison laptops={laptops} />
+          <ProfessionalComparisonTable products={laptops} />
         </div>
 
         {/* Technical Specifications */}
