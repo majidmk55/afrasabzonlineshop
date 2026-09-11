@@ -309,13 +309,25 @@ export default function ProductModal({ laptop, products, onClose, onAdd, onToggl
     <div className="fixed inset-0 z-50 overflow-y-auto" role="dialog" aria-modal="true" aria-label={laptop.name}>
       <div className="overlay-in fixed inset-0 bg-ink/70" onClick={onClose} />
       <div className="panel-in relative mx-auto my-6 w-[min(1060px,94vw)] rounded-3xl border border-line bg-white shadow-2xl">
-        <div className="sticky top-0 z-10 flex items-center justify-between rounded-t-3xl border-b border-line bg-white/95 px-5 py-3 backdrop-blur-sm">
-          <p className="text-[11px] font-bold tracking-wider text-mist">
-            {laptop.brand} · <span dir="ltr" className="font-mono">SKU {laptop.sku}</span>
-          </p>
-          <button onClick={onClose} aria-label="بستن جزئیات کالا" className="flex h-9 w-9 items-center justify-center rounded-full border border-line transition-colors hover:border-red-400 hover:text-red-500">
-            <IClose size={17} />
-          </button>
+        <div className="sticky top-0 z-10 rounded-t-3xl border-b border-line bg-white/95 px-5 py-3 backdrop-blur-sm">
+          {/* Breadcrumb - مسیر صفحه */}
+          <div className="mb-2 flex items-center gap-1 text-[10px] text-mist">
+            <span>افرالینک</span>
+            <span>/</span>
+            <span>لپ تاپ و تجهیزات</span>
+            <span>/</span>
+            <span>لپ تاپ</span>
+            <span>/</span>
+            <span className="font-bold text-ink">{laptop.name}</span>
+          </div>
+          <div className="flex items-center justify-between">
+            <p className="text-[11px] font-bold tracking-wider text-mist">
+              {laptop.brand} · <span dir="ltr" className="font-mono">SKU {laptop.sku}</span>
+            </p>
+            <button onClick={onClose} aria-label="بستن جزئیات کالا" className="flex h-9 w-9 items-center justify-center rounded-full border border-line transition-colors hover:border-red-400 hover:text-red-500">
+              <IClose size={17} />
+            </button>
+          </div>
         </div>
 
         <div className="grid gap-8 p-5 sm:p-8 lg:grid-cols-[1.05fr_1fr]">

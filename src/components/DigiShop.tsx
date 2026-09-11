@@ -68,7 +68,8 @@ function ProductCard({ product, onSpecs, onToggleCompare, compared }: { product:
   };
 
   const cpuShort = removeBrand(cpu).split(" ").slice(0, 3).join(" ");
-  const gpuShort = removeBrand(gpu).split(" ").slice(0, 2).join(" ");
+  // حذف کلمه NVIDIA از ابتدای متن گرافیک
+  const gpuShort = removeBrand(gpu).replace(/^NVIDIA\s+/i, "").split(" ").slice(0, 2).join(" ");
   const ramShort = removeBrand(ram).split(" ")[0];
   const displayShort = removeBrand(display).split(" ")[0];
 
@@ -549,7 +550,7 @@ export default function DigiShop({ products, onSpecs, onBrand, onToggleCompare, 
 
         {/* گرید محصولات */}
         <div className="flex-1">
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
+          <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
             {displayProducts.map((product) => (
               <ProductCard key={product.id} product={product} onSpecs={onSpecs} onToggleCompare={onToggleCompare} compared={compareIds?.includes(product.id)} />
             ))}

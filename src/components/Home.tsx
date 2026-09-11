@@ -151,7 +151,7 @@ export default function Home({ products, onBrand, onCategory, onPrice, onExplore
             <span className="hidden text-[11px] font-bold text-mist sm:block">پنج گروه تخصصی</span>
           </div>
         </Reveal>
-        <div className="mt-6 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5">
+        <div className="mt-6 grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-5">
           {USE_GROUPS.map((g, i) => {
             const count = groupCount(g);
             return (
@@ -186,7 +186,7 @@ export default function Home({ products, onBrand, onCategory, onPrice, onExplore
             <span className="hidden text-[11px] font-bold text-mist sm:block">قیمت‌ها به ریال و به‌روز</span>
           </div>
         </Reveal>
-        <div className="mt-6 grid grid-cols-2 gap-4 lg:grid-cols-4">
+        <div className="mt-6 grid grid-cols-2 gap-2 lg:grid-cols-4">
           {BANDS.map((band, i) => {
             const inBand = products.filter((p) => p.price >= band.min && p.price < band.max);
             const share = products.length ? Math.round((inBand.length / products.length) * 100) : 0;

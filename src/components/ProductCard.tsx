@@ -26,10 +26,12 @@ function shortStorage(p: Laptop): string {
 
 function shortGpu(p: Laptop): string {
   const v = brief(p, "گرافیک");
-  const m = v.match(/RTX \d{4}|Radeon \w+|Arc \w+|Adreno \w+/);
+  // حذف کلمه NVIDIA از ابتدای متن
+  const cleaned = v.replace(/^NVIDIA\s+/i, "");
+  const m = cleaned.match(/RTX \d{4}|Radeon \w+|Arc \w+|Adreno \w+/);
   if (m) return m[0];
   if (p.brand === "اپل") return `${shortCpu(p)} GPU`;
-  return v.split("·")[0].trim() || "—";
+  return cleaned.split("·")[0].trim() || "—";
 }
 
 function shortDisplay(p: Laptop): string {
