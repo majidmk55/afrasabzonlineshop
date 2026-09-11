@@ -8,6 +8,7 @@ import CaseComparisonTable from "./CaseComparisonTable";
 import SizeComparison from "./SizeComparison";
 import RamStorageComparison from "./RamStorageComparison";
 import CpuComparison from "./CpuComparison";
+import GpuComparison from "./GpuComparison";
 import CoolingSolution from "./CoolingSolution";
 import Display from "./Display";
 import DisplayComparison from "./DisplayComparison";
@@ -379,6 +380,11 @@ export default function ComparePage({ products, ids, onClose, onAddToCart }: Com
         {/* CPU Comparison - مقایسه CPU */}
         <div className="mb-8">
           <CpuComparison laptops={laptops} />
+        </div>
+
+        {/* GPU Comparison - مقایسه GPU */}
+        <div className="mb-8">
+          <GpuComparison laptops={laptops} />
         </div>
 
         {/* Cooling Solution - راه حل خنک‌کنندگی */}
