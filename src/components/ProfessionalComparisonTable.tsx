@@ -399,6 +399,127 @@ export default function ComparisonTable({ products }: ComparisonTableProps) {
           })}
         </div>
       </div>
+
+      {/* SECTION 4: Battery */}
+      <div className="border-t border-gray-200">
+        <div className="flex items-center border-b border-gray-100 px-6 py-4">
+          <div className="mr-2 h-4 w-4 bg-sea" />
+          <h3 className="text-lg font-bold text-ink">باتری</h3>
+        </div>
+
+        {/* Battery Capacity Header with Radio Dots */}
+        <div className="grid border-b border-gray-100 bg-gray-50" style={{ gridTemplateColumns: `180px repeat(${products.length}, 1fr)` }}>
+          <div className="flex items-center p-3 pr-6 font-medium text-ink">ظرفیت باتری</div>
+          {products.map((laptop, idx) => {
+            const batterySpec = laptop.specs.find(s => s.title === "باتری و شارژ");
+            const capacityText = batterySpec?.rows.find(r => r[0] === "ظرفیت باتری")?.[1] || "—";
+            const capacityMatch = capacityText.match(/(\d+)/);
+            const capacity = capacityMatch ? `${capacityMatch[1]} Wh` : capacityText;
+            
+            return (
+              <div key={laptop.id} className="flex items-center justify-end gap-2 p-3 px-4">
+                <span className="text-sm font-bold text-ink">{capacity}</span>
+                <div className={`flex h-4 w-4 items-center justify-center rounded-full border-2 ${
+                  idx === 0 ? "border-sea bg-sea" : "border-gray-300"
+                }`}>
+                  {idx === 0 && <div className="h-1.5 w-1.5 rounded-full bg-white" />}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+
+        <div className="flex flex-col">
+          {/* Battery type */}
+          <div className="grid border-b border-gray-100" style={{ gridTemplateColumns: `180px repeat(${products.length}, 1fr)` }}>
+            <div className="flex items-center p-3 pr-6 font-medium text-ink">نوع باتری</div>
+            {products.map((laptop, idx) => {
+              const batterySpec = laptop.specs.find(s => s.title === "باتری و شارژ");
+              const type = batterySpec?.rows.find(r => r[0] === "نوع باتری")?.[1] || "Li Ion";
+              
+              return (
+                <div key={laptop.id} className="flex items-center justify-end p-3 px-4 text-ink">{type}</div>
+              );
+            })}
+          </div>
+
+          {/* Replaceable */}
+          <div className="grid border-b border-gray-100" style={{ gridTemplateColumns: `180px repeat(${products.length}, 1fr)` }}>
+            <div className="flex items-center p-3 pr-6 font-medium text-ink">قابل تعویض</div>
+            {products.map((laptop, idx) => {
+              const batterySpec = laptop.specs.find(s => s.title === "باتری و شارژ");
+              const replaceable = batterySpec?.rows.find(r => r[0] === "قابل تعویض")?.[1] || "No";
+              
+              return (
+                <div key={laptop.id} className="flex items-center justify-end p-3 px-4 text-ink">{replaceable}</div>
+              );
+            })}
+          </div>
+
+          {/* Fast charging */}
+          <div className="grid border-b border-gray-100" style={{ gridTemplateColumns: `180px repeat(${products.length}, 1fr)` }}>
+            <div className="flex items-center p-3 pr-6 font-medium text-ink">شارژ سریع</div>
+            {products.map((laptop, idx) => {
+              const batterySpec = laptop.specs.find(s => s.title === "باتری و شارژ");
+              const fastCharging = batterySpec?.rows.find(r => r[0] === "شارژ سریع")?.[1] || "Yes";
+              
+              return (
+                <div key={laptop.id} className="flex items-center justify-end p-3 px-4 text-ink">{fastCharging}</div>
+              );
+            })}
+          </div>
+
+          {/* Charging via USB (Power Delivery) - Highlighted */}
+          <div className="grid border-b border-gray-100 bg-[#d5f5e3]" style={{ gridTemplateColumns: `180px repeat(${products.length}, 1fr)` }}>
+            <div className="flex items-center p-3 pr-6 font-medium text-ink">شارژ از طریق USB (Power Delivery)</div>
+            {products.map((laptop, idx) => {
+              const batterySpec = laptop.specs.find(s => s.title === "باتری و شارژ");
+              const usbCharging = batterySpec?.rows.find(r => r[0] === "شارژ USB")?.[1] || "Yes";
+              
+              return (
+                <div key={laptop.id} className="flex items-center justify-end p-3 px-4 font-medium text-ink">{usbCharging}</div>
+              );
+            })}
+          </div>
+
+          {/* Charging port position */}
+          <div className="grid border-b border-gray-100" style={{ gridTemplateColumns: `180px repeat(${products.length}, 1fr)` }}>
+            <div className="flex items-center p-3 pr-6 font-medium text-ink">موقعیت پورت شارژ</div>
+            {products.map((laptop, idx) => {
+              const batterySpec = laptop.specs.find(s => s.title === "باتری و شارژ");
+              const portPosition = batterySpec?.rows.find(r => r[0] === "موقعیت پورت")?.[1] || "Left";
+              
+              return (
+                <div key={laptop.id} className="flex items-center justify-end p-3 px-4 text-ink">{portPosition}</div>
+              );
+            })}
+          </div>
+
+          {/* Charge power - Highlighted */}
+          <div className="grid bg-[#d5f5e3]" style={{ gridTemplateColumns: `180px repeat(${products.length}, 1fr)` }}>
+            <div className="flex items-center p-3 pr-6 font-medium text-ink">توان شارژ</div>
+            {products.map((laptop, idx) => {
+              const batterySpec = laptop.specs.find(s => s.title === "باتری و شارژ");
+              const chargePower = batterySpec?.rows.find(r => r[0] === "توان شارژ")?.[1] || "65 W";
+              const powerMatch = chargePower.match(/(\d+)/);
+              const power = powerMatch ? parseInt(powerMatch[1]) : 65;
+              const maxPower = Math.max(...products.map(p => {
+                const spec = p.specs.find(s => s.title === "باتری و شارژ");
+                const power = spec?.rows.find(r => r[0] === "توان شارژ")?.[1] || "65 W";
+                const match = power.match(/(\d+)/);
+                return match ? parseInt(match[1]) : 65;
+              }));
+              const isHighest = power === maxPower;
+              
+              return (
+                <div key={laptop.id} className={`flex items-center justify-end p-3 px-4 ${isHighest ? "font-bold" : ""} text-ink`}>
+                  {chargePower}
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
