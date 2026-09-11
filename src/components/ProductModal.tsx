@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { WARRANTY_PRICE, fmt, toFa, type Laptop } from "../data/laptops";
 import { Reveal, prefersReducedMotion, useEscape, useLockBody } from "../lib/motion";
 import { ICheck, IClose, ICompare, IMinus, IPlus, IStar, ITruck, SPEC_ICONS } from "./icons";
+import LaptopSpecsSummary from "./LaptopSpecsSummary";
 
 type Tab = "specs" | "box" | "shipping";
 
@@ -320,8 +321,23 @@ export default function ProductModal({ laptop, products, onClose, onAdd, onToggl
         <div className="grid gap-8 p-5 sm:p-8 lg:grid-cols-[1.05fr_1fr]">
           {/* تصویر + بنچمارک */}
           <div>
-            <div className="group overflow-hidden rounded-2xl border border-line bg-skywash">
-              <img src={laptop.image} alt={laptop.name} className="img-zoom aspect-[4/3] w-full object-cover" />
+            <div className="flex flex-col gap-6 md:flex-row">
+              {/* تصویر لپ‌تاپ */}
+              <div className="group flex-1 overflow-hidden rounded-2xl border border-line bg-skywash">
+                <img src={laptop.image} alt={laptop.name} className="img-zoom aspect-[4/3] w-full object-cover" />
+              </div>
+
+              {/* خلاصه مشخصات کلیدی */}
+              <div className="md:w-[340px]">
+                <LaptopSpecsSummary
+                  cpu={laptop.specs.find(s => s.title === "پردازنده")?.rows.find(r => r[0] === "مدل پردازنده")?.[1] ?? laptop.brief.find(b => b[0] === "پردازنده")?.[1] ?? "—"}
+                  gpu={laptop.specs.find(s => s.title === "گرافیک")?.rows.find(r => r[0] === "مدل گرافیک مجزا")?.[1] ?? laptop.brief.find(b => b[0] === "گرافیک")?.[1] ?? "—"}
+                  display={laptop.specs.find(s => s.title === "صفحه نمایش")?.rows.find(r => r[0] === "اندازه صفحه نمایش")?.[1] ?? laptop.brief.find(b => b[0] === "نمایشگر")?.[1] ?? "—"}
+                  storage={`${laptop.specs.find(s => s.title === "ذخیره‌سازی")?.rows.find(r => r[0] === "ظرفیت کلی")?.[1] ?? "—"} SSD`}
+                  ram={`${laptop.specs.find(s => s.title === "حافظه رم")?.rows.find(r => r[0] === "حافظه داخلی رم")?.[1] ?? laptop.brief.find(b => b[0] === "رم / حافظه")?.[1] ?? "—"} RAM`}
+                  weight={laptop.specs.find(s => s.title === "وزن و ابعاد")?.rows.find(r => r[0] === "وزن")?.[1] ?? "—"}
+                />
+              </div>
             </div>
 
             <div className="mt-5 overflow-hidden rounded-2xl border border-line bg-sea/5">
