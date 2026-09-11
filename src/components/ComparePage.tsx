@@ -10,6 +10,7 @@ import RamStorageComparison from "./RamStorageComparison";
 import CpuComparison from "./CpuComparison";
 import GpuComparison from "./GpuComparison";
 import SoundConnectivityPortsComparison from "./SoundConnectivityPortsComparison";
+import BatteryComparison from "./BatteryComparison";
 import CoolingSolution from "./CoolingSolution";
 import Display from "./Display";
 import DisplayComparison from "./DisplayComparison";
@@ -391,6 +392,11 @@ export default function ComparePage({ products, ids, onClose, onAddToCart }: Com
         {/* Sound, Connectivity & Ports Comparison - مقایسه صدا، اتصالات و پورت‌ها */}
         <div className="mb-8">
           <SoundConnectivityPortsComparison laptops={laptops} />
+        </div>
+
+        {/* Battery Comparison - مقایسه باتری */}
+        <div className="mb-8">
+          <BatteryComparison laptops={laptops} />
         </div>
 
         {/* Cooling Solution - راه حل خنک‌کنندگی */}
