@@ -1095,6 +1095,588 @@ export default function ComparisonTable({ products }: ComparisonTableProps) {
           </div>
         </div>
       </div>
+
+      {/* SECTION 7: RAM */}
+      <div className="border-t border-[#e8e8e8]">
+        <div className="flex items-center border-b border-[#e8e8e8] px-6 py-4">
+          <div className="mr-2 h-4 w-4 bg-sea" />
+          <h3 className="text-lg font-bold text-[#1a1a2e]">RAM</h3>
+        </div>
+
+        {/* RAM size selector */}
+        <div className="grid border-b border-[#e8e8e8]" style={{ gridTemplateColumns: `30% 35% 35%` }}>
+          <div className="flex items-center p-3 px-4 text-[#666666] text-sm">اندازه RAM</div>
+          {products.slice(0, 2).map((laptop, idx) => {
+            const ramSpec = laptop.specs.find(s => s.title === "حافظه رم");
+            const ramSize = ramSpec?.rows.find(r => r[0] === "حافظه داخلی رم")?.[1] || "—";
+            const sizeMatch = ramSize.match(/(\d+)/);
+            const size = sizeMatch ? parseInt(sizeMatch[1]) : 0;
+            
+            return (
+              <div key={laptop.id} className="flex items-center p-3 px-4">
+                <div className="space-y-2">
+                  <div className="flex items-center gap-2">
+                    <div className={`flex h-4 w-4 items-center justify-center rounded-full border-2 ${
+                      size === 16 ? "border-[#1a73e8] bg-[#1a73e8]" : "border-[#cccccc]"
+                    }`}>
+                      {size === 16 && <div className="h-1.5 w-1.5 rounded-full bg-white" />}
+                    </div>
+                    <span className={`text-sm ${size === 16 ? "text-[#1a73e8]" : "text-[#333333]"}`}>16GB</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <div className={`flex h-4 w-4 items-center justify-center rounded-full border-2 ${
+                      size === 32 ? "border-[#1a73e8] bg-[#1a73e8]" : "border-[#cccccc]"
+                    }`}>
+                      {size === 32 && <div className="h-1.5 w-1.5 rounded-full bg-white" />}
+                    </div>
+                    <span className={`text-sm ${size === 32 ? "text-[#1a73e8]" : "text-[#333333]"}`}>32GB</span>
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+
+        <div className="flex flex-col">
+          {/* Channels */}
+          <div className="grid border-b border-[#e8e8e8]" style={{ gridTemplateColumns: `30% 35% 35%` }}>
+            <div className="flex items-center p-3 px-4 text-[#666666] text-sm">کانال‌ها</div>
+            {products.slice(0, 2).map((laptop, idx) => {
+              const ramSpec = laptop.specs.find(s => s.title === "حافظه رم");
+              const channels = ramSpec?.rows.find(r => r[0] === "تعداد کانال")?.[1] || "—";
+              const channelMatch = channels.match(/(\d+)/);
+              const channel = channelMatch ? parseInt(channelMatch[1]) : 0;
+              const maxChannel = Math.max(...products.slice(0, 2).map(p => {
+                const spec = p.specs.find(s => s.title === "حافظه رم");
+                const ch = spec?.rows.find(r => r[0] === "تعداد کانال")?.[1] || "0";
+                const match = ch.match(/(\d+)/);
+                return match ? parseInt(match[1]) : 0;
+              }));
+              const isHighest = channel === maxChannel && channel > 0;
+              
+              return (
+                <div key={laptop.id} className={`flex items-center p-3 px-4 text-[#333333] text-sm ${isHighest ? "bg-[#d4edda]" : ""}`}>
+                  {channels}
+                </div>
+              );
+            })}
+          </div>
+
+          {/* Clock */}
+          <div className="grid border-b border-[#e8e8e8]" style={{ gridTemplateColumns: `30% 35% 35%` }}>
+            <div className="flex items-center p-3 px-4 text-[#666666] text-sm">فرکانس</div>
+            {products.slice(0, 2).map((laptop, idx) => {
+              const ramSpec = laptop.specs.find(s => s.title === "حافظه رم");
+              const clockText = ramSpec?.rows.find(r => r[0] === "فرکانس")?.[1] || "—";
+              const clockMatch = clockText.match(/(\d+)/);
+              const clock = clockMatch ? parseInt(clockMatch[1]) : 0;
+              const maxClock = Math.max(...products.slice(0, 2).map(p => {
+                const spec = p.specs.find(s => s.title === "حافظه رم");
+                const clk = spec?.rows.find(r => r[0] === "فرکانس")?.[1] || "0";
+                const match = clk.match(/(\d+)/);
+                return match ? parseInt(match[1]) : 0;
+              }));
+              const isHighest = clock === maxClock && clock > 0;
+              
+              return (
+                <div key={laptop.id} className={`flex items-center p-3 px-4 text-[#333333] text-sm ${isHighest ? "bg-[#d4edda]" : ""}`}>
+                  {clockText}
+                </div>
+              );
+            })}
+          </div>
+
+          {/* Type */}
+          <div className="grid border-b border-[#e8e8e8]" style={{ gridTemplateColumns: `30% 35% 35%` }}>
+            <div className="flex items-center p-3 px-4 text-[#666666] text-sm">نوع</div>
+            {products.slice(0, 2).map((laptop, idx) => {
+              const ramSpec = laptop.specs.find(s => s.title === "حافظه رم");
+              const type = ramSpec?.rows.find(r => r[0] === "نوع")?.[1] || "—";
+              
+              return (
+                <div key={laptop.id} className="flex items-center p-3 px-4 text-[#333333] text-sm">{type}</div>
+              );
+            })}
+          </div>
+
+          {/* Upgradable */}
+          <div className="grid border-b border-[#e8e8e8]" style={{ gridTemplateColumns: `30% 35% 35%` }}>
+            <div className="flex items-center p-3 px-4 text-[#666666] text-sm">قابل ارتقا</div>
+            {products.slice(0, 2).map((laptop, idx) => {
+              const ramSpec = laptop.specs.find(s => s.title === "حافظه رم");
+              const upgradable = ramSpec?.rows.find(r => r[0] === "قابل ارتقا")?.[1] || "—";
+              const isYes = upgradable === "Yes" || upgradable === "بله";
+              
+              return (
+                <div key={laptop.id} className={`flex items-center p-3 px-4 text-[#333333] text-sm ${isYes ? "bg-[#d4edda]" : ""}`}>
+                  {upgradable}
+                </div>
+              );
+            })}
+          </div>
+
+          {/* Total slots */}
+          <div className="grid border-b border-[#e8e8e8]" style={{ gridTemplateColumns: `30% 35% 35%` }}>
+            <div className="flex items-center p-3 px-4 text-[#666666] text-sm">تعداد اسلات‌ها</div>
+            {products.slice(0, 2).map((laptop, idx) => {
+              const ramSpec = laptop.specs.find(s => s.title === "حافظه رم");
+              const slots = ramSpec?.rows.find(r => r[0] === "تعداد اسلات")?.[1] || "—";
+              
+              return (
+                <div key={laptop.id} className="flex items-center p-3 px-4 text-[#333333] text-sm">{slots}</div>
+              );
+            })}
+          </div>
+
+          {/* Max. ram size */}
+          <div className="grid" style={{ gridTemplateColumns: `30% 35% 35%` }}>
+            <div className="flex items-center p-3 px-4 text-[#666666] text-sm">حداکثر اندازه RAM</div>
+            {products.slice(0, 2).map((laptop, idx) => {
+              const ramSpec = laptop.specs.find(s => s.title === "حافظه رم");
+              const maxSize = ramSpec?.rows.find(r => r[0] === "حداکثر")?.[1] || "—";
+              
+              return (
+                <div key={laptop.id} className="flex items-center p-3 px-4 text-[#333333] text-sm">{maxSize}</div>
+              );
+            })}
+          </div>
+        </div>
+      </div>
+
+      {/* SECTION DIVIDER */}
+      <div className="border-t-2 border-[#e0e0e0]" />
+
+      {/* SECTION 8: Storage */}
+      <div className="border-t border-[#e8e8e8]">
+        <div className="flex items-center border-b border-[#e8e8e8] px-6 py-4">
+          <div className="mr-2 h-4 w-4 bg-sea" />
+          <h3 className="text-lg font-bold text-[#1a1a2e]">ذخیره‌سازی</h3>
+        </div>
+
+        {/* Storage size selector */}
+        <div className="grid border-b border-[#e8e8e8]" style={{ gridTemplateColumns: `30% 35% 35%` }}>
+          <div className="flex items-center p-3 px-4 text-[#666666] text-sm">اندازه ذخیره‌سازی</div>
+          {products.slice(0, 2).map((laptop, idx) => {
+            const storageSpec = laptop.specs.find(s => s.title === "ذخیره‌سازی");
+            const storageSize = storageSpec?.rows.find(r => r[0] === "ظرفیت کلی")?.[1] || "—";
+            const sizeMatch = storageSize.match(/(\d+)/);
+            const size = sizeMatch ? parseInt(sizeMatch[1]) : 0;
+            
+            return (
+              <div key={laptop.id} className="flex items-center p-3 px-4">
+                <div className="space-y-2">
+                  <div className="flex items-center gap-2">
+                    <div className={`flex h-4 w-4 items-center justify-center rounded-full border-2 ${
+                      size === 256 ? "border-[#1a73e8] bg-[#1a73e8]" : "border-[#cccccc]"
+                    }`}>
+                      {size === 256 && <div className="h-1.5 w-1.5 rounded-full bg-white" />}
+                    </div>
+                    <span className={`text-sm ${size === 256 ? "text-[#1a73e8]" : "text-[#333333]"}`}>256GB</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <div className={`flex h-4 w-4 items-center justify-center rounded-full border-2 ${
+                      size === 512 ? "border-[#1a73e8] bg-[#1a73e8]" : "border-[#cccccc]"
+                    }`}>
+                      {size === 512 && <div className="h-1.5 w-1.5 rounded-full bg-white" />}
+                    </div>
+                    <span className={`text-sm ${size === 512 ? "text-[#1a73e8]" : "text-[#333333]"}`}>512GB</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <div className={`flex h-4 w-4 items-center justify-center rounded-full border-2 ${
+                      size === 1024 ? "border-[#1a73e8] bg-[#1a73e8]" : "border-[#cccccc]"
+                    }`}>
+                      {size === 1024 && <div className="h-1.5 w-1.5 rounded-full bg-white" />}
+                    </div>
+                    <span className={`text-sm ${size === 1024 ? "text-[#1a73e8]" : "text-[#333333]"}`}>1024GB</span>
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+
+        <div className="flex flex-col">
+          {/* Bus */}
+          <div className="grid border-b border-[#e8e8e8]" style={{ gridTemplateColumns: `30% 35% 35%` }}>
+            <div className="flex items-center p-3 px-4 text-[#666666] text-sm">Bus</div>
+            {products.slice(0, 2).map((laptop, idx) => {
+              const storageSpec = laptop.specs.find(s => s.title === "ذخیره‌سازی");
+              const bus = storageSpec?.rows.find(r => r[0] === "رابط")?.[1] || "—";
+              
+              return (
+                <div key={laptop.id} className="flex items-center p-3 px-4 text-[#333333] text-sm">{bus}</div>
+              );
+            })}
+          </div>
+
+          {/* Storage type */}
+          <div className="grid border-b border-[#e8e8e8]" style={{ gridTemplateColumns: `30% 35% 35%` }}>
+            <div className="flex items-center p-3 px-4 text-[#666666] text-sm">نوع ذخیره‌سازی</div>
+            {products.slice(0, 2).map((laptop, idx) => {
+              const storageSpec = laptop.specs.find(s => s.title === "ذخیره‌سازی");
+              const type = storageSpec?.rows.find(r => r[0] === "نوع")?.[1] || "—";
+              
+              return (
+                <div key={laptop.id} className="flex items-center p-3 px-4 text-[#333333] text-sm">{type}</div>
+              );
+            })}
+          </div>
+
+          {/* Channels */}
+          <div className="grid border-b border-[#e8e8e8]" style={{ gridTemplateColumns: `30% 35% 35%` }}>
+            <div className="flex items-center p-3 px-4 text-[#666666] text-sm">کانال‌ها</div>
+            {products.slice(0, 2).map((laptop, idx) => {
+              const storageSpec = laptop.specs.find(s => s.title === "ذخیره‌سازی");
+              const channels = storageSpec?.rows.find(r => r[0] === "کانال")?.[1] || "—";
+              const channelMatch = channels.match(/(\d+)/);
+              const channel = channelMatch ? parseInt(channelMatch[1]) : 0;
+              const maxChannel = Math.max(...products.slice(0, 2).map(p => {
+                const spec = p.specs.find(s => s.title === "ذخیره‌سازی");
+                const ch = spec?.rows.find(r => r[0] === "کانال")?.[1] || "0";
+                const match = ch.match(/(\d+)/);
+                return match ? parseInt(match[1]) : 0;
+              }));
+              const isHighest = channel === maxChannel && channel > 0;
+              
+              return (
+                <div key={laptop.id} className={`flex items-center p-3 px-4 text-[#333333] text-sm ${isHighest ? "bg-[#d4edda]" : ""}`}>
+                  {channels}
+                </div>
+              );
+            })}
+          </div>
+
+          {/* Upgradable */}
+          <div className="grid border-b border-[#e8e8e8]" style={{ gridTemplateColumns: `30% 35% 35%` }}>
+            <div className="flex items-center p-3 px-4 text-[#666666] text-sm">قابل ارتقا</div>
+            {products.slice(0, 2).map((laptop, idx) => {
+              const storageSpec = laptop.specs.find(s => s.title === "ذخیره‌سازی");
+              const upgradable = storageSpec?.rows.find(r => r[0] === "قابل ارتقا")?.[1] || "—";
+              
+              return (
+                <div key={laptop.id} className="flex items-center p-3 px-4 text-[#333333] text-sm">{upgradable}</div>
+              );
+            })}
+          </div>
+
+          {/* Total slots */}
+          <div className="grid border-b border-[#e8e8e8]" style={{ gridTemplateColumns: `30% 35% 35%` }}>
+            <div className="flex items-center p-3 px-4 text-[#666666] text-sm">تعداد اسلات‌ها</div>
+            {products.slice(0, 2).map((laptop, idx) => {
+              const storageSpec = laptop.specs.find(s => s.title === "ذخیره‌سازی");
+              const slots = storageSpec?.rows.find(r => r[0] === "تعداد اسلات")?.[1] || "—";
+              
+              return (
+                <div key={laptop.id} className="flex items-center p-3 px-4 text-[#333333] text-sm">{slots}</div>
+              );
+            })}
+          </div>
+
+          {/* NVMe */}
+          <div className="grid" style={{ gridTemplateColumns: `30% 35% 35%` }}>
+            <div className="flex items-center p-3 px-4 text-[#666666] text-sm">NVMe</div>
+            {products.slice(0, 2).map((laptop, idx) => {
+              const storageSpec = laptop.specs.find(s => s.title === "ذخیره‌سازی");
+              const nvme = storageSpec?.rows.find(r => r[0] === "NVMe")?.[1] || "—";
+              
+              return (
+                <div key={laptop.id} className="flex items-center p-3 px-4 text-[#333333] text-sm">{nvme}</div>
+              );
+            })}
+          </div>
+        </div>
+      </div>
+
+      {/* SECTION 7: RAM */}
+      <div className="border-t border-[#e8e8e8]">
+        <div className="flex items-center border-b border-[#e8e8e8] px-6 py-4">
+          <div className="mr-2 h-4 w-4 bg-sea" />
+          <h3 className="text-lg font-bold text-[#1a1a2e]">RAM</h3>
+        </div>
+
+        {/* RAM size selector */}
+        <div className="grid border-b border-[#e8e8e8]" style={{ gridTemplateColumns: `30% 35% 35%` }}>
+          <div className="flex items-center p-3 px-4 text-[#666666] text-sm">اندازه RAM</div>
+          {products.slice(0, 2).map((laptop, idx) => {
+            const ramSpec = laptop.specs.find(s => s.title === "حافظه رم");
+            const ramSize = ramSpec?.rows.find(r => r[0] === "حافظه داخلی رم")?.[1] || "—";
+            const sizeMatch = ramSize.match(/(\d+)/);
+            const size = sizeMatch ? parseInt(sizeMatch[1]) : 0;
+            
+            return (
+              <div key={laptop.id} className="flex items-center p-3 px-4">
+                <div className="space-y-2">
+                  <div className="flex items-center gap-2">
+                    <div className={`flex h-4 w-4 items-center justify-center rounded-full border-2 ${
+                      size === 16 ? "border-[#1a73e8] bg-[#1a73e8]" : "border-[#cccccc]"
+                    }`}>
+                      {size === 16 && <div className="h-1.5 w-1.5 rounded-full bg-white" />}
+                    </div>
+                    <span className={`text-sm ${size === 16 ? "text-[#1a73e8]" : "text-[#333333]"}`}>16GB</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <div className={`flex h-4 w-4 items-center justify-center rounded-full border-2 ${
+                      size === 32 ? "border-[#1a73e8] bg-[#1a73e8]" : "border-[#cccccc]"
+                    }`}>
+                      {size === 32 && <div className="h-1.5 w-1.5 rounded-full bg-white" />}
+                    </div>
+                    <span className={`text-sm ${size === 32 ? "text-[#1a73e8]" : "text-[#333333]"}`}>32GB</span>
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+
+        <div className="flex flex-col">
+          {/* Channels */}
+          <div className="grid border-b border-[#e8e8e8]" style={{ gridTemplateColumns: `30% 35% 35%` }}>
+            <div className="flex items-center p-3 px-4 text-[#666666] text-sm">کانال‌ها</div>
+            {products.slice(0, 2).map((laptop, idx) => {
+              const ramSpec = laptop.specs.find(s => s.title === "حافظه رم");
+              const channels = ramSpec?.rows.find(r => r[0] === "تعداد کانال")?.[1] || "—";
+              const channelMatch = channels.match(/(\d+)/);
+              const channel = channelMatch ? parseInt(channelMatch[1]) : 0;
+              const maxChannel = Math.max(...products.slice(0, 2).map(p => {
+                const spec = p.specs.find(s => s.title === "حافظه رم");
+                const ch = spec?.rows.find(r => r[0] === "تعداد کانال")?.[1] || "0";
+                const match = ch.match(/(\d+)/);
+                return match ? parseInt(match[1]) : 0;
+              }));
+              const isHighest = channel === maxChannel && channel > 0;
+              
+              return (
+                <div key={laptop.id} className={`flex items-center p-3 px-4 text-[#333333] text-sm ${isHighest ? "bg-[#d4edda]" : ""}`}>
+                  {channels}
+                </div>
+              );
+            })}
+          </div>
+
+          {/* Clock */}
+          <div className="grid border-b border-[#e8e8e8]" style={{ gridTemplateColumns: `30% 35% 35%` }}>
+            <div className="flex items-center p-3 px-4 text-[#666666] text-sm">فرکانس</div>
+            {products.slice(0, 2).map((laptop, idx) => {
+              const ramSpec = laptop.specs.find(s => s.title === "حافظه رم");
+              const clockText = ramSpec?.rows.find(r => r[0] === "فرکانس")?.[1] || "—";
+              const clockMatch = clockText.match(/(\d+)/);
+              const clock = clockMatch ? parseInt(clockMatch[1]) : 0;
+              const maxClock = Math.max(...products.slice(0, 2).map(p => {
+                const spec = p.specs.find(s => s.title === "حافظه رم");
+                const clk = spec?.rows.find(r => r[0] === "فرکانس")?.[1] || "0";
+                const match = clk.match(/(\d+)/);
+                return match ? parseInt(match[1]) : 0;
+              }));
+              const isHighest = clock === maxClock && clock > 0;
+              
+              return (
+                <div key={laptop.id} className={`flex items-center p-3 px-4 text-[#333333] text-sm ${isHighest ? "bg-[#d4edda]" : ""}`}>
+                  {clockText}
+                </div>
+              );
+            })}
+          </div>
+
+          {/* Type */}
+          <div className="grid border-b border-[#e8e8e8]" style={{ gridTemplateColumns: `30% 35% 35%` }}>
+            <div className="flex items-center p-3 px-4 text-[#666666] text-sm">نوع</div>
+            {products.slice(0, 2).map((laptop, idx) => {
+              const ramSpec = laptop.specs.find(s => s.title === "حافظه رم");
+              const type = ramSpec?.rows.find(r => r[0] === "نوع")?.[1] || "—";
+              
+              return (
+                <div key={laptop.id} className="flex items-center p-3 px-4 text-[#333333] text-sm">{type}</div>
+              );
+            })}
+          </div>
+
+          {/* Upgradable */}
+          <div className="grid border-b border-[#e8e8e8]" style={{ gridTemplateColumns: `30% 35% 35%` }}>
+            <div className="flex items-center p-3 px-4 text-[#666666] text-sm">قابل ارتقا</div>
+            {products.slice(0, 2).map((laptop, idx) => {
+              const ramSpec = laptop.specs.find(s => s.title === "حافظه رم");
+              const upgradable = ramSpec?.rows.find(r => r[0] === "قابل ارتقا")?.[1] || "—";
+              const isYes = upgradable === "Yes" || upgradable === "بله";
+              
+              return (
+                <div key={laptop.id} className={`flex items-center p-3 px-4 text-[#333333] text-sm ${isYes ? "bg-[#d4edda]" : ""}`}>
+                  {upgradable}
+                </div>
+              );
+            })}
+          </div>
+
+          {/* Total slots */}
+          <div className="grid border-b border-[#e8e8e8]" style={{ gridTemplateColumns: `30% 35% 35%` }}>
+            <div className="flex items-center p-3 px-4 text-[#666666] text-sm">تعداد اسلات‌ها</div>
+            {products.slice(0, 2).map((laptop, idx) => {
+              const ramSpec = laptop.specs.find(s => s.title === "حافظه رم");
+              const slots = ramSpec?.rows.find(r => r[0] === "تعداد اسلات")?.[1] || "—";
+              
+              return (
+                <div key={laptop.id} className="flex items-center p-3 px-4 text-[#333333] text-sm">{slots}</div>
+              );
+            })}
+          </div>
+
+          {/* Max. ram size */}
+          <div className="grid" style={{ gridTemplateColumns: `30% 35% 35%` }}>
+            <div className="flex items-center p-3 px-4 text-[#666666] text-sm">حداکثر اندازه RAM</div>
+            {products.slice(0, 2).map((laptop, idx) => {
+              const ramSpec = laptop.specs.find(s => s.title === "حافظه رم");
+              const maxSize = ramSpec?.rows.find(r => r[0] === "حداکثر")?.[1] || "—";
+              
+              return (
+                <div key={laptop.id} className="flex items-center p-3 px-4 text-[#333333] text-sm">{maxSize}</div>
+              );
+            })}
+          </div>
+        </div>
+      </div>
+
+      {/* SECTION DIVIDER */}
+      <div className="border-t-2 border-[#e0e0e0]" />
+
+      {/* SECTION 8: Storage */}
+      <div className="border-t border-[#e8e8e8]">
+        <div className="flex items-center border-b border-[#e8e8e8] px-6 py-4">
+          <div className="mr-2 h-4 w-4 bg-sea" />
+          <h3 className="text-lg font-bold text-[#1a1a2e]">ذخیره‌سازی</h3>
+        </div>
+
+        {/* Storage size selector */}
+        <div className="grid border-b border-[#e8e8e8]" style={{ gridTemplateColumns: `30% 35% 35%` }}>
+          <div className="flex items-center p-3 px-4 text-[#666666] text-sm">اندازه ذخیره‌سازی</div>
+          {products.slice(0, 2).map((laptop, idx) => {
+            const storageSpec = laptop.specs.find(s => s.title === "ذخیره‌سازی");
+            const storageSize = storageSpec?.rows.find(r => r[0] === "ظرفیت کلی")?.[1] || "—";
+            const sizeMatch = storageSize.match(/(\d+)/);
+            const size = sizeMatch ? parseInt(sizeMatch[1]) : 0;
+            
+            return (
+              <div key={laptop.id} className="flex items-center p-3 px-4">
+                <div className="space-y-2">
+                  <div className="flex items-center gap-2">
+                    <div className={`flex h-4 w-4 items-center justify-center rounded-full border-2 ${
+                      size === 256 ? "border-[#1a73e8] bg-[#1a73e8]" : "border-[#cccccc]"
+                    }`}>
+                      {size === 256 && <div className="h-1.5 w-1.5 rounded-full bg-white" />}
+                    </div>
+                    <span className={`text-sm ${size === 256 ? "text-[#1a73e8]" : "text-[#333333]"}`}>256GB</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <div className={`flex h-4 w-4 items-center justify-center rounded-full border-2 ${
+                      size === 512 ? "border-[#1a73e8] bg-[#1a73e8]" : "border-[#cccccc]"
+                    }`}>
+                      {size === 512 && <div className="h-1.5 w-1.5 rounded-full bg-white" />}
+                    </div>
+                    <span className={`text-sm ${size === 512 ? "text-[#1a73e8]" : "text-[#333333]"}`}>512GB</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <div className={`flex h-4 w-4 items-center justify-center rounded-full border-2 ${
+                      size === 1024 ? "border-[#1a73e8] bg-[#1a73e8]" : "border-[#cccccc]"
+                    }`}>
+                      {size === 1024 && <div className="h-1.5 w-1.5 rounded-full bg-white" />}
+                    </div>
+                    <span className={`text-sm ${size === 1024 ? "text-[#1a73e8]" : "text-[#333333]"}`}>1024GB</span>
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+
+        <div className="flex flex-col">
+          {/* Bus */}
+          <div className="grid border-b border-[#e8e8e8]" style={{ gridTemplateColumns: `30% 35% 35%` }}>
+            <div className="flex items-center p-3 px-4 text-[#666666] text-sm">Bus</div>
+            {products.slice(0, 2).map((laptop, idx) => {
+              const storageSpec = laptop.specs.find(s => s.title === "ذخیره‌سازی");
+              const bus = storageSpec?.rows.find(r => r[0] === "رابط")?.[1] || "—";
+              
+              return (
+                <div key={laptop.id} className="flex items-center p-3 px-4 text-[#333333] text-sm">{bus}</div>
+              );
+            })}
+          </div>
+
+          {/* Storage type */}
+          <div className="grid border-b border-[#e8e8e8]" style={{ gridTemplateColumns: `30% 35% 35%` }}>
+            <div className="flex items-center p-3 px-4 text-[#666666] text-sm">نوع ذخیره‌سازی</div>
+            {products.slice(0, 2).map((laptop, idx) => {
+              const storageSpec = laptop.specs.find(s => s.title === "ذخیره‌سازی");
+              const type = storageSpec?.rows.find(r => r[0] === "نوع")?.[1] || "—";
+              
+              return (
+                <div key={laptop.id} className="flex items-center p-3 px-4 text-[#333333] text-sm">{type}</div>
+              );
+            })}
+          </div>
+
+          {/* Channels */}
+          <div className="grid border-b border-[#e8e8e8]" style={{ gridTemplateColumns: `30% 35% 35%` }}>
+            <div className="flex items-center p-3 px-4 text-[#666666] text-sm">کانال‌ها</div>
+            {products.slice(0, 2).map((laptop, idx) => {
+              const storageSpec = laptop.specs.find(s => s.title === "ذخیره‌سازی");
+              const channels = storageSpec?.rows.find(r => r[0] === "کانال")?.[1] || "—";
+              const channelMatch = channels.match(/(\d+)/);
+              const channel = channelMatch ? parseInt(channelMatch[1]) : 0;
+              const maxChannel = Math.max(...products.slice(0, 2).map(p => {
+                const spec = p.specs.find(s => s.title === "ذخیره‌سازی");
+                const ch = spec?.rows.find(r => r[0] === "کانال")?.[1] || "0";
+                const match = ch.match(/(\d+)/);
+                return match ? parseInt(match[1]) : 0;
+              }));
+              const isHighest = channel === maxChannel && channel > 0;
+              
+              return (
+                <div key={laptop.id} className={`flex items-center p-3 px-4 text-[#333333] text-sm ${isHighest ? "bg-[#d4edda]" : ""}`}>
+                  {channels}
+                </div>
+              );
+            })}
+          </div>
+
+          {/* Upgradable */}
+          <div className="grid border-b border-[#e8e8e8]" style={{ gridTemplateColumns: `30% 35% 35%` }}>
+            <div className="flex items-center p-3 px-4 text-[#666666] text-sm">قابل ارتقا</div>
+            {products.slice(0, 2).map((laptop, idx) => {
+              const storageSpec = laptop.specs.find(s => s.title === "ذخیره‌سازی");
+              const upgradable = storageSpec?.rows.find(r => r[0] === "قابل ارتقا")?.[1] || "—";
+              
+              return (
+                <div key={laptop.id} className="flex items-center p-3 px-4 text-[#333333] text-sm">{upgradable}</div>
+              );
+            })}
+          </div>
+
+          {/* Total slots */}
+          <div className="grid border-b border-[#e8e8e8]" style={{ gridTemplateColumns: `30% 35% 35%` }}>
+            <div className="flex items-center p-3 px-4 text-[#666666] text-sm">تعداد اسلات‌ها</div>
+            {products.slice(0, 2).map((laptop, idx) => {
+              const storageSpec = laptop.specs.find(s => s.title === "ذخیره‌سازی");
+              const slots = storageSpec?.rows.find(r => r[0] === "تعداد اسلات")?.[1] || "—";
+              
+              return (
+                <div key={laptop.id} className="flex items-center p-3 px-4 text-[#333333] text-sm">{slots}</div>
+              );
+            })}
+          </div>
+
+          {/* NVMe */}
+          <div className="grid" style={{ gridTemplateColumns: `30% 35% 35%` }}>
+            <div className="flex items-center p-3 px-4 text-[#666666] text-sm">NVMe</div>
+            {products.slice(0, 2).map((laptop, idx) => {
+              const storageSpec = laptop.specs.find(s => s.title === "ذخیره‌سازی");
+              const nvme = storageSpec?.rows.find(r => r[0] === "NVMe")?.[1] || "—";
+              
+              return (
+                <div key={laptop.id} className="flex items-center p-3 px-4 text-[#333333] text-sm">{nvme}</div>
+              );
+            })}
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
