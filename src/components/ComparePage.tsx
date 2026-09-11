@@ -7,6 +7,7 @@ import KeyDifferences from "./KeyDifferences";
 import CaseComparisonTable from "./CaseComparisonTable";
 import SizeComparison from "./SizeComparison";
 import CoolingSolution from "./CoolingSolution";
+import Display from "./Display";
 import DisplayComparison from "./DisplayComparison";
 import ProfessionalComparisonTable from "./ProfessionalComparisonTable";
 
@@ -371,6 +372,7 @@ export default function ComparePage({ products, ids, onClose, onAddToCart }: Com
         {/* Cooling Solution - راه حل خنک‌کنندگی */}
         <div className="mb-8">
           <CoolingSolution laptops={laptops} maxLaptops={4} />
+          <Display laptops={laptops} />
           <DisplayComparison laptops={laptops} />
           <ProfessionalComparisonTable products={laptops} />
         </div>
