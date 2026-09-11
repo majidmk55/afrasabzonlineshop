@@ -1,23 +1,23 @@
 import { lazy, Suspense, useCallback, useMemo, useState } from "react";
 import Header from "./components/Header";
 import Home from "./components/Home";
-
-import ProductModal from "./components/ProductModal";
-import CartDrawer from "./components/CartDrawer";
-import Checkout from "./components/Checkout";
-import { CompareTray } from "./components/Compare";
-import ComparePage from "./components/ComparePage";
 import Guide from "./components/Guide";
 import Footer from "./components/Footer";
-import LiveChat from "./components/LiveChat";
-import AuthModal from "./components/AuthModal";
 import { ErrorBoundary } from "./components/ErrorBoundary";
+import { CompareTray } from "./components/Compare";
 import { PROMOS, type CartLine, type Laptop } from "./data/laptops";
 import { loadOrders, loadProducts, loadSettings, saveOrders, saveProducts, saveSettings, visibleProducts, type OrderRecord, type Settings } from "./lib/store";
 import { scrollToId } from "./lib/motion";
 import { ICheck } from "./components/icons";
 
+// Lazy load سنگین‌ترین کامپوننت‌ها
 const Admin = lazy(() => import("./components/Admin"));
+const ProductModal = lazy(() => import("./components/ProductModal"));
+const CartDrawer = lazy(() => import("./components/CartDrawer"));
+const Checkout = lazy(() => import("./components/Checkout"));
+const ComparePage = lazy(() => import("./components/ComparePage"));
+const LiveChat = lazy(() => import("./components/LiveChat"));
+const AuthModal = lazy(() => import("./components/AuthModal"));
 
 interface CartEntry { qty: number; warranty: boolean }
 

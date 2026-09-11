@@ -1,3 +1,4 @@
+import { memo, useMemo } from "react";
 import { type Laptop } from "../data/laptops";
 import { ICpu, IDisplay, IGpu, IRam, IStar } from "./icons";
 
@@ -47,19 +48,22 @@ interface ProductCardProps {
   className?: string;
 }
 
-export default function ProductCard({ laptop, onOpen, className = "" }: ProductCardProps) {
-  const specs = [
+const ProductCard = memo(function ProductCard({ laptop, onOpen, className = "" }: ProductCardProps) {
+  const specs = useMemo(() => [
     { Icon: ICpu, value: shortCpu(laptop), label: "پردازنده" },
     { Icon: IRam, value: shortRam(laptop), label: "رم" },
     { Icon: IDisplay, value: shortDisplay(laptop), label: "صفحه نمایش" },
     { Icon: IGpu, value: shortGpu(laptop), label: "گرافیک" },
-  ];
+  ], [laptop]);
 
   /* نام کامل به فرمت رایج فروشگاه‌های ایرانی */
-  const fullName = `لپ‌تاپ ${laptop.brand} ${shortDisplay(laptop).replace(" inch", " اینچی")} مدل ${laptop.series} ${shortCpu(laptop)} ${shortRam(laptop)} ${shortStorage(laptop)} ${shortGpu(laptop)}`;
+  const fullName = useMemo(() => 
+    `لپ‌تاپ ${laptop.brand} ${shortDisplay(laptop).replace(" inch", " اینچی")} مدل ${laptop.series} ${shortCpu(laptop)} ${shortRam(laptop)} ${shortStorage(laptop)} ${shortGpu(laptop)}`,
+    [laptop]
+  );
 
-  const toman = (laptop.price / 10).toLocaleString("fa-IR");
-  const rating = laptop.rating.toLocaleString("fa-IR", { minimumFractionDigits: 1, maximumFractionDigits: 1 });
+  const toman = useMemo(() => (laptop.price / 10).toLocaleString("fa-IR"), [laptop.price]);
+  const rating = useMemo(() => laptop.rating.toLocaleString("fa-IR", { minimumFractionDigits: 1, maximumFractionDigits: 1 }), [laptop.rating]);
 
   return (
     <article
@@ -115,4 +119,6 @@ export default function ProductCard({ laptop, onOpen, className = "" }: ProductC
       </div>
     </article>
   );
-}
+});
+
+export default ProductCard;
