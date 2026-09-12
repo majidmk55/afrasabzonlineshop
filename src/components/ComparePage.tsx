@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useMemo, useRef, useEffect } from "react";
 import { fmt, toFa, type Laptop } from "../data/laptops";
 import { IClose, ICart } from "./icons";
 
@@ -33,7 +33,7 @@ function extractSpec(laptop: Laptop, group: string, key: string): string {
   return row ? row[1] : "—";
 }
 
-// استخراج عدد
+// استخراج عدد از متن
 function extractNumber(text: string): number {
   const match = text.match(/(\d+(?:\.\d+)?)/);
   return match ? parseFloat(match[1]) : 0;

@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#667eea"/>
+      <stop offset="100%" style="stop-color:#764ba2"/>
+    </linearGradient>
+  </defs>
+  <rect fill="url(#bg)" width="1200" height="630"/>
+  
+  <!-- لپ‌تاپ‌ها -->
+  <rect x="150" y="180" width="280" height="180" rx="8" fill="#1a1a1a"/>
+  <rect x="165" y="195" width="250" height="150" rx="4" fill="#00d4ff"/>
+  
+  <rect x="480" y="200" width="240" height="160" rx="8" fill="#c0c0c0"/>
+  <rect x="495" y="215" width="210" height="130" rx="4" fill="#000"/>
+  
+  <rect x="770" y="185" width="260" height="170" rx="8" fill="#2a2a2a"/>
+  <rect x="785" y="200" width="230" height="140" rx="4" fill="#ff0080"/>
+  
+  <!-- متن -->
+  <text x="600" y="480" font-family="Arial, sans-serif" font-size="56" font-weight="bold" fill="white" text-anchor="middle">افرالینک</text>
+  <text x="600" y="540" font-family="Arial, sans-serif" font-size="32" fill="white" text-anchor="middle" opacity="0.9">فروشگاه تخصصی لپ‌تاپ</text>
+</svg>
