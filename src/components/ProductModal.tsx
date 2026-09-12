@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { WARRANTY_PRICE, fmt, toFa, type Laptop } from "../data/laptops";
 import { Reveal, prefersReducedMotion, useEscape, useLockBody } from "../lib/motion";
 import { ICheck, IClose, ICompare, IMinus, IPlus, IStar, ITruck, SPEC_ICONS } from "./icons";
-import LaptopSpecsSummary from "./LaptopSpecsSummary";
+import SpecsSummary from "./SpecsSummary";
 
 type Tab = "specs" | "box" | "shipping";
 
@@ -341,7 +341,7 @@ export default function ProductModal({ laptop, products, onClose, onAdd, onToggl
 
               {/* خلاصه مشخصات کلیدی */}
               <div className="md:w-[340px]">
-                <LaptopSpecsSummary
+                <SpecsSummary
                   cpu={laptop.specs.find(s => s.title === "پردازنده")?.rows.find(r => r[0] === "مدل پردازنده")?.[1] ?? laptop.brief.find(b => b[0] === "پردازنده")?.[1] ?? "—"}
                   gpu={laptop.specs.find(s => s.title === "گرافیک")?.rows.find(r => r[0] === "مدل گرافیک مجزا")?.[1] ?? laptop.brief.find(b => b[0] === "گرافیک")?.[1] ?? "—"}
                   display={laptop.specs.find(s => s.title === "صفحه نمایش")?.rows.find(r => r[0] === "اندازه صفحه نمایش")?.[1] ?? laptop.brief.find(b => b[0] === "نمایشگر")?.[1] ?? "—"}
