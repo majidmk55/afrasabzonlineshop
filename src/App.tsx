@@ -256,56 +256,64 @@ export default function App() {
 
       {/* overlays */}
       {activeProduct && (
-        <ProductModal
-          key={activeProduct.id}
-          laptop={activeProduct}
-          products={visible}
-          onClose={() => setProductId(null)}
-          onAdd={(id, qty, warranty) => addToCart(id, qty, warranty)}
-          onToggleCompare={toggleCompare}
-          compared={compareIds.includes(activeProduct.id)}
-          onOpen={openProduct}
-        />
+        <Suspense fallback={<div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50"><div className="h-10 w-10 animate-spin rounded-full border-4 border-sea border-t-transparent" /></div>}>
+          <ProductModal
+            key={activeProduct.id}
+            laptop={activeProduct}
+            products={visible}
+            onClose={() => setProductId(null)}
+            onAdd={(id, qty, warranty) => addToCart(id, qty, warranty)}
+            onToggleCompare={toggleCompare}
+            compared={compareIds.includes(activeProduct.id)}
+            onOpen={openProduct}
+          />
+        </Suspense>
       )}
 
       {cartOpen && (
-        <CartDrawer
-          lines={lines}
-          promo={promo}
-          enableTax={settings.enableTax}
-          onApplyPromo={applyPromo}
-          onClose={() => setCartOpen(false)}
-          onSetQty={setQty}
-          onRemove={removeLine}
-          onToggleWarranty={toggleWarranty}
-          onCheckout={() => {
-            if (lines.length === 0) return;
-            setCartOpen(false);
-            setCheckoutOpen(true);
-          }}
-        />
+        <Suspense fallback={<div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50"><div className="h-10 w-10 animate-spin rounded-full border-4 border-sea border-t-transparent" /></div>}>
+          <CartDrawer
+            lines={lines}
+            promo={promo}
+            enableTax={settings.enableTax}
+            onApplyPromo={applyPromo}
+            onClose={() => setCartOpen(false)}
+            onSetQty={setQty}
+            onRemove={removeLine}
+            onToggleWarranty={toggleWarranty}
+            onCheckout={() => {
+              if (lines.length === 0) return;
+              setCartOpen(false);
+              setCheckoutOpen(true);
+            }}
+          />
+        </Suspense>
       )}
 
       {checkoutOpen && (
-        <Checkout
-          lines={lines}
-          promo={promo}
-          enableTax={settings.enableTax}
-          onApplyPromo={applyPromo}
-          onClose={() => setCheckoutOpen(false)}
-          onComplete={(order) => {
-            recordOrder(order);
-            setCart({});
-            setPromo(null);
-          }}
-        />
+        <Suspense fallback={<div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50"><div className="h-10 w-10 animate-spin rounded-full border-4 border-sea border-t-transparent" /></div>}>
+          <Checkout
+            lines={lines}
+            promo={promo}
+            enableTax={settings.enableTax}
+            onApplyPromo={applyPromo}
+            onClose={() => setCheckoutOpen(false)}
+            onComplete={(order) => {
+              recordOrder(order);
+              setCart({});
+              setPromo(null);
+            }}
+          />
+        </Suspense>
       )}
 
       {authModalOpen && (
-        <AuthModal
-          onClose={() => setAuthModalOpen(false)}
-          initialMode={authMode}
-        />
+        <Suspense fallback={<div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50"><div className="h-10 w-10 animate-spin rounded-full border-4 border-sea border-t-transparent" /></div>}>
+          <AuthModal
+            onClose={() => setAuthModalOpen(false)}
+            initialMode={authMode}
+          />
+        </Suspense>
       )}
 
       <CompareTray
@@ -322,15 +330,17 @@ export default function App() {
 
 
       {comparePageOpen && (
-        <ComparePage
-          products={visible}
-          ids={compareIdsForPage}
-          onClose={() => setComparePageOpen(false)}
-          onAddToCart={(id) => {
-            addToCart(id);
-            setComparePageOpen(false);
-          }}
-        />
+        <Suspense fallback={<div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50"><div className="h-10 w-10 animate-spin rounded-full border-4 border-sea border-t-transparent" /></div>}>
+          <ComparePage
+            products={visible}
+            ids={compareIdsForPage}
+            onClose={() => setComparePageOpen(false)}
+            onAddToCart={(id) => {
+              addToCart(id);
+              setComparePageOpen(false);
+            }}
+          />
+        </Suspense>
       )}
 
       <LiveChat />
