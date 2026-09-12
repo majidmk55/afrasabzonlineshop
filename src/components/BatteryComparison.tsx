@@ -1,200 +1,142 @@
-import { Laptop } from '../data/laptops';
+import { type Laptop } from "../data/laptops";
 
 interface BatteryComparisonProps {
   laptops: Laptop[];
 }
 
 export default function BatteryComparison({ laptops }: BatteryComparisonProps) {
-  const extractBatterySpec = (laptop: Laptop, key: string): string => {
-    const batteryGroup = laptop.specs.find(s => s.title === 'باتری و شارژ');
-    if (!batteryGroup) return '—';
-
-    const row = batteryGroup.rows.find(r => r[0] === key);
-    return row ? row[1] : '—';
+  // استخراج مقادیر از مشخصات لپ‌تاپ‌ها
+  const extractValues = (key: string) => {
+    return laptops.map(laptop => {
+      const batteryGroup = laptop.specs.find(s => s.title === "باتری و شارژ");
+      
+      if (key === "capacity") {
+        return batteryGroup?.rows.find(r => r[0] === "ظرفیت باتری")?.[1] ?? "—";
+      }
+      if (key === "type") {
+        const type = batteryGroup?.rows.find(r => r[0] === "نوع باتری")?.[1] ?? "";
+        if (type.includes("Li-Po") || type.includes("لیتیوم پلیمر")) return "Li Po";
+        if (type.includes("Li-Ion") || type.includes("لیتیوم یون")) return "Li Ion";
+        return "—";
+      }
+      if (key === "replaceable") {
+        const replaceable = batteryGroup?.rows.find(r => r[0] === "قابلیت تعویض")?.[1];
+        return replaceable && (replaceable === "بله" || replaceable.includes("قابل")) ? "Yes" : "No";
+      }
+      if (key === "fastCharging") {
+        const fast = batteryGroup?.rows.find(r => r[0] === "شارژ سریع")?.[1];
+        return fast && fast === "بله" ? "Yes" : "No";
+      }
+      if (key === "chargingViaUSB") {
+        const usb = batteryGroup?.rows.find(r => r[0] === "شارژ از طریق USB")?.[1];
+        if (!usb || usb === "—") return "No";
+        // استخراج توان
+        const match = usb.match(/(\d+)\s*وات/);
+        if (match) return `Yes, ${match[1]} W`;
+        return "Yes";
+      }
+      if (key === "chargingPortPosition") {
+        const position = batteryGroup?.rows.find(r => r[0] === "موقعیت پورت شارژ")?.[1];
+        if (!position || position === "—") return "—";
+        if (position.includes("چپ") || position.includes("Left")) return "Left";
+        if (position.includes("راست") || position.includes("Right")) return "Right";
+        return "—";
+      }
+      if (key === "chargePower") {
+        const power = batteryGroup?.rows.find(r => r[0] === "توان شارژ")?.[1];
+        if (!power || power === "—") return "—";
+        const match = power.match(/(\d+)\s*وات/);
+        if (match) return `${match[1]} W`;
+        return "—";
+      }
+      return "—";
+    });
   };
 
-  const getCapacity = (laptop: Laptop): string => {
-    const capacity = extractBatterySpec(laptop, 'ظرفیت باتری');
-    const match = capacity.match(/(\d+)/);
-    return match ? `${match[1]} Wh` : '—';
+  // تعیین بهترین مقدار برای هایلایت
+  const getBestValue = (key: string, values: string[]) => {
+    if (key === "chargingViaUSB") {
+      // "Yes, 100 W" بهتر از "Yes" است
+      const hasPower = values.some(v => v.includes("Yes,"));
+      if (hasPower) {
+        return values.map(v => v.includes("Yes,"));
+      }
+      return values.map(() => false);
+    }
+    if (key === "chargePower") {
+      // توان بیشتر بهتر است
+      const numericValues = values.map(v => {
+        const match = v.match(/(\d+)/);
+        return match ? parseInt(match[1]) : 0;
+      });
+      const max = Math.max(...numericValues);
+      return values.map((v, i) => numericValues[i] === max && max > 0);
+    }
+    return values.map(() => false);
   };
 
-  const getBatteryType = (laptop: Laptop): string => {
-    const type = extractBatterySpec(laptop, 'نوع باتری');
-    if (type.includes('Li-Po') || type.includes('لیتیوم پلیمر')) return 'Li Po';
-    if (type.includes('Li-Ion') || type.includes('لیتیوم یون')) return 'Li Ion';
-    return '—';
-  };
-
-  const getReplaceable = (laptop: Laptop): string => {
-    const replaceable = extractBatterySpec(laptop, 'قابلیت تعویض');
-    if (replaceable.includes('بله') || replaceable.includes('قابل تعویض')) return 'Yes';
-    if (replaceable.includes('خیر') || replaceable.includes('غیرقابل') || replaceable.includes('لحیم')) return 'No';
-    return '—';
-  };
-
-  const getFastCharging = (laptop: Laptop): string => {
-    const fastCharging = extractBatterySpec(laptop, 'شارژ سریع');
-    if (fastCharging.includes('بله') || fastCharging.includes('دارد')) return 'Yes';
-    if (fastCharging.includes('خیر') || fastCharging.includes('ندارد')) return 'No';
-    return '—';
-  };
-
-  const getUsbCharging = (laptop: Laptop): string => {
-    const usbCharging = extractBatterySpec(laptop, 'شارژ از طریق USB');
-    const match = usbCharging.match(/(\d+)\s*W/i);
-    if (match) return `Yes, ${match[1]} W`;
-    if (usbCharging.includes('بله') || usbCharging.includes('دارد')) return 'Yes';
-    if (usbCharging.includes('خیر') || usbCharging.includes('ندارد')) return 'No';
-    return '—';
-  };
-
-  const getChargingPortPosition = (laptop: Laptop): string => {
-    const position = extractBatterySpec(laptop, 'موقعیت پورت شارژ');
-    if (position.includes('چپ') || position.includes('Left')) return 'Left';
-    if (position.includes('راست') || position.includes('Right')) return 'Right';
-    return '—';
-  };
-
-  const getChargePower = (laptop: Laptop): string => {
-    const power = extractBatterySpec(laptop, 'توان شارژر');
-    const match = power.match(/(\d+)\s*W/i);
-    return match ? `${match[1]} W` : '—';
-  };
-
-  // Determine best values for highlighting
-  const capacities = laptops.map(getCapacity);
-  const usbChargingValues = laptops.map(getUsbCharging);
-  const chargePowers = laptops.map(getChargePower);
-
-  const bestCapacity = capacities.reduce((best, curr) => {
-    const bestVal = parseInt(best);
-    const currVal = parseInt(curr);
-    return currVal > bestVal ? curr : best;
-  }, '0');
-
-  const bestChargePower = chargePowers.reduce((best, curr) => {
-    const bestVal = parseInt(best);
-    const currVal = parseInt(curr);
-    return currVal > bestVal ? curr : best;
-  }, '0');
+  // تعریف ردیف‌ها
+  const rows = [
+    { label: "Capacity", key: "capacity", isSelector: true },
+    { label: "Battery type", key: "type" },
+    { label: "Replaceable", key: "replaceable" },
+    { label: "Fast charging", key: "fastCharging" },
+    { label: "Charging via USB (Power\nDelivery)", key: "chargingViaUSB" },
+    { label: "Charging port position", key: "chargingPortPosition" },
+    { label: "Charge power", key: "chargePower" },
+  ];
 
   return (
     <div className="w-full bg-white">
-      {/* Header */}
+      {/* هدر بخش */}
       <div className="flex items-center gap-2.5 border-b border-[#e2e8f0] bg-[#f8fafc] px-4 py-3">
-        <svg width={20} height={20} viewBox="0 0 24 24" fill="#1a73e8">
-          <rect x="2" y="7" width="18" height="10" rx="1" />
-          <rect x="20" y="10" width="2" height="4" />
+        <svg width={20} height={20} viewBox="0 0 24 24" fill="none" stroke="#1a73e8" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <rect x="2" y="7" width="18" height="10" rx="1" fill="#1a73e8" />
+          <rect x="20" y="10" width="2" height="4" fill="#1a73e8" />
         </svg>
         <span className="text-[18px] font-bold text-[#1a1a2e]">Battery</span>
       </div>
 
-      {/* Capacity Row with Radio Buttons */}
-      <div className="grid grid-cols-3 border-b border-[#e8e8e8]" style={{ minHeight: '40px' }}>
-        <div className="col-span-1 flex items-center px-4 py-3 text-[14px] text-[#666666]">
-          Capacity
-        </div>
-        {laptops.map((laptop, idx) => (
-          <div key={laptop.id} className="col-span-1 flex items-center px-4 py-3">
-            <div className="h-4 w-4 rounded-full bg-[#1a73e8] mr-2" />
-            <span className="text-[14px] text-[#1a73e8]">{getCapacity(laptop)}</span>
-          </div>
-        ))}
-      </div>
+      {/* ردیف‌های جدول */}
+      {rows.map((row) => {
+        const values = extractValues(row.key);
+        const highlights = getBestValue(row.key, values);
+        const hasHighlight = highlights.some(h => h);
 
-      {/* Battery Type */}
-      <div className="grid grid-cols-3 border-b border-[#e8e8e8]" style={{ minHeight: '40px' }}>
-        <div className="col-span-1 flex items-center px-4 py-3 text-[14px] text-[#666666]">
-          Battery type
-        </div>
-        {laptops.map((laptop) => (
-          <div key={laptop.id} className="col-span-1 flex items-center px-4 py-3 text-[14px] text-[#333333]">
-            {getBatteryType(laptop)}
-          </div>
-        ))}
-      </div>
-
-      {/* Replaceable */}
-      <div className="grid grid-cols-3 border-b border-[#e8e8e8]" style={{ minHeight: '40px' }}>
-        <div className="col-span-1 flex items-center px-4 py-3 text-[14px] text-[#666666]">
-          Replaceable
-        </div>
-        {laptops.map((laptop) => (
-          <div key={laptop.id} className="col-span-1 flex items-center px-4 py-3 text-[14px] text-[#333333]">
-            {getReplaceable(laptop)}
-          </div>
-        ))}
-      </div>
-
-      {/* Fast Charging */}
-      <div className="grid grid-cols-3 border-b border-[#e8e8e8]" style={{ minHeight: '40px' }}>
-        <div className="col-span-1 flex items-center px-4 py-3 text-[14px] text-[#666666]">
-          Fast charging
-        </div>
-        {laptops.map((laptop) => (
-          <div key={laptop.id} className="col-span-1 flex items-center px-4 py-3 text-[14px] text-[#333333]">
-            {getFastCharging(laptop)}
-          </div>
-        ))}
-      </div>
-
-      {/* Charging via USB (Power Delivery) */}
-      <div className="grid grid-cols-3 border-b border-[#e8e8e8]" style={{ minHeight: '40px' }}>
-        <div className="col-span-1 flex items-center px-4 py-3 text-[14px] text-[#666666]">
-          <div>
-            <div>Charging via USB (Power</div>
-            <div>Delivery)</div>
-          </div>
-        </div>
-        {laptops.map((laptop, idx) => {
-          const value = getUsbCharging(laptop);
-          const isBest = value === bestCapacity && value.includes('W');
-          return (
-            <div
-              key={laptop.id}
-              className={`col-span-1 flex items-center px-4 py-3 text-[14px] ${
-                isBest ? 'bg-[#d4edda] text-[#333333]' : 'text-[#333333]'
-              }`}
-            >
-              {value}
+        return (
+          <div
+            key={row.label}
+            className="grid grid-cols-3 border-b border-[#e8e8e8]"
+            style={{ minHeight: "40px" }}
+          >
+            {/* برچسب */}
+            <div className="col-span-1 flex items-center px-4 py-3 text-[14px] text-[#666666] whitespace-pre-line">
+              {row.label}
             </div>
-          );
-        })}
-      </div>
 
-      {/* Charging Port Position */}
-      <div className="grid grid-cols-3 border-b border-[#e8e8e8]" style={{ minHeight: '40px' }}>
-        <div className="col-span-1 flex items-center px-4 py-3 text-[14px] text-[#666666]">
-          Charging port position
-        </div>
-        {laptops.map((laptop) => (
-          <div key={laptop.id} className="col-span-1 flex items-center px-4 py-3 text-[14px] text-[#333333]">
-            {getChargingPortPosition(laptop)}
+            {/* مقادیر لپ‌تاپ‌ها */}
+            {values.map((value, laptopIdx) => (
+              <div
+                key={laptopIdx}
+                className={`col-span-1 flex items-center px-4 py-3 text-[14px] ${
+                  hasHighlight && highlights[laptopIdx] 
+                    ? "bg-[#d4edda] text-[#333333]" 
+                    : row.isSelector 
+                    ? "text-[#1a73e8]"
+                    : "text-[#333333]"
+                }`}
+              >
+                {row.isSelector && (
+                  <div className="mr-2 flex h-4 w-4 items-center justify-center rounded-full bg-[#1a73e8]">
+                    <div className="h-2 w-2 rounded-full bg-white"></div>
+                  </div>
+                )}
+                {value}
+              </div>
+            ))}
           </div>
-        ))}
-      </div>
-
-      {/* Charge Power */}
-      <div className="grid grid-cols-3" style={{ minHeight: '40px' }}>
-        <div className="col-span-1 flex items-center px-4 py-3 text-[14px] text-[#666666]">
-          Charge power
-        </div>
-        {laptops.map((laptop, idx) => {
-          const value = getChargePower(laptop);
-          const isBest = value === bestChargePower && value !== '—';
-          return (
-            <div
-              key={laptop.id}
-              className={`col-span-1 flex items-center px-4 py-3 text-[14px] ${
-                isBest ? 'bg-[#d4edda] text-[#333333]' : 'text-[#333333]'
-              }`}
-            >
-              {value}
-            </div>
-          );
-        })}
-      </div>
+        );
+      })}
     </div>
   );
 }
