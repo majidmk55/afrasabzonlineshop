@@ -63,13 +63,12 @@ function ProductCard({ product, onSpecs, onToggleCompare, compared }: { product:
   const removeBrand = (text: string) => {
     return text
       .split(" ")
-      .filter(word => !["APPLE", "AMD", "INTEL", "Apple", "Amd", "Intel", "apple", "amd", "intel"].includes(word))
+      .filter(word => !["APPLE", "AMD", "INTEL", "NVIDIA", "Apple", "Amd", "Intel", "Nvidia", "apple", "amd", "intel", "nvidia"].includes(word))
       .join(" ");
   };
 
   const cpuShort = removeBrand(cpu).split(" ").slice(0, 3).join(" ");
-  // حذف کلمه NVIDIA از ابتدای متن گرافیک
-  const gpuShort = removeBrand(gpu).replace(/^NVIDIA\s+/i, "").split(" ").slice(0, 2).join(" ");
+  const gpuShort = removeBrand(gpu).split(" ").slice(0, 2).join(" ");
   const ramShort = removeBrand(ram).split(" ")[0];
   const displayShort = removeBrand(display).split(" ")[0];
 

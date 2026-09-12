@@ -151,14 +151,14 @@ export default function Home({ products, onBrand, onCategory, onPrice, onExplore
             <span className="hidden text-[11px] font-bold text-mist sm:block">پنج گروه تخصصی</span>
           </div>
         </Reveal>
-        <div className="mt-6 grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-5">
+        <div className="mt-6 grid grid-cols-2 gap-1 sm:grid-cols-3 lg:grid-cols-5">
           {USE_GROUPS.map((g, i) => {
             const count = groupCount(g);
             return (
               <Reveal key={g.id} delay={i * 70}>
                 <button
                   onClick={() => (g.cats ? onCategory(g.cats[0]) : onPrice(g.price![0], g.price![1]))}
-                  className="card-lift group flex h-full w-full flex-col items-center rounded-2xl border border-line bg-white p-5 text-center"
+                  className="card-lift group flex h-full w-full flex-col items-center rounded-2xl border border-line bg-white p-6 text-center"
                   aria-label={`لپ‌تاپ‌های ${g.name} — ${toFa(count)} دستگاه`}
                 >
                   <span className="flex h-16 w-16 items-center justify-center rounded-full bg-skywash text-ink transition-all duration-300 group-hover:bg-sea group-hover:text-white group-hover:shadow-lg group-hover:shadow-sea/25">
