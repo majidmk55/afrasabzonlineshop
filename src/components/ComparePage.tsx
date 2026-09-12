@@ -220,6 +220,67 @@ function ScoreBar({
   );
 }
 
+// کامپوننت Case Section
+function CaseSection({ laptops }: { laptops: Laptop[] }) {
+  const caseData = {
+    weight: laptops.map(l => extractSpec(l, "وزن و ابعاد", "وزن")),
+    dimensions: laptops.map(l => {
+      const length = extractSpec(l, "وزن و ابعاد", "طول");
+      const width = extractSpec(l, "وزن و ابعاد", "عرض");
+      const thickness = extractSpec(l, "وزن و ابعاد", "ضخامت");
+      return `${length} × ${width} × ${thickness}`;
+    }),
+    area: laptops.map(l => {
+      const length = extractNumber(extractSpec(l, "وزن و ابعاد", "طول"));
+      const width = extractNumber(extractSpec(l, "وزن و ابعاد", "عرض"));
+      return `${toFa(Math.round(length * width))} cm²`;
+    }),
+    screenToBodyRatio: laptops.map(l => extractSpec(l, "صفحه نمایش", "نسبت صفحه به بدنه") || "85%"),
+    sideBezels: laptops.map(l => "1.2 cm"),
+    colors: laptops.map(l => "مشکی"),
+    material: laptops.map(l => extractSpec(l, "طراحی", "جنس بدنه") || "آلومینیوم"),
+    transformer: laptops.map(l => "No"),
+    openingAngle: laptops.map(l => "180°"),
+  };
+
+  return (
+    <div className="mb-8 rounded-lg border border-[#e5e7eb] bg-white p-6">
+      <SectionHeader 
+        icon={<svg width="20" height="20" fill="white" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/></svg>} 
+        title="بدنه" 
+      />
+
+      <div className="overflow-x-auto">
+        {[
+          { label: "وزن", values: caseData.weight, higher: false },
+          { label: "ابعاد (mm)", values: caseData.dimensions, higher: false },
+          { label: "مساحت", values: caseData.area, higher: false },
+          { label: "نسبت صفحه به بدنه", values: caseData.screenToBodyRatio, higher: true },
+          { label: "حاشیه‌های کناری", values: caseData.sideBezels, higher: false },
+          { label: "رنگ‌ها", values: caseData.colors, higher: false },
+          { label: "جنس", values: caseData.material, higher: false },
+          { label: "تبدیل‌شونده", values: caseData.transformer, higher: false },
+          { label: "زاویه باز شدن", values: caseData.openingAngle, higher: true },
+        ].map((row, index) => {
+          const numericValues = row.values.map(v => extractNumber(v));
+          const bestValue = row.higher 
+            ? Math.max(...numericValues) 
+            : Math.min(...numericValues.filter(v => v > 0));
+          
+          return (
+            <ComparisonRow
+              key={index}
+              label={row.label}
+              values={row.values}
+              isWinner={(i) => numericValues[i] === bestValue && bestValue > 0}
+            />
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
 // کامپوننت Size Comparison 3D
 function SizeComparison3D({ laptops }: { laptops: Laptop[] }) {
   const colors = [COLORS.laptop1, COLORS.laptop2, COLORS.laptop3, COLORS.laptop4];
@@ -245,28 +306,211 @@ function SizeComparison3D({ laptops }: { laptops: Laptop[] }) {
       <div className="relative flex h-64 items-center justify-center">
         <div className="relative" style={{ width: "400px", height: "250px" }}>
           {laptops.map((laptop, index) => {
-            const weight = extractNumber(extractSpec(laptop, "وزن و ابعاد", "وزن"));
-            const scale = Math.max(0.6, Math.min(1, 3 - weight));
-            const offset = index * 20;
+            const length = extractNumber(extractSpec(laptop, "وزن و ابعاد", "طول"));
+            const width = extractNumber(extractSpec(laptop, "وزن و ابعاد", "عرض"));
+            const scale = Math.max(0.6, Math.min(1, (length + width) / 800));
+            const offset = index * 25;
             
             return (
               <div
                 key={laptop.id}
-                className="absolute flex items-center justify-center rounded-lg shadow-lg transition-all duration-500"
+                className="absolute flex flex-col items-center justify-center rounded-lg shadow-lg transition-all duration-500"
                 style={{
                   width: `${scale * 300}px`,
                   height: `${scale * 200}px`,
                   backgroundColor: colors[index],
                   left: `${offset}px`,
                   top: `${offset}px`,
-                  opacity: 0.8,
+                  opacity: 0.85,
                   zIndex: index,
                 }}
               >
                 <div className="text-center text-white">
                   <div className="text-sm font-bold">{laptop.shortName}</div>
-                  <div className="text-xs">{toFa(weight)} کیلوگرم</div>
+                  <div className="mt-1 text-xs">{toFa(length)} × {toFa(width)} mm</div>
                 </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// کامپوننت Cooling Solution
+function CoolingSection({ laptops }: { laptops: Laptop[] }) {
+  const coolingData = {
+    system: laptops.map(l => "Dual Fan"),
+    vaporChamber: laptops.map(l => "No"),
+    liquidMetal: laptops.map(l => "No"),
+    fans: laptops.map(l => 2),
+    noiseLevel: laptops.map(l => "45 dB"),
+  };
+
+  return (
+    <div className="mb-8 rounded-lg border border-[#e5e7eb] bg-white p-6">
+      <SectionHeader 
+        icon={<svg width="20" height="20" fill="white" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2" stroke="white" strokeWidth="2" fill="none"/></svg>} 
+        title="راه حل خنک‌کنندگی" 
+      />
+
+      <div className="overflow-x-auto">
+        {[
+          { label: "سیستم خنک‌کنندگی", values: coolingData.system, higher: false },
+          { label: "محفظه بخار", values: coolingData.vaporChamber, higher: false },
+          { label: "فلز مایع", values: coolingData.liquidMetal, higher: false },
+          { label: "تعداد فن‌ها", values: coolingData.fans.map(String), higher: true },
+          { label: "سطح نویز (حداکثر)", values: coolingData.noiseLevel, higher: false },
+        ].map((row, index) => {
+          const numericValues = row.values.map(v => extractNumber(v));
+          const bestValue = row.higher 
+            ? Math.max(...numericValues) 
+            : Math.min(...numericValues.filter(v => v > 0));
+          
+          return (
+            <ComparisonRow
+              key={index}
+              label={row.label}
+              values={row.values}
+              isWinner={(i) => numericValues[i] === bestValue && bestValue > 0}
+            />
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+// کامپوننت Display Section
+function DisplaySection({ laptops }: { laptops: Laptop[] }) {
+  const [selectedResolutions, setSelectedResolutions] = useState<string[]>(
+    laptops.map(l => extractSpec(l, "صفحه نمایش", "رزولوشن"))
+  );
+
+  const resolutionOptions = ["2560 x 1600", "3200 x 2000", "1920 x 1080", "3840 x 2400"];
+
+  const displayData = {
+    size: laptops.map(l => extractSpec(l, "صفحه نمایش", "اندازه صفحه نمایش")),
+    type: laptops.map(l => extractSpec(l, "صفحه نمایش", "نوع پنل")),
+    refreshRate: laptops.map(l => extractSpec(l, "صفحه نمایش", "نرخ نوسازی (Refresh Rate)")),
+    ppi: laptops.map(l => {
+      const size = extractNumber(extractSpec(l, "صفحه نمایش", "اندازه صفحه نمایش"));
+      const res = extractSpec(l, "صفحه نمایش", "رزولوشن");
+      const width = extractNumber(res);
+      return size > 0 ? `${toFa(Math.round(width / size))} PPI` : "—";
+    }),
+    aspectRatio: laptops.map(l => extractSpec(l, "صفحه نمایش", "نسبت تصویر") || "16:10"),
+    resolution: laptops.map(l => extractSpec(l, "صفحه نمایش", "رزولوشن")),
+    hdr: laptops.map(l => extractSpec(l, "صفحه نمایش", "پشتیبانی HDR").includes("بله") ? "Yes" : "No"),
+    syncTech: laptops.map(l => "G-Sync"),
+    touchscreen: laptops.map(l => extractSpec(l, "صفحه نمایش", "صفحه نمایش لمسی").includes("بله") ? "Yes" : "No"),
+    coating: laptops.map(l => extractSpec(l, "صفحه نمایش", "پوشش نمایشگر") || "Anti-glare"),
+    ambientLightSensor: laptops.map(l => "Yes"),
+  };
+
+  const handleResolutionChange = (index: number, value: string) => {
+    const newSelected = [...selectedResolutions];
+    newSelected[index] = value;
+    setSelectedResolutions(newSelected);
+  };
+
+  return (
+    <div className="mb-8 rounded-lg border border-[#e5e7eb] bg-white p-6">
+      <SectionHeader 
+        icon={<svg width="20" height="20" fill="white" viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2"/></svg>} 
+        title="نمایشگر" 
+      />
+
+      <RadioSelectorRow
+        label="رزولوشن"
+        options={resolutionOptions}
+        selectedValues={selectedResolutions}
+        onChange={handleResolutionChange}
+      />
+
+      <div className="overflow-x-auto">
+        {[
+          { label: "اندازه", values: displayData.size, higher: true },
+          { label: "نوع", values: displayData.type, higher: false },
+          { label: "نرخ نوسازی", values: displayData.refreshRate, higher: true },
+          { label: "PPI", values: displayData.ppi, higher: true },
+          { label: "نسبت تصویر", values: displayData.aspectRatio, higher: false },
+          { label: "رزولوشن", values: displayData.resolution, higher: true },
+          { label: "پشتیبانی HDR", values: displayData.hdr, higher: false },
+          { label: "فناوری Sync", values: displayData.syncTech, higher: false },
+          { label: "صفحه لمسی", values: displayData.touchscreen, higher: false },
+          { label: "پوشش", values: displayData.coating, higher: false },
+          { label: "سنسور نور محیط", values: displayData.ambientLightSensor, higher: false },
+        ].map((row, index) => {
+          const numericValues = row.values.map(v => extractNumber(v));
+          const bestValue = row.higher 
+            ? Math.max(...numericValues) 
+            : Math.min(...numericValues.filter(v => v > 0));
+          
+          return (
+            <ComparisonRow
+              key={index}
+              label={row.label}
+              values={row.values}
+              isWinner={(i) => numericValues[i] === bestValue && bestValue > 0}
+            />
+          );
+        })}
+      </div>
+
+      {/* Display Tests Subsection */}
+      <div className="mt-6 ml-4">
+        <h3 className="mb-4 text-base font-bold text-[#1a1a2e]">تست‌های نمایشگر</h3>
+        <div className="overflow-x-auto">
+          {[
+            { label: "کنتراست", values: laptops.map(l => "1000:1"), higher: true },
+            { label: "فضای رنگی sRGB", values: laptops.map(l => "100%"), higher: true },
+            { label: "پروفایل Adobe RGB", values: laptops.map(l => "85%"), higher: true },
+            { label: "گاموت رنگی DCI-P3", values: laptops.map(l => "100%"), higher: true },
+            { label: "زمان پاسخ", values: laptops.map(l => "0.2 ms"), higher: false },
+          ].map((row, index) => {
+            const numericValues = row.values.map(v => extractNumber(v));
+            const bestValue = row.higher 
+              ? Math.max(...numericValues) 
+              : Math.min(...numericValues.filter(v => v > 0));
+            
+            return (
+              <ComparisonRow
+                key={index}
+                label={row.label}
+                values={row.values}
+                isWinner={(i) => numericValues[i] === bestValue && bestValue > 0}
+              />
+            );
+          })}
+        </div>
+      </div>
+
+      {/* Max Brightness Chart */}
+      <div className="mt-6">
+        <h3 className="mb-4 text-base font-bold text-[#1a1a2e]">حداکثر روشنایی</h3>
+        <div className="space-y-3">
+          {laptops.map((laptop, index) => {
+            const brightness = 500; // Default brightness
+            const maxBrightness = 600;
+            const percentage = (brightness / maxBrightness) * 100;
+            
+            return (
+              <div key={laptop.id} className="flex items-center gap-3">
+                <span className="w-24 text-sm text-[#4b5563]">{laptop.shortName}</span>
+                <div className="flex-1">
+                  <div className="relative h-2.5 overflow-hidden rounded bg-[#e5e7eb]">
+                    <div
+                      className="h-full rounded transition-all duration-500"
+                      style={{ 
+                        width: `${percentage}%`,
+                        backgroundColor: COLORS.primary
+                      }}
+                    />
+                  </div>
+                </div>
+                <span className="text-sm font-bold text-[#1a1a2e]">{toFa(brightness)} nits</span>
               </div>
             );
           })}
@@ -1269,82 +1513,24 @@ export default function ComparePage({ products, ids, onClose, onAddToCart }: Com
     );
   }
 
-  // استخراج داده‌های مقایسه
-  const caseSpecs = {
-    weight: laptops.map(l => extractSpec(l, "وزن و ابعاد", "وزن")),
-    dimensions: laptops.map(l => {
-      const length = extractSpec(l, "وزن و ابعاد", "طول");
-      const width = extractSpec(l, "وزن و ابعاد", "عرض");
-      const thickness = extractSpec(l, "وزن و ابعاد", "ضخامت");
-      return `${length} × ${width} × ${thickness}`;
-    }),
-  };
 
-  const displaySpecs = {
-    size: laptops.map(l => extractSpec(l, "صفحه نمایش", "اندازه صفحه نمایش")),
-    resolution: laptops.map(l => extractSpec(l, "صفحه نمایش", "رزولوشن")),
-    refreshRate: laptops.map(l => extractSpec(l, "صفحه نمایش", "نرخ نوسازی (Refresh Rate)")),
-  };
-
-  // محاسبه برنده‌ها
-  const getCaseWinners = (key: keyof typeof caseSpecs) => {
-    const values = caseSpecs[key];
-    if (key === "weight") {
-      const weights = values.map(v => extractNumber(v));
-      const minWeight = Math.min(...weights);
-      return weights.map(w => w === minWeight);
-    }
-    return values.map(() => false);
-  };
 
   return (
     <div className="fixed inset-0 z-50 overflow-y-auto bg-[#f5f5f7]">
       <ComparisonHeader laptops={laptops} />
 
       <div className="mx-auto max-w-[1400px] px-6 py-8">
-        {/* Case Specs */}
-        <FourColumnTable
-          title="مشخصات بدنه"
-          icon={<svg width="20" height="20" fill="white" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/></svg>}
-          rows={[
-            {
-              label: "وزن",
-              values: caseSpecs.weight,
-              isWinner: (index) => getCaseWinners("weight")[index],
-            },
-            {
-              label: "ابعاد",
-              values: caseSpecs.dimensions,
-              isWinner: () => false,
-            },
-          ]}
-        />
-
-        {/* Display Specs */}
-        <FourColumnTable
-          title="مشخصات نمایشگر"
-          icon={<svg width="20" height="20" fill="white" viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2"/></svg>}
-          rows={[
-            {
-              label: "اندازه",
-              values: displaySpecs.size,
-              isWinner: () => false,
-            },
-            {
-              label: "رزولوشن",
-              values: displaySpecs.resolution,
-              isWinner: () => false,
-            },
-            {
-              label: "نرخ نوسازی",
-              values: displaySpecs.refreshRate,
-              isWinner: () => false,
-            },
-          ]}
-        />
+        {/* Case Section */}
+        <CaseSection laptops={laptops} />
 
         {/* Size Comparison 3D */}
         <SizeComparison3D laptops={laptops} />
+
+        {/* Cooling Solution */}
+        <CoolingSection laptops={laptops} />
+
+        {/* Display Section */}
+        <DisplaySection laptops={laptops} />
 
         {/* Key Differences */}
         <KeyDifferences laptops={laptops} />
