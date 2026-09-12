@@ -87,7 +87,7 @@ export default function Home({ products, onBrand, onCategory, onPrice, onExplore
           src={BILLBOARD_IMG}
           alt="خانواده لپ‌تاپ‌های لنوو IdeaPad Pro"
           className="pointer-events-none absolute bottom-0 left-0 hidden h-[96%] w-auto max-w-[75%] select-none object-contain object-bottom drop-shadow-[0_30px_55px_rgba(2,20,35,0.55)] md:block lg:h-full"
-          fetchPriority="high"
+
           decoding="async"
         />
         <div className="absolute inset-0 bg-gradient-to-l from-deeplit via-deeplit/60 to-deeplit/5" aria-hidden="true" />
