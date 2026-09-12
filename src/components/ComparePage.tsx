@@ -296,20 +296,28 @@ export default function ComparePage({ products, ids, onClose, onAddToCart }: Com
         {/* Review Section - پیکسل پرفکت مطابق NanoReview */}
         <div className="mb-8">
           <Review
-            laptops={laptops.map(laptop => {
-              const scores = calculateCategoryScores(laptop);
-              return {
-                name: laptop.name,
-                scores: {
-                  performance: scores.performance,
-                  gaming: scores.gaming,
-                  display: scores.display,
-                  battery: scores.battery,
-                  connectivity: scores.connectivity,
-                  portability: scores.portability,
-                },
-              };
-            })}
+            laptopA={{
+              name: laptops[0].name,
+              scores: {
+                performance: calculateCategoryScores(laptops[0]).performance,
+                gaming: calculateCategoryScores(laptops[0]).gaming,
+                display: calculateCategoryScores(laptops[0]).display,
+                battery: calculateCategoryScores(laptops[0]).battery,
+                connectivity: calculateCategoryScores(laptops[0]).connectivity,
+                portability: calculateCategoryScores(laptops[0]).portability,
+              },
+            }}
+            laptopB={{
+              name: laptops[1].name,
+              scores: {
+                performance: calculateCategoryScores(laptops[1]).performance,
+                gaming: calculateCategoryScores(laptops[1]).gaming,
+                display: calculateCategoryScores(laptops[1]).display,
+                battery: calculateCategoryScores(laptops[1]).battery,
+                connectivity: calculateCategoryScores(laptops[1]).connectivity,
+                portability: calculateCategoryScores(laptops[1]).portability,
+              },
+            }}
           />
         </div>
 
