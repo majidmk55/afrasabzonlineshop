@@ -1,0 +1,296 @@
+:root {
+  --color-bg-primary: #fafafa;
+  --color-bg-secondary: #ffffff;
+  --color-text-primary: #111827;
+  --color-text-secondary: #1f2937;
+  --color-text-tertiary: #4b5563;
+  --color-text-muted: #6b7280;
+  --color-text-light: #9ca3af;
+  --color-border: #e5e7eb;
+  --color-bar-track: #e5e7eb;
+  --color-bar-fill-start: #3B5998;
+  --color-bar-fill-end: #4a69a8;
+  --color-score-border: #3B5998;
+  --color-score-text: #3B5998;
+  --color-icon: #3B5998;
+  --shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
+  --shadow-md: 0 2px 8px rgba(0,0,0,0.08);
+  --shadow-score: 0 2px 4px rgba(59, 89, 152, 0.12);
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 12px;
+  --spacing-xs: 4px;
+  --spacing-sm: 8px;
+  --spacing-md: 16px;
+  --spacing-lg: 24px;
+  --spacing-xl: 32px;
+  --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-bar: width 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.review-container {
+  background: var(--color-bg-primary);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-xl) 40px;
+  max-width: 1200px;
+  margin: 0 auto;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+.review-header {
+  margin-bottom: var(--spacing-lg);
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.header-content {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.chart-icon {
+  width: 28px;
+  height: 28px;
+  color: var(--color-icon);
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.title-wrapper {
+  flex: 1;
+}
+
+.review-title {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--color-text-primary);
+  letter-spacing: -0.5px;
+  line-height: 1.2;
+  margin: 0 0 6px 0;
+}
+
+.review-subtitle {
+  font-size: 13px;
+  font-weight: 400;
+  color: var(--color-text-muted);
+  line-height: 1.5;
+  max-width: 100%;
+  margin: 0;
+}
+
+.review-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 48px 56px;
+  padding: 8px 4px;
+}
+
+.category-card {
+  animation: fadeInUp 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  opacity: 0;
+  transition: var(--transition-smooth);
+}
+
+.category-card:hover {
+  transform: translateY(-2px);
+}
+
+.category-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--color-text-secondary);
+  margin: 0 0 4px 0;
+  letter-spacing: -0.3px;
+}
+
+.category-description {
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--color-text-light);
+  margin: 0 0 20px 0;
+  line-height: 1.4;
+}
+
+.laptop-comparison {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.laptop-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.laptop-name {
+  flex: 0 0 180px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--color-text-tertiary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding-right: 12px;
+}
+
+.progress-container {
+  flex: 1;
+  display: flex;
+  align-items: center;
+}
+
+.progress-track {
+  width: 100%;
+  height: 8px;
+  background: var(--color-bar-track);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  box-shadow: inset 0 1px 2px rgba(0,0,0,0.05);
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--color-bar-fill-start) 0%, var(--color-bar-fill-end) 100%);
+  border-radius: var(--radius-md);
+  transition: var(--transition-bar);
+  position: relative;
+  box-shadow: 0 0 0 1px rgba(59, 89, 152, 0.1);
+}
+
+.score-badge {
+  flex: 0 0 42px;
+  height: 32px;
+  background: var(--color-bg-secondary);
+  border: 2px solid var(--color-score-border);
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: 12px;
+  box-shadow: var(--shadow-score);
+  transition: var(--transition-smooth);
+}
+
+.score-badge:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(59, 89, 152, 0.2);
+}
+
+.score-value {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--color-score-text);
+  line-height: 1;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 968px) {
+  .review-grid {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+  
+  .review-container {
+    padding: 24px;
+  }
+}
+
+@media (max-width: 640px) {
+  .review-title {
+    font-size: 20px;
+  }
+  
+  .category-title {
+    font-size: 15px;
+  }
+  
+  .laptop-name {
+    flex: 0 0 140px;
+    font-size: 12px;
+  }
+  
+  .score-badge {
+    width: 38px;
+    height: 30px;
+  }
+  
+  .score-value {
+    font-size: 14px;
+  }
+  
+  .progress-track {
+    height: 7px;
+  }
+}
+
+@media (max-width: 480px) {
+  .review-container {
+    padding: 16px;
+  }
+  
+  .laptop-name {
+    flex: 0 0 120px;
+    font-size: 11px;
+  }
+  
+  .category-description {
+    font-size: 11px;
+  }
+  
+  .review-subtitle {
+    font-size: 12px;
+  }
+  
+  .review-grid {
+    gap: 24px;
+  }
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-bg-primary: #0f172a;
+    --color-bg-secondary: #1e293b;
+    --color-text-primary: #f1f5f9;
+    --color-text-secondary: #e2e8f0;
+    --color-text-tertiary: #cbd5e1;
+    --color-text-muted: #94a3b8;
+    --color-text-light: #64748b;
+    --color-border: #334155;
+    --color-bar-track: #334155;
+  }
+}
+
+/* Print styles */
+@media print {
+  .review-container {
+    box-shadow: none;
+    padding: 0;
+  }
+  
+  .progress-fill {
+    animation: none;
+    box-shadow: none;
+  }
+  
+  .category-card {
+    animation: none;
+    opacity: 1;
+  }
+}

@@ -1,0 +1,61 @@
+# Robots.txt برای افرالینک - فروشگاه تخصصی لپ‌تاپ
+# آخرین به‌روزرسانی: 2026-01-22
+
+User-agent: *
+Allow: /
+
+# مسیرهای مجاز برای همه crawler ها
+Allow: /laptops
+Allow: /laptop/
+Allow: /category/
+Allow: /brand/
+Allow: /compare/
+Allow: /blog/
+Allow: /about
+Allow: /contact
+Allow: /faq
+Allow: /terms
+Allow: /privacy
+
+# مسیرهای مسدود شده
+Disallow: /admin
+Disallow: /admin/
+Disallow: /api/
+Disallow: /checkout
+Disallow: /cart
+Disallow: /account
+Disallow: /login
+Disallow: /register
+Disallow: /reset-password
+Disallow: /*?*sort=
+Disallow: /*?*filter=
+Disallow: /*?*page=
+Disallow: /*?*ref=
+Disallow: /*?*utm_
+
+# جلوگیری از crawl کردن پارامترهای غیرضروری
+Disallow: /*?*sessionid=
+Disallow: /*?*token=
+Disallow: /*?*debug=
+
+# Crawl-delay برای جلوگیری از فشار بیش از حد
+Crawl-delay: 1
+
+# مسیرهای خاص برای موتورهای جستجو
+User-agent: Googlebot
+Allow: /
+Crawl-delay: 0
+
+User-agent: Bingbot
+Allow: /
+Crawl-delay: 2
+
+User-agent: YandexBot
+Allow: /
+Crawl-delay: 2
+
+# Sitemap
+Sitemap: https://corehaus.ir/sitemap.xml
+
+# Host
+Host: https://corehaus.ir
