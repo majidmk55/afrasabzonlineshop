@@ -395,6 +395,520 @@ function NanoReviewSummary({ laptops }: { laptops: Laptop[] }) {
   );
 }
 
+// کامپوننت Radio Selector Row
+function RadioSelectorRow({ 
+  label, 
+  options, 
+  selectedValues,
+  onChange 
+}: { 
+  label: string; 
+  options: string[]; 
+  selectedValues: string[];
+  onChange: (index: number, value: string) => void;
+}) {
+  return (
+    <div className="mb-4 grid grid-cols-5 gap-3">
+      <div className="text-sm text-[#6b7280]">{label}</div>
+      {selectedValues.map((selected, index) => (
+        <div key={index} className="flex flex-wrap gap-2">
+          {options.map((option) => (
+            <label key={option} className="flex items-center gap-1.5 cursor-pointer">
+              <input
+                type="radio"
+                name={`option-${index}`}
+                checked={selected === option}
+                onChange={() => onChange(index, option)}
+                className="h-3.5 w-3.5 accent-[#3b4cc0]"
+              />
+              <span className="text-xs text-[#1a1a2e]">{option}</span>
+            </label>
+          ))}
+        </div>
+      ))}
+    </div>
+  );
+}
+
+// کامپوننت CPU Section
+function CPUSection({ laptops }: { laptops: Laptop[] }) {
+  const [selectedCPUs, setSelectedCPUs] = useState<string[]>(
+    laptops.map(l => extractSpec(l, "پردازنده", "مدل پردازنده"))
+  );
+
+  const cpuOptions = [
+    "Intel Core Ultra 5 235HX",
+    "Intel Core Ultra 7 251HX",
+    "Intel Core Ultra 9 275HX",
+    "AMD Ryzen 7 7840HS",
+    "AMD Ryzen 9 7940HS",
+  ];
+
+  const cpuData = {
+    baseFrequency: laptops.map(l => extractSpec(l, "پردازنده", "فرکانس پایه و حداکثر").split("·")[0].trim()),
+    turboFrequency: laptops.map(l => extractSpec(l, "پردازنده", "فرکانس پایه و حداکثر").split("·")[1]?.trim() || "—"),
+    cores: laptops.map(l => extractSpec(l, "پردازنده", "تعداد هسته و رشته")),
+    threads: laptops.map(l => {
+          const spec = extractSpec(l, "پردازنده", "تعداد هسته و رشته");
+          const match = spec.match(/(\d+)\s رشته/);
+          return match ? match[1] : "—";
+        }),
+    l3Cache: laptops.map(l => extractSpec(l, "پردازنده", "مقدار حافظه کش")),
+    integratedGPU: laptops.map(l => extractSpec(l, "پردازنده", "گرافیک مجتمع")),
+    fabricationProcess: laptops.map(l => extractSpec(l, "پردازنده", "سطح تکنولوژی ساخت")),
+  };
+
+  const handleCPUChange = (index: number, value: string) => {
+    const newSelected = [...selectedCPUs];
+    newSelected[index] = value;
+    setSelectedCPUs(newSelected);
+  };
+
+  return (
+    <div className="mb-8 rounded-lg border border-[#e5e7eb] bg-white p-6">
+      <SectionHeader 
+        icon={<svg width="20" height="20" fill="white" viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M9 9h6v6H9z" fill="#3b4cc0"/></svg>} 
+        title="پردازنده" 
+      />
+
+      <RadioSelectorRow
+        label="نام پردازنده"
+        options={cpuOptions}
+        selectedValues={selectedCPUs}
+        onChange={handleCPUChange}
+      />
+
+      <div className="overflow-x-auto">
+        {[
+          { label: "فرکانس پایه", values: cpuData.baseFrequency, higher: true },
+          { label: "فرکانس توربو", values: cpuData.turboFrequency, higher: true },
+          { label: "تعداد هسته", values: cpuData.cores, higher: true },
+          { label: "تعداد رشته", values: cpuData.threads, higher: true },
+          { label: "حافظه کش L3", values: cpuData.l3Cache, higher: true },
+          { label: "گرافیک مجتمع", values: cpuData.integratedGPU, higher: false },
+          { label: "فرآیند ساخت", values: cpuData.fabricationProcess, higher: false },
+        ].map((row, index) => {
+          const numericValues = row.values.map(v => extractNumber(v));
+          const bestValue = row.higher 
+            ? Math.max(...numericValues) 
+            : Math.min(...numericValues.filter(v => v > 0));
+          
+          return (
+            <ComparisonRow
+              key={index}
+              label={row.label}
+              values={row.values}
+              isWinner={(i) => numericValues[i] === bestValue && bestValue > 0}
+            />
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+// کامپوننت Benchmark Grid
+function BenchmarksSection({ laptops }: { laptops: Laptop[] }) {
+  const laptopNames = laptops.map(l => l.shortName);
+  const colors = [COLORS.laptop1, COLORS.laptop2, COLORS.laptop3, COLORS.laptop4];
+
+  // محاسبه امتیازات بنچمارک بر اساس مشخصات
+  const benchmarks = laptops.map(l => {
+    const cpuSpec = extractSpec(l, "پردازنده", "تعداد هسته و رشته");
+    const cores = extractNumber(cpuSpec);
+    const singleCore = Math.min(3000, Math.round(cores * 200 + 500));
+    const multiCore = Math.min(28000, Math.round(cores * 1800));
+    
+    return {
+      geekbench6Single: singleCore,
+      geekbench6Multi: multiCore,
+      cinebench2024Single: Math.min(200, Math.round(cores * 15)),
+      cinebench2024Multi: Math.min(2000, Math.round(cores * 150)),
+    };
+  });
+
+  const benchmarkData = {
+    geekbench6Single: benchmarks.map(b => b.geekbench6Single),
+    geekbench6Multi: benchmarks.map(b => b.geekbench6Multi),
+    cinebench2024Single: benchmarks.map(b => b.cinebench2024Single),
+    cinebench2024Multi: benchmarks.map(b => b.cinebench2024Multi),
+  };
+
+  return (
+    <div className="mb-8 rounded-lg border border-[#e5e7eb] bg-white p-6">
+      <SectionHeader 
+        icon={<svg width="20" height="20" fill="white" viewBox="0 0 24 24"><path d="M3 3v18h18M7 16l4-4 4 4 5-5"/></svg>} 
+        title="بنچمارک‌ها" 
+      />
+
+      <div className="grid gap-4 md:grid-cols-2">
+        {[
+          { title: "Geekbench 6 (تک هسته‌ای)", data: benchmarkData.geekbench6Single },
+          { title: "Geekbench 6 (چند هسته‌ای)", data: benchmarkData.geekbench6Multi },
+          { title: "Cinebench 2024 (تک هسته‌ای)", data: benchmarkData.cinebench2024Single },
+          { title: "Cinebench 2024 (چند هسته‌ای)", data: benchmarkData.cinebench2024Multi },
+        ].map((benchmark, index) => {
+          const maxValue = Math.max(...benchmark.data);
+          
+          return (
+            <div key={index} className="rounded-lg border border-[#e5e7eb] p-4">
+              <h4 className="mb-3 text-sm font-bold text-[#1a1a2e]">{benchmark.title}</h4>
+              <div className="space-y-2">
+                {benchmark.data.map((score, i) => {
+                  const percentage = (score / maxValue) * 100;
+                  const isLeader = score === maxValue;
+                  const diff = isLeader ? 0 : Math.round(((maxValue - score) / maxValue) * 100);
+                  
+                  return (
+                    <div key={i} className="flex items-center gap-3">
+                      <span className="w-24 text-xs text-[#4b5563]">{laptopNames[i]}</span>
+                      <div className="flex-1">
+                        <div className="relative h-6 overflow-hidden rounded bg-[#e5e7eb]">
+                          <div
+                            className="h-full rounded transition-all duration-500"
+                            style={{ 
+                              width: `${percentage}%`,
+                              backgroundColor: colors[i]
+                            }}
+                          />
+                          <span className="absolute inset-0 flex items-center justify-center text-xs font-bold text-white">
+                            {toFa(score)}
+                          </span>
+                        </div>
+                      </div>
+                      {isLeader && (
+                        <span className="text-xs font-bold text-[#22c55e]">+0%</span>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+// کامپوننت Gaming Performance Chart
+function GamingPerformanceChart({ laptops }: { laptops: Laptop[] }) {
+  const laptopNames = laptops.map(l => l.shortName);
+  const colors = ["#5b7cfa", "#1e3a8a", "#14b8a6", "#f59e0b"];
+
+  // محاسبه FPS بر اساس مشخصات گرافیکی
+  const gamingData = laptops.map(l => {
+    const gpuModel = extractSpec(l, "گرافیک", "مدل گرافیک مجزا").toLowerCase();
+    let baseFPS = 60;
+    
+    if (gpuModel.includes("rtx 5090")) baseFPS = 140;
+    else if (gpuModel.includes("rtx 5080")) baseFPS = 130;
+    else if (gpuModel.includes("rtx 5070")) baseFPS = 110;
+    else if (gpuModel.includes("rtx 4090")) baseFPS = 135;
+    else if (gpuModel.includes("rtx 4080")) baseFPS = 120;
+    else if (gpuModel.includes("rtx 4070")) baseFPS = 95;
+    else if (gpuModel.includes("rtx 4060")) baseFPS = 75;
+    
+    return {
+      '1080p High': Math.round(baseFPS * 1.2),
+      '1080p Ultra': Math.round(baseFPS),
+      '1440p Ultra': Math.round(baseFPS * 0.7),
+      '4K Ultra': Math.round(baseFPS * 0.4),
+    };
+  });
+
+  const resolutions = ['1080p High', '1080p Ultra', '1440p Ultra', '4K Ultra'];
+  const maxFPS = 140;
+
+  return (
+    <div className="mb-8 rounded-lg border border-[#e5e7eb] bg-white p-6">
+      <h2 className="mb-6 text-center text-xl font-bold text-[#1a1a2e]">عملکرد بازی</h2>
+
+      <div className="overflow-x-auto">
+        <div className="min-w-[800px]">
+          {resolutions.map((resolution, resIndex) => (
+            <div key={resolution} className="mb-6">
+              <h4 className="mb-3 text-sm font-bold text-[#1a1a2e]">{resolution}</h4>
+              <div className="space-y-2">
+                {gamingData.map((data, laptopIndex) => {
+                  const fps = data[resolution as keyof typeof data];
+                  const percentage = (fps / maxFPS) * 100;
+                  const maxFPSInCategory = Math.max(...gamingData.map(d => d[resolution as keyof typeof d]));
+                  const isLeader = fps === maxFPSInCategory;
+                  const diff = isLeader ? 0 : Math.round(((maxFPSInCategory - fps) / maxFPSInCategory) * 100);
+                  
+                  return (
+                    <div key={laptopIndex} className="flex items-center gap-3">
+                      <span className="w-24 text-xs text-[#4b5563]">{laptopNames[laptopIndex]}</span>
+                      <div className="flex-1">
+                        <div className="relative h-8 overflow-hidden rounded bg-[#e5e7eb]">
+                          <div
+                            className="h-full rounded transition-all duration-500"
+                            style={{ 
+                              width: `${percentage}%`,
+                              backgroundColor: colors[laptopIndex]
+                            }}
+                          />
+                          <span className="absolute inset-0 flex items-center justify-center text-xs font-bold text-white">
+                            {toFa(fps)} FPS
+                          </span>
+                        </div>
+                      </div>
+                      {isLeader && (
+                        <span className="text-xs font-bold text-[#6b7280]">+0%</span>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Legend */}
+      <div className="mt-6 flex flex-wrap justify-center gap-4">
+        {laptops.map((laptop, index) => (
+          <div key={laptop.id} className="flex items-center gap-2">
+            <div className="h-4 w-4 rounded" style={{ backgroundColor: colors[index] }} />
+            <span className="text-xs text-[#1a1a2e]">{laptop.shortName}</span>
+          </div>
+        ))}
+      </div>
+
+      <p className="mt-4 text-center text-xs text-[#6b7280]">
+        FPS مورد انتظار بر اساس میانگین عملکرد در ۹ بازی محبوب
+      </p>
+    </div>
+  );
+}
+
+// کامپوننت Graphics Card Section
+function GraphicsCardSection({ laptops }: { laptops: Laptop[] }) {
+  const [selectedGPUs, setSelectedGPUs] = useState<string[]>(
+    laptops.map(l => extractSpec(l, "گرافیک", "مدل گرافیک مجزا"))
+  );
+
+  const gpuOptions = [
+    "NVIDIA RTX 5090",
+    "NVIDIA RTX 5080",
+    "NVIDIA RTX 5070",
+    "NVIDIA RTX 4090",
+    "NVIDIA RTX 4080",
+  ];
+
+  const gpuData = {
+    tgp: laptops.map(l => extractSpec(l, "گرافیک", "توان مصرفی")),
+    memorySize: laptops.map(l => extractSpec(l, "گرافیک", "حافظه گرافیک مجزا")),
+    memoryType: laptops.map(l => extractSpec(l, "گرافیک", "نوع حافظه گرافیک")),
+    memoryBus: laptops.map(l => extractSpec(l, "گرافیک", "باس حافظه")),
+    baseClock: laptops.map(l => extractSpec(l, "گرافیک", "فرکانس پایه")),
+    boostClock: laptops.map(l => extractSpec(l, "گرافیک", "فرکانس پایه")), // Simplified
+  };
+
+  const handleGPUChange = (index: number, value: string) => {
+    const newSelected = [...selectedGPUs];
+    newSelected[index] = value;
+    setSelectedGPUs(newSelected);
+  };
+
+  return (
+    <div className="mb-8 rounded-lg border border-[#e5e7eb] bg-white p-6">
+      <SectionHeader 
+        icon={<svg width="20" height="20" fill="white" viewBox="0 0 24 24"><rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="3" fill="#3b4cc0"/></svg>} 
+        title="کارت گرافیک" 
+      />
+
+      <RadioSelectorRow
+        label="نام GPU"
+        options={gpuOptions}
+        selectedValues={selectedGPUs}
+        onChange={handleGPUChange}
+      />
+
+      <div className="overflow-x-auto">
+        {[
+          { label: "TGP", values: gpuData.tgp, higher: true },
+          { label: "حافظه", values: gpuData.memorySize, higher: true },
+          { label: "نوع حافظه", values: gpuData.memoryType, higher: false },
+          { label: "باس حافظه", values: gpuData.memoryBus, higher: true },
+          { label: "فرکانس پایه", values: gpuData.baseClock, higher: true },
+        ].map((row, index) => {
+          const numericValues = row.values.map(v => extractNumber(v));
+          const bestValue = row.higher 
+            ? Math.max(...numericValues) 
+            : Math.min(...numericValues.filter(v => v > 0));
+          
+          return (
+            <ComparisonRow
+              key={index}
+              label={row.label}
+              values={row.values}
+              isWinner={(i) => numericValues[i] === bestValue && bestValue > 0}
+            />
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+// کامپوننت GPU Benchmarks
+function GPUBenchmarksSection({ laptops }: { laptops: Laptop[] }) {
+  const laptopNames = laptops.map(l => l.shortName);
+  const colors = [COLORS.laptop1, COLORS.laptop2, COLORS.laptop3, COLORS.laptop4];
+
+  // محاسبه امتیازات GPU بر اساس مشخصات
+  const gpuBenchmarks = laptops.map(l => {
+    const gpuModel = extractSpec(l, "گرافیک", "مدل گرافیک مجزا").toLowerCase();
+    let steelNomad = 5000;
+    
+    if (gpuModel.includes("rtx 5090")) steelNomad = 25000;
+    else if (gpuModel.includes("rtx 5080")) steelNomad = 22000;
+    else if (gpuModel.includes("rtx 5070")) steelNomad = 18000;
+    else if (gpuModel.includes("rtx 4090")) steelNomad = 24000;
+    else if (gpuModel.includes("rtx 4080")) steelNomad = 20000;
+    else if (gpuModel.includes("rtx 4070")) steelNomad = 15000;
+    else if (gpuModel.includes("rtx 4060")) steelNomad = 12000;
+    
+    return {
+      steelNomadLite: steelNomad,
+      blenderGPU: Math.round(steelNomad * 0.8),
+      solarBay: Math.round(steelNomad * 1.2),
+    };
+  });
+
+  const benchmarkData = {
+    steelNomadLite: gpuBenchmarks.map(b => b.steelNomadLite),
+    blenderGPU: gpuBenchmarks.map(b => b.blenderGPU),
+    solarBay: gpuBenchmarks.map(b => b.solarBay),
+  };
+
+  return (
+    <div className="mb-8 rounded-lg border border-[#e5e7eb] bg-white p-6">
+      <SectionHeader 
+        icon={<svg width="20" height="20" fill="white" viewBox="0 0 24 24"><path d="M3 3v18h18M7 16l4-4 4 4 5-5"/></svg>} 
+        title="بنچمارک‌های GPU" 
+      />
+
+      {/* Steel Nomad Lite */}
+      <div className="mb-6">
+        <h4 className="mb-3 text-sm font-bold text-[#1a1a2e]">Steel Nomad Lite Score</h4>
+        <div className="space-y-2">
+          {benchmarkData.steelNomadLite.map((score, index) => {
+            const maxValue = Math.max(...benchmarkData.steelNomadLite);
+            const percentage = (score / maxValue) * 100;
+            const isLeader = score === maxValue;
+            
+            return (
+              <div key={index} className="flex items-center gap-3">
+                <span className="w-24 text-xs text-[#4b5563]">{laptopNames[index]}</span>
+                <div className="flex-1">
+                  <div className="relative h-6 overflow-hidden rounded bg-[#e5e7eb]">
+                    <div
+                      className="h-full rounded transition-all duration-500"
+                      style={{ 
+                        width: `${percentage}%`,
+                        backgroundColor: colors[index]
+                      }}
+                    />
+                    <span className="absolute inset-0 flex items-center justify-center text-xs font-bold text-white">
+                      {toFa(score)}
+                    </span>
+                  </div>
+                </div>
+                {isLeader && (
+                  <span className="text-xs font-bold text-[#22c55e]">+0%</span>
+                )}
+              </div>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* Table */}
+      <div className="overflow-x-auto">
+        {[
+          { label: "Blender GPU", values: benchmarkData.blenderGPU, higher: true },
+          { label: "Solar Bay", values: benchmarkData.solarBay, higher: true },
+        ].map((row, index) => {
+          const bestValue = row.higher ? Math.max(...row.values) : Math.min(...row.values);
+          
+          return (
+            <ComparisonRow
+              key={index}
+              label={row.label}
+              values={row.values.map(v => toFa(v))}
+              isWinner={(i) => row.values[i] === bestValue}
+            />
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+// کامپوننت Battery Section
+function BatterySection({ laptops }: { laptops: Laptop[] }) {
+  const [selectedCapacities, setSelectedCapacities] = useState<string[]>(
+    laptops.map(l => extractSpec(l, "باتری و شارژ", "ظرفیت باتری"))
+  );
+
+  const capacityOptions = ["60 Wh", "70 Wh", "80 Wh", "90 Wh", "99 Wh"];
+
+  const batteryData = {
+    fullChargingTime: laptops.map(l => extractSpec(l, "باتری و شارژ", "زمان شارژ کامل")),
+    batteryType: laptops.map(l => extractSpec(l, "باتری و شارژ", "نوع باتری")),
+    chargePower: laptops.map(l => extractSpec(l, "باتری و شارژ", "توان آداپتور")),
+    batteryLife: laptops.map(l => extractSpec(l, "باتری و شارژ", "عمر شارژ")),
+  };
+
+  const handleCapacityChange = (index: number, value: string) => {
+    const newSelected = [...selectedCapacities];
+    newSelected[index] = value;
+    setSelectedCapacities(newSelected);
+  };
+
+  return (
+    <div className="mb-8 rounded-lg border border-[#e5e7eb] bg-white p-6">
+      <SectionHeader 
+        icon={<svg width="20" height="20" fill="white" viewBox="0 0 24 24"><rect x="6" y="7" width="12" height="10" rx="1"/><path d="M20 10v4" stroke="white" strokeWidth="2"/></svg>} 
+        title="باتری" 
+      />
+
+      <RadioSelectorRow
+        label="ظرفیت باتری"
+        options={capacityOptions}
+        selectedValues={selectedCapacities}
+        onChange={handleCapacityChange}
+      />
+
+      <div className="overflow-x-auto">
+        {[
+          { label: "زمان شارژ کامل", values: batteryData.fullChargingTime, higher: false },
+          { label: "نوع باتری", values: batteryData.batteryType, higher: false },
+          { label: "توان شارژ", values: batteryData.chargePower, higher: true },
+          { label: "عمر باتری", values: batteryData.batteryLife, higher: true },
+        ].map((row, index) => {
+          const numericValues = row.values.map(v => extractNumber(v));
+          const bestValue = row.higher 
+            ? Math.max(...numericValues) 
+            : Math.min(...numericValues.filter(v => v > 0));
+          
+          return (
+            <ComparisonRow
+              key={index}
+              label={row.label}
+              values={row.values}
+              isWinner={(i) => numericValues[i] === bestValue && bestValue > 0}
+            />
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
 // کامپوننت اصلی
 export default function ComparePage({ products, ids, onClose, onAddToCart }: ComparePageProps) {
   const laptops = ids.map(id => products.find(p => p.id === id)).filter((p): p is Laptop => !!p);
@@ -497,6 +1011,24 @@ export default function ComparePage({ products, ids, onClose, onAddToCart }: Com
 
         {/* NanoReview Summary */}
         <NanoReviewSummary laptops={laptops} />
+
+        {/* CPU Section */}
+        <CPUSection laptops={laptops} />
+
+        {/* Benchmarks Section */}
+        <BenchmarksSection laptops={laptops} />
+
+        {/* Gaming Performance */}
+        <GamingPerformanceChart laptops={laptops} />
+
+        {/* Graphics Card Section */}
+        <GraphicsCardSection laptops={laptops} />
+
+        {/* GPU Benchmarks */}
+        <GPUBenchmarksSection laptops={laptops} />
+
+        {/* Battery Section */}
+        <BatterySection laptops={laptops} />
 
         {/* Action Buttons */}
         <div className="sticky bottom-0 border-t border-[#e5e7eb] bg-white p-6 shadow-lg">
