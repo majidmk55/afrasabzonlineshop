@@ -909,6 +909,349 @@ function BatterySection({ laptops }: { laptops: Laptop[] }) {
   );
 }
 
+// کامپوننت RAM Section
+function RAMSection({ laptops }: { laptops: Laptop[] }) {
+  const [selectedSizes, setSelectedSizes] = useState<string[]>(
+    laptops.map(l => extractSpec(l, "حافظه رم", "حافظه داخلی رم"))
+  );
+
+  const sizeOptions = ["16GB", "32GB", "64GB", "128GB"];
+
+  const ramData = {
+    channels: laptops.map(l => extractSpec(l, "حافظه رم", "تعداد اسلات‌ها و کانال‌های رم").includes("دو کاناله") ? "Dual Channel" : "Single Channel"),
+    clock: laptops.map(l => extractSpec(l, "حافظه رم", "نوع حافظه").match(/(\d+)/)?.[0] + " MHz" || "—"),
+    type: laptops.map(l => extractSpec(l, "حافظه رم", "نوع حافظه").match(/DDR\d\w*/)?.[0] || "—"),
+    upgradeable: laptops.map(l => extractSpec(l, "حافظه رم", "نوع ماژول رم").includes("لحیم") ? "No" : "Yes"),
+    totalSlots: laptops.map(l => {
+          const spec = extractSpec(l, "حافظه رم", "تعداد اسلات‌ها و کانال‌های رم");
+        const match = spec.match(/(\d+)\s اسلات/);
+        return match ? parseInt(match[1]) : 0;
+      }),
+    maxRamSize: laptops.map(l => extractSpec(l, "حافظه رم", "حداکثر حافظه قابل پشتیبانی")),
+  };
+
+  const handleSizeChange = (index: number, value: string) => {
+    const newSelected = [...selectedSizes];
+    newSelected[index] = value;
+    setSelectedSizes(newSelected);
+  };
+
+  return (
+    <div className="mb-8 rounded-lg border border-[#e5e7eb] bg-white p-6">
+      <SectionHeader 
+        icon={<svg width="20" height="20" fill="white" viewBox="0 0 24 24"><rect x="3" y="8" width="18" height="8" rx="1"/><path d="M7 8V6M11 8V6M15 8V6M19 8V6M7 16v2M11 16v2M15 16v2M19 16v2" stroke="white" strokeWidth="2"/></svg>} 
+        title="حافظه رم" 
+      />
+
+      <RadioSelectorRow
+        label="حجم رم"
+        options={sizeOptions}
+        selectedValues={selectedSizes}
+        onChange={handleSizeChange}
+      />
+
+      <div className="overflow-x-auto">
+        {[
+          { label: "کانال‌ها", values: ramData.channels, higher: false },
+          { label: "فرکانس", values: ramData.clock, higher: true },
+          { label: "نوع", values: ramData.type, higher: false },
+          { label: "قابل ارتقا", values: ramData.upgradeable, higher: false },
+          { label: "تعداد اسلات", values: ramData.totalSlots.map(String), higher: true },
+          { label: "حداکثر حجم رم", values: ramData.maxRamSize, higher: true },
+        ].map((row, index) => {
+          const numericValues = row.values.map(v => extractNumber(v));
+          const bestValue = row.higher 
+            ? Math.max(...numericValues) 
+            : Math.min(...numericValues.filter(v => v > 0));
+          
+          return (
+            <ComparisonRow
+              key={index}
+              label={row.label}
+              values={row.values}
+              isWinner={(i) => numericValues[i] === bestValue && bestValue > 0}
+            />
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+// کامپوننت Storage Section
+function StorageSection({ laptops }: { laptops: Laptop[] }) {
+  const [selectedSizes, setSelectedSizes] = useState<string[]>(
+    laptops.map(l => extractSpec(l, "ذخیره‌سازی", "ظرفیت کلی"))
+  );
+
+  const sizeOptions = ["512GB", "1TB", "2TB", "4TB"];
+
+  const storageData = {
+    bus: laptops.map(l => extractSpec(l, "ذخیره‌سازی", "رابط SSD")),
+    storageType: laptops.map(l => extractSpec(l, "ذخیره‌سازی", "مدل و نوع حافظه").includes("NVMe") ? "NVMe SSD" : "SATA SSD"),
+    channels: laptops.map(l => extractSpec(l, "ذخیره‌سازی", "رابط SSD").includes("Gen5") ? "PCIe Gen 5.0 x4" : "PCIe Gen 4.0 x4"),
+    upgradeable: laptops.map(l => "Yes"),
+    totalSlots: laptops.map(l => {
+          const spec = extractSpec(l, "ذخیره‌سازی", "تعداد اسلات‌ها");
+        const match = spec.match(/(\d+)\s اسلات/);
+        return match ? parseInt(match[1]) : 1;
+      }),
+    nvme: laptops.map(l => extractSpec(l, "ذخیره‌سازی", "نسخه NVMe")),
+  };
+
+  const handleSizeChange = (index: number, value: string) => {
+    const newSelected = [...selectedSizes];
+    newSelected[index] = value;
+    setSelectedSizes(newSelected);
+  };
+
+  return (
+    <div className="mb-8 rounded-lg border border-[#e5e7eb] bg-white p-6">
+      <SectionHeader 
+        icon={<svg width="20" height="20" fill="white" viewBox="0 0 24 24"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5" stroke="white" strokeWidth="2" fill="none"/><path d="M3 12c0 1.66 4 3 9 3s9-1.34 9-3" stroke="white" strokeWidth="2" fill="none"/></svg>} 
+        title="حافظه ذخیره‌سازی" 
+      />
+
+      <RadioSelectorRow
+        label="حجم ذخیره‌سازی"
+        options={sizeOptions}
+        selectedValues={selectedSizes}
+        onChange={handleSizeChange}
+      />
+
+      <div className="overflow-x-auto">
+        {[
+          { label: "باس", values: storageData.bus, higher: false },
+          { label: "نوع حافظه", values: storageData.storageType, higher: false },
+          { label: "کانال‌ها", values: storageData.channels, higher: false },
+          { label: "قابل ارتقا", values: storageData.upgradeable, higher: false },
+          { label: "تعداد اسلات", values: storageData.totalSlots.map(String), higher: true },
+          { label: "NVMe", values: storageData.nvme, higher: false },
+        ].map((row, index) => {
+          const numericValues = row.values.map(v => extractNumber(v));
+          const bestValue = row.higher 
+            ? Math.max(...numericValues) 
+            : Math.min(...numericValues.filter(v => v > 0));
+          
+          return (
+            <ComparisonRow
+              key={index}
+              label={row.label}
+              values={row.values}
+              isWinner={(i) => numericValues[i] === bestValue && bestValue > 0}
+            />
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+// کامپوننت Sound Section
+function SoundSection({ laptops }: { laptops: Laptop[] }) {
+  const soundData = {
+    audioChip: laptops.map(l => "Realtek ALC298"),
+    speakers: laptops.map(l => extractSpec(l, "صدا", "تعداد بلندگوهای داخلی")),
+    power: laptops.map(l => "2W x 2"),
+    dolbyAtmos: laptops.map(l => extractSpec(l, "صدا", "سیستم صوتی").includes("Dolby") ? "Yes" : "No"),
+    loudness: laptops.map(l => "-77.3 dB"),
+    microphones: laptops.map(l => extractSpec(l, "دوربین", "رزولوشن دوربین").includes("IR") ? "3" : "2"),
+  };
+
+  return (
+    <div className="mb-8 rounded-lg border border-[#e5e7eb] bg-white p-6">
+      <SectionHeader 
+        icon={<svg width="20" height="20" fill="white" viewBox="0 0 24 24"><path d="M12 3v18M8 8v8M4 11v2M16 8v8M20 11v2" stroke="white" strokeWidth="2" strokeLinecap="round"/></svg>} 
+        title="صدا" 
+      />
+
+      <div className="overflow-x-auto">
+        {[
+          { label: "چیپ صوتی", values: soundData.audioChip, higher: false },
+          { label: "بلندگوها", values: soundData.speakers, higher: true },
+          { label: "توان", values: soundData.power, higher: true },
+          { label: "Dolby Atmos", values: soundData.dolbyAtmos, higher: false },
+          { label: "بلندی صدا", values: soundData.loudness, higher: false },
+          { label: "میکروفون‌ها", values: soundData.microphones, higher: true },
+        ].map((row, index) => {
+          const numericValues = row.values.map(v => extractNumber(v));
+          const bestValue = row.higher 
+            ? Math.max(...numericValues) 
+            : Math.min(...numericValues.filter(v => v > 0));
+          
+          return (
+            <ComparisonRow
+              key={index}
+              label={row.label}
+              values={row.values}
+              isWinner={(i) => numericValues[i] === bestValue && bestValue > 0}
+            />
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+// کامپوننت Connectivity Section
+function ConnectivitySection({ laptops }: { laptops: Laptop[] }) {
+  const connectivityData = {
+    wifiStandard: laptops.map(l => extractSpec(l, "شبکه", "بالاترین استاندارد Wi-Fi").includes("7") ? "Wi-Fi 7" : "Wi-Fi 6E"),
+    bluetooth: laptops.map(l => extractSpec(l, "شبکه", "بلوتوث")),
+    fingerprint: laptops.map(l => extractSpec(l, "امنیت", "حسگر اثر انگشت") !== "—" ? "Yes" : "No"),
+    infraredSensor: laptops.map(l => extractSpec(l, "دوربین", "رزولوشن دوربین").includes("IR") ? "Yes" : "No"),
+    opticalDrive: laptops.map(l => "No"),
+    webcam: laptops.map(l => "Yes"),
+    webcamResolution: laptops.map(l => extractSpec(l, "دوربین", "رزولوشن دوربین")),
+  };
+
+  return (
+    <div className="mb-8 rounded-lg border border-[#e5e7eb] bg-white p-6">
+      <SectionHeader 
+        icon={<svg width="20" height="20" fill="white" viewBox="0 0 24 24"><path d="M5 12.55a11 11 0 0 1 14.08 0M1.42 9a16 16 0 0 1 21.16 0M8.53 16.11a6 6 0 0 1 6.95 0M12 20h.01" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" fill="none"/></svg>} 
+        title="اتصالات" 
+      />
+
+      <div className="overflow-x-auto">
+        {[
+          { label: "استاندارد Wi-Fi", values: connectivityData.wifiStandard, higher: false },
+          { label: "بلوتوث", values: connectivityData.bluetooth, higher: true },
+          { label: "اثر انگشت", values: connectivityData.fingerprint, higher: false },
+          { label: "سنسور مادون قرمز", values: connectivityData.infraredSensor, higher: false },
+          { label: "درایو نوری", values: connectivityData.opticalDrive, higher: false },
+          { label: "وب‌کم", values: connectivityData.webcam, higher: false },
+          { label: "رزولوشن وب‌کم", values: connectivityData.webcamResolution, higher: true },
+        ].map((row, index) => {
+          const numericValues = row.values.map(v => extractNumber(v));
+          const bestValue = row.higher 
+            ? Math.max(...numericValues) 
+            : Math.min(...numericValues.filter(v => v > 0));
+          
+          return (
+            <ComparisonRow
+              key={index}
+              label={row.label}
+              values={row.values}
+              isWinner={(i) => numericValues[i] === bestValue && bestValue > 0}
+            />
+          );
+        })}
+      </div>
+
+      {/* Ports Subsection */}
+      <div className="mt-6 ml-4">
+        <h3 className="mb-4 text-base font-bold text-[#1a1a2e]">پورت‌ها</h3>
+        <div className="overflow-x-auto">
+          {[
+            { label: "USB-A", values: laptops.map(l => extractSpec(l, "پورت‌ها و اتصالات", "تعداد USB-A 3.2")), higher: true },
+            { label: "USB Type-C", values: laptops.map(l => extractSpec(l, "پورت‌ها و اتصالات", "تعداد USB-C")), higher: true },
+            { label: "Thunderbolt", values: laptops.map(l => extractSpec(l, "پورت‌ها و اتصالات", "تعداد Thunderbolt 4 (USB-C)")), higher: true },
+            { label: "HDMI", values: laptops.map(l => extractSpec(l, "پورت‌ها و اتصالات", "تعداد پورت HDMI")), higher: true },
+            { label: "DisplayPort", values: laptops.map(l => "—"), higher: true },
+            { label: "VGA", values: laptops.map(l => "—"), higher: true },
+            { label: "جک صدا (3.5mm)", values: laptops.map(l => extractSpec(l, "پورت‌ها و اتصالات", "جک ترکیبی هدفون/میکروفون")), higher: false },
+            { label: "Ethernet (RJ45)", values: laptops.map(l => "—"), higher: true },
+            { label: "کارت‌خوان SD", values: laptops.map(l => extractSpec(l, "ذخیره‌سازی", "کارت‌خوان")), higher: false },
+            { label: "پورت شارژ اختصاصی", values: laptops.map(l => "—"), higher: true },
+          ].map((row, index) => {
+            const numericValues = row.values.map(v => extractNumber(v));
+            const bestValue = row.higher 
+              ? Math.max(...numericValues) 
+              : Math.min(...numericValues.filter(v => v > 0));
+            
+            return (
+              <ComparisonRow
+                key={index}
+                label={row.label}
+                values={row.values}
+                isWinner={(i) => numericValues[i] === bestValue && bestValue > 0}
+              />
+            );
+          })}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// کامپوننت Input Section
+function InputSection({ laptops }: { laptops: Laptop[] }) {
+  const keyboardData = {
+    type: laptops.map(l => "Chiclet"),
+    numpad: laptops.map(l => extractSpec(l, "کیبورد", "صفحه‌کلید عددی")),
+    backlight: laptops.map(l => extractSpec(l, "کیبورد", "نور پس‌زمینه کیبورد")),
+    keyTravel: laptops.map(l => "1.5 mm"),
+  };
+
+  const touchpadData = {
+    size: laptops.map(l => "13.0 x 8.5 cm"),
+    surface: laptops.map(l => "Glass"),
+    windowsPrecision: laptops.map(l => "Yes"),
+  };
+
+  return (
+    <div className="mb-8 rounded-lg border border-[#e5e7eb] bg-white p-6">
+      <SectionHeader 
+        icon={<svg width="20" height="20" fill="white" viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M6 8h.01M10 8h.01M14 8h.01M18 8h.01M6 12h.01M10 12h.01M14 12h.01M18 12h.01M7 16h10" stroke="white" strokeWidth="2" strokeLinecap="round"/></svg>} 
+        title="ورودی" 
+      />
+
+      {/* Keyboard Subsection */}
+      <div className="mb-6 ml-4">
+        <h3 className="mb-4 text-base font-bold text-[#1a1a2e]">کیبورد</h3>
+        <div className="overflow-x-auto">
+          {[
+            { label: "نوع کیبورد", values: keyboardData.type, higher: false },
+            { label: "نام‌پد", values: keyboardData.numpad, higher: false },
+            { label: "نور پس‌زمینه", values: keyboardData.backlight, higher: false },
+            { label: "مسافت کلید", values: keyboardData.keyTravel, higher: true },
+          ].map((row, index) => {
+            const numericValues = row.values.map(v => extractNumber(v));
+            const bestValue = row.higher 
+              ? Math.max(...numericValues) 
+              : Math.min(...numericValues.filter(v => v > 0));
+            
+            return (
+              <ComparisonRow
+                key={index}
+                label={row.label}
+                values={row.values}
+                isWinner={(i) => numericValues[i] === bestValue && bestValue > 0}
+              />
+            );
+          })}
+        </div>
+      </div>
+
+      {/* Touchpad Subsection */}
+      <div className="ml-4">
+        <h3 className="mb-4 text-base font-bold text-[#1a1a2e]">تاچ‌پد</h3>
+        <div className="overflow-x-auto">
+          {[
+            { label: "اندازه", values: touchpadData.size, higher: true },
+            { label: "سطح", values: touchpadData.surface, higher: false },
+            { label: "Windows Precision", values: touchpadData.windowsPrecision, higher: false },
+          ].map((row, index) => {
+            const numericValues = row.values.map(v => extractNumber(v));
+            const bestValue = row.higher 
+              ? Math.max(...numericValues) 
+              : Math.min(...numericValues.filter(v => v > 0));
+            
+            return (
+              <ComparisonRow
+                key={index}
+                label={row.label}
+                values={row.values}
+                isWinner={(i) => numericValues[i] === bestValue && bestValue > 0}
+              />
+            );
+          })}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 // کامپوننت اصلی
 export default function ComparePage({ products, ids, onClose, onAddToCart }: ComparePageProps) {
   const laptops = ids.map(id => products.find(p => p.id === id)).filter((p): p is Laptop => !!p);
@@ -1029,6 +1372,21 @@ export default function ComparePage({ products, ids, onClose, onAddToCart }: Com
 
         {/* Battery Section */}
         <BatterySection laptops={laptops} />
+
+        {/* RAM Section */}
+        <RAMSection laptops={laptops} />
+
+        {/* Storage Section */}
+        <StorageSection laptops={laptops} />
+
+        {/* Sound Section */}
+        <SoundSection laptops={laptops} />
+
+        {/* Connectivity Section */}
+        <ConnectivitySection laptops={laptops} />
+
+        {/* Input Section */}
+        <InputSection laptops={laptops} />
 
         {/* Action Buttons */}
         <div className="sticky bottom-0 border-t border-[#e5e7eb] bg-white p-6 shadow-lg">
