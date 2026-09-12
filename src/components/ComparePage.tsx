@@ -1,20 +1,6 @@
 import { useState } from "react";
 import { fmt, toFa, type Laptop } from "../data/laptops";
 import { IClose, ICart } from "./icons";
-import Review from "./Review";
-import NanoReviewScore from "./NanoReviewScore";
-import KeyDifferences from "./KeyDifferences";
-import CaseComparisonTable from "./CaseComparisonTable";
-import SizeComparison from "./SizeComparison";
-import RamStorageComparison from "./RamStorageComparison";
-import CpuComparison from "./CpuComparison";
-import GpuComparison from "./GpuComparison";
-import SoundConnectivityPortsComparison from "./SoundConnectivityPortsComparison";
-import BatteryComparison from "./BatteryComparison";
-import CoolingSolution from "./CoolingSolution";
-import Display from "./Display";
-import DisplayComparison from "./DisplayComparison";
-import ProfessionalComparisonTable from "./ProfessionalComparisonTable";
 
 interface ComparePageProps {
   products: Laptop[];
@@ -23,7 +9,7 @@ interface ComparePageProps {
   onAddToCart: (id: string) => void;
 }
 
-// استخراج مشخصات از لپ‌تاپ
+// استخراج مشخصات
 function extractSpec(laptop: Laptop, group: string, key: string): string {
   const g = laptop.specs.find(s => s.title === group);
   if (!g) return "—";
@@ -31,123 +17,10 @@ function extractSpec(laptop: Laptop, group: string, key: string): string {
   return row ? row[1] : "—";
 }
 
-// استخراج عدد از متن
+// استخراج عدد
 function extractNumber(text: string): number {
   const match = text.match(/(\d+(?:\.\d+)?)/);
   return match ? parseFloat(match[1]) : 0;
-}
-
-// تولید مزایای هر لپ‌تاپ بر اساس مقایسه با همه لپ‌تاپ‌های دیگر
-function generateAdvantagesForAll(laptop: Laptop, allLaptops: Laptop[]): string[] {
-  const advantages: string[] = [];
-  
-  if (allLaptops.length < 2) return [];
-  
-  // استخراج مقادیر برای همه لپ‌تاپ‌ها
-  const getWeight = (l: Laptop) => extractNumber(extractSpec(l, "وزن و ابعاد", "وزن"));
-  const getBattery = (l: Laptop) => extractNumber(extractSpec(l, "باتری و شارژ", "ظرفیت باتری"));
-  const getDisplay = (l: Laptop) => extractNumber(extractSpec(l, "صفحه نمایش", "اندازه صفحه نمایش"));
-  const getRefresh = (l: Laptop) => extractNumber(extractSpec(l, "صفحه نمایش", "نرخ نوسازی (Refresh Rate)"));
-  const getRam = (l: Laptop) => extractNumber(extractSpec(l, "حافظه رم", "حافظه داخلی رم"));
-  const getStorage = (l: Laptop) => extractNumber(extractSpec(l, "ذخیره‌سازی", "ظرفیت کلی"));
-  
-  // مقادیر لپ‌تاپ فعلی
-  const myWeight = getWeight(laptop);
-  const myBattery = getBattery(laptop);
-  const myDisplay = getDisplay(laptop);
-  const myRefresh = getRefresh(laptop);
-  const myRam = getRam(laptop);
-  const myStorage = getStorage(laptop);
-  const myPrice = laptop.price;
-  
-  // مقادیر همه لپ‌تاپ‌ها
-  const allWeights = allLaptops.map(getWeight);
-  const allBatteries = allLaptops.map(getBattery);
-  const allDisplays = allLaptops.map(getDisplay);
-  const allRefreshes = allLaptops.map(getRefresh);
-  const allRams = allLaptops.map(getRam);
-  const allStorages = allLaptops.map(getStorage);
-  const allPrices = allLaptops.map(l => l.price);
-  
-  // 1. سبک‌ترین وزن
-  if (myWeight > 0) {
-    const minWeight = Math.min(...allWeights.filter(w => w > 0));
-    if (myWeight === minWeight) {
-      const maxWeight = Math.max(...allWeights);
-      const diff = maxWeight - myWeight;
-      if (diff > 0.1) {
-        advantages.push(`سبک‌ترین: ${diff.toFixed(2)} کیلوگرم سبک‌تر از سنگین‌ترین`);
-      }
-    }
-  }
-  
-  // 2. بیشترین ظرفیت باتری
-  if (myBattery > 0) {
-    const maxBattery = Math.max(...allBatteries);
-    if (myBattery === maxBattery) {
-      const minBattery = Math.min(...allBatteries.filter(b => b > 0));
-      const percent = Math.round(((myBattery - minBattery) / minBattery) * 100);
-      if (percent > 10) {
-        advantages.push(`بیشترین ظرفیت باتری: ${percent}% بیشتر از کمترین`);
-      }
-    }
-  }
-  
-  // 3. بزرگ‌ترین نمایشگر
-  if (myDisplay > 0) {
-    const maxDisplay = Math.max(...allDisplays);
-    if (myDisplay === maxDisplay) {
-      const minDisplay = Math.min(...allDisplays.filter(d => d > 0));
-      if (myDisplay - minDisplay > 0.5) {
-        advantages.push(`بزرگ‌ترین نمایشگر: ${myDisplay} اینچ`);
-      }
-    }
-  }
-  
-  // 4. بالاترین نرخ نوسازی
-  if (myRefresh > 0) {
-    const maxRefresh = Math.max(...allRefreshes);
-    if (myRefresh === maxRefresh) {
-      const minRefresh = Math.min(...allRefreshes.filter(r => r > 0));
-      if (myRefresh - minRefresh > 30) {
-        advantages.push(`بالاترین نرخ نوسازی: ${myRefresh} هرتز`);
-      }
-    }
-  }
-  
-  // 5. بیشترین رم
-  if (myRam > 0) {
-    const maxRam = Math.max(...allRams);
-    if (myRam === maxRam) {
-      const minRam = Math.min(...allRams.filter(r => r > 0));
-      if (myRam > minRam) {
-        advantages.push(`بیشترین حافظه رم: ${myRam}GB`);
-      }
-    }
-  }
-  
-  // 6. بیشترین ذخیره‌سازی
-  if (myStorage > 0) {
-    const maxStorage = Math.max(...allStorages);
-    if (myStorage === maxStorage) {
-      const minStorage = Math.min(...allStorages.filter(s => s > 0));
-      if (myStorage > minStorage) {
-        advantages.push(`بیشترین حافظه ذخیره‌سازی: ${myStorage}GB`);
-      }
-    }
-  }
-  
-  // 7. ارزان‌ترین قیمت
-  const minPrice = Math.min(...allPrices);
-  if (myPrice === minPrice) {
-    const maxPrice = Math.max(...allPrices);
-    const diff = maxPrice - myPrice;
-    if (diff > 10000000) { // حداقل 10 میلیون تومان تفاوت
-      advantages.push(`ارزان‌ترین: ${fmt(diff)} ارزان‌تر از گران‌ترین`);
-    }
-  }
-  
-  return advantages.slice(0, 6); // حداکثر 6 مزیت
 }
 
 // محاسبه امتیاز دسته‌ها
@@ -192,35 +65,49 @@ function calculateCategoryScores(laptop: Laptop) {
   };
 }
 
-
-
-// کامپوننت جدول مقایسه
-function ComparisonTable({ title, rows }: {
-  title: string;
-  rows: { label: string; valueA: string; valueB: string }[];
+// کامپوننت Score Bar
+function ScoreBar({ label, scoreA, scoreB, laptopAName, laptopBName }: {
+  label: string;
+  scoreA: number;
+  scoreB: number;
+  laptopAName: string;
+  laptopBName: string;
 }) {
+  const winner = scoreA > scoreB ? 0 : scoreB > scoreA ? 1 : null;
   return (
-    <div className="mb-8">
-      <h3 className="mb-4 text-xl font-bold text-[#1a1a1a]">{title}</h3>
-      <div className="overflow-x-auto">
-        <table className="w-full">
-          <thead>
-            <tr className="border-b-2 border-[#e5e7eb] bg-[#f9fafb]">
-              <th className="p-3 text-right text-sm font-bold text-[#1a1a1a]">مشخصه</th>
-              <th className="p-3 text-center text-sm font-bold text-[#1a1a1a]">لپ‌تاپ A</th>
-              <th className="p-3 text-center text-sm font-bold text-[#1a1a1a]">لپ‌تاپ B</th>
-            </tr>
-          </thead>
-          <tbody>
-            {rows.map((row, idx) => (
-              <tr key={idx} className="border-b border-[#f3f4f6]">
-                <td className="p-3 text-sm font-medium text-[#1a1a1a]">{row.label}</td>
-                <td className="p-3 text-center text-sm text-[#4b5563]">{row.valueA}</td>
-                <td className="p-3 text-center text-sm text-[#4b5563]">{row.valueB}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+    <div className="mb-6">
+      <div className="mb-2 flex items-center justify-between">
+        <span className="text-sm font-bold text-[#1a1a1a]">{label}</span>
+      </div>
+      <div className="space-y-2">
+        <div className="flex items-center gap-3">
+          <span className="w-24 text-xs text-[#4b5563]">{laptopAName}</span>
+          <div className="flex-1">
+            <div className="relative h-6 overflow-hidden rounded bg-[#f3f4f6]">
+              <div
+                className={`h-full rounded transition-all duration-500 ${winner === 0 ? "bg-[#10b981]" : "bg-[#6b7280]"}`}
+                style={{ width: `${scoreA}%` }}
+              />
+              <span className="absolute inset-0 flex items-center justify-center text-xs font-bold text-white">
+                {toFa(scoreA)}
+              </span>
+            </div>
+          </div>
+        </div>
+        <div className="flex items-center gap-3">
+          <span className="w-24 text-xs text-[#4b5563]">{laptopBName}</span>
+          <div className="flex-1">
+            <div className="relative h-6 overflow-hidden rounded bg-[#f3f4f6]">
+              <div
+                className={`h-full rounded transition-all duration-500 ${winner === 1 ? "bg-[#10b981]" : "bg-[#6b7280]"}`}
+                style={{ width: `${scoreB}%` }}
+              />
+              <span className="absolute inset-0 flex items-center justify-center text-xs font-bold text-white">
+                {toFa(scoreB)}
+              </span>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );
@@ -230,15 +117,11 @@ export default function ComparePage({ products, ids, onClose, onAddToCart }: Com
   const laptops = ids.map(id => products.find(p => p.id === id)).filter((p): p is Laptop => !!p);
   const [scenario, setScenario] = useState("gaming");
 
-  if (laptops.length < 2 || laptops.length > 4) {
+  if (laptops.length < 2) {
     return (
       <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#f5f5f7]">
         <div className="text-center">
-          <p className="text-xl font-bold text-gray-600">
-            {laptops.length < 2 
-              ? "حداقل ۲ محصول برای مقایسه انتخاب کنید" 
-              : "حداکثر ۴ محصول برای مقایسه انتخاب کنید"}
-          </p>
+          <p className="text-xl font-bold text-gray-600">حداقل ۲ محصول برای مقایسه انتخاب کنید</p>
           <button onClick={onClose} className="mt-4 rounded-lg bg-[#2563eb] px-6 py-3 text-white font-bold">
             بازگشت
           </button>
@@ -247,8 +130,7 @@ export default function ComparePage({ products, ids, onClose, onAddToCart }: Com
     );
   }
 
-  const laptopA = laptops[0];
-  const laptopB = laptops[1];
+  const [laptopA, laptopB] = laptops;
   const scoresA = calculateCategoryScores(laptopA);
   const scoresB = calculateCategoryScores(laptopB);
 
@@ -264,74 +146,74 @@ export default function ComparePage({ products, ids, onClose, onAddToCart }: Com
         </div>
       </div>
 
-      <div className="mx-auto max-w-[70%] px-2 py-8 sm:px-4">
-        {/* Products Header - تا ۴ لپ‌تاپ */}
-        <div className="mb-8">
-          <div className={`grid gap-4 ${
-            laptops.length === 2 ? 'grid-cols-1 md:grid-cols-2' :
-            laptops.length === 3 ? 'grid-cols-1 md:grid-cols-3' :
-            'grid-cols-2 md:grid-cols-4'
-          }`}>
-            {laptops.map((laptop, index) => {
-              const scores = calculateCategoryScores(laptop);
-              return (
-                <div key={laptop.id} className="rounded-2xl bg-white p-4 shadow-sm">
-                  <div className="mb-3 flex justify-center">
-                    <img src={laptop.image} alt={laptop.name} className="h-32 w-auto object-contain" />
-                  </div>
-                  <h2 className="mb-2 text-center text-sm font-bold text-[#1a1a1a] line-clamp-2">
-                    {laptop.name}
-                  </h2>
-                  <div className="flex justify-center">
-                    <div className="rounded-full bg-[#2563eb] px-4 py-1.5 text-lg font-bold text-white">
-                      {toFa(scores.overall)} / ۱۰۰
-                    </div>
-                  </div>
-                </div>
-              );
-            })}
+      <div className="mx-auto max-w-7xl px-6 py-8">
+        {/* Two Products Header */}
+        <div className="mb-8 grid grid-cols-1 gap-6 md:grid-cols-[1fr_auto_1fr]">
+          {/* Laptop A */}
+          <div className="rounded-2xl bg-white p-6 shadow-sm">
+            <div className="mb-4 flex justify-center">
+              <img src={laptopA.image} alt={laptopA.name} className="h-40 w-auto object-contain" />
+            </div>
+            <h2 className="mb-2 text-center text-lg font-bold text-[#1a1a1a]">{laptopA.name}</h2>
+            <div className="flex justify-center">
+              <div className="rounded-full bg-[#2563eb] px-6 py-2 text-2xl font-bold text-white">
+                {toFa(scoresA.overall)} / ۱۰۰
+              </div>
+            </div>
+          </div>
+
+          {/* VS */}
+          <div className="flex items-center justify-center">
+            <div className="rounded-full bg-[#f59e0b] px-6 py-4 text-3xl font-bold text-white shadow-lg">
+              VS
+            </div>
+          </div>
+
+          {/* Laptop B */}
+          <div className="rounded-2xl bg-white p-6 shadow-sm">
+            <div className="mb-4 flex justify-center">
+              <img src={laptopB.image} alt={laptopB.name} className="h-40 w-auto object-contain" />
+            </div>
+            <h2 className="mb-2 text-center text-lg font-bold text-[#1a1a1a]">{laptopB.name}</h2>
+            <div className="flex justify-center">
+              <div className="rounded-full bg-[#2563eb] px-6 py-2 text-2xl font-bold text-white">
+                {toFa(scoresB.overall)} / ۱۰۰
+              </div>
+            </div>
           </div>
         </div>
 
-        {/* Review Section - پیکسل پرفکت مطابق NanoReview */}
-        <div className="mb-8">
-          <Review
-            laptopA={{
-              name: laptops[0].name,
-              scores: {
-                performance: calculateCategoryScores(laptops[0]).performance,
-                gaming: calculateCategoryScores(laptops[0]).gaming,
-                display: calculateCategoryScores(laptops[0]).display,
-                battery: calculateCategoryScores(laptops[0]).battery,
-                connectivity: calculateCategoryScores(laptops[0]).connectivity,
-                portability: calculateCategoryScores(laptops[0]).portability,
-              },
-            }}
-            laptopB={{
-              name: laptops[1].name,
-              scores: {
-                performance: calculateCategoryScores(laptops[1]).performance,
-                gaming: calculateCategoryScores(laptops[1]).gaming,
-                display: calculateCategoryScores(laptops[1]).display,
-                battery: calculateCategoryScores(laptops[1]).battery,
-                connectivity: calculateCategoryScores(laptops[1]).connectivity,
-                portability: calculateCategoryScores(laptops[1]).portability,
-              },
-            }}
-          />
-        </div>
+        {/* Review Section */}
+        <div className="mb-8 rounded-2xl bg-white p-8 shadow-sm">
+          <h2 className="mb-2 text-2xl font-bold text-[#1a1a1a]">بررسی</h2>
+          <p className="mb-6 text-sm text-[#6b7280]">ارزیابی ویژگی‌های مهم</p>
 
-        {/* NanoReview Score Section */}
-        <div className="mb-8">
-          <NanoReviewScore
-            laptops={laptops.map(laptop => {
-              const scores = calculateCategoryScores(laptop);
-              return {
-                name: laptop.name,
-                score: scores.overall,
-              };
-            })}
-          />
+          {/* Scenario Selector */}
+          <div className="mb-6 rounded-xl bg-[#f9fafb] p-4">
+            <p className="mb-3 text-sm font-bold text-[#1a1a1a]">سناریوی استفاده را انتخاب کنید:</p>
+            <select
+              value={scenario}
+              onChange={(e) => setScenario(e.target.value)}
+              className="w-full rounded-lg border border-[#e5e7eb] bg-white px-4 py-2 text-sm"
+            >
+              <option value="gaming">گیمینگ</option>
+              <option value="business">تجاری</option>
+              <option value="programming">برنامه‌نویسی</option>
+              <option value="student">دانشجویی</option>
+              <option value="content">تولید محتوا</option>
+              <option value="engineering">مهندسی</option>
+            </select>
+          </div>
+
+          {/* Score Bars */}
+          <div className="space-y-6">
+            <ScoreBar label="عملکرد" scoreA={scoresA.performance} scoreB={scoresB.performance} laptopAName={laptopA.shortName} laptopBName={laptopB.shortName} />
+            <ScoreBar label="گیمینگ" scoreA={scoresA.gaming} scoreB={scoresB.gaming} laptopAName={laptopA.shortName} laptopBName={laptopB.shortName} />
+            <ScoreBar label="نمایشگر" scoreA={scoresA.display} scoreB={scoresB.display} laptopAName={laptopA.shortName} laptopBName={laptopB.shortName} />
+            <ScoreBar label="عمر باتری" scoreA={scoresA.battery} scoreB={scoresB.battery} laptopAName={laptopA.shortName} laptopBName={laptopB.shortName} />
+            <ScoreBar label="اتصالات" scoreA={scoresA.connectivity} scoreB={scoresB.connectivity} laptopAName={laptopA.shortName} laptopBName={laptopB.shortName} />
+            <ScoreBar label="قابلیت حمل" scoreA={scoresA.portability} scoreB={scoresB.portability} laptopAName={laptopA.shortName} laptopBName={laptopB.shortName} />
+          </div>
         </div>
 
         {/* Value for Money */}
@@ -362,57 +244,84 @@ export default function ComparePage({ products, ids, onClose, onAddToCart }: Com
           </div>
         </div>
 
-        {/* Key Differences - پیکسل پرفکت مطابق NanoReview */}
-        <div className="mb-8">
-          <KeyDifferences
-            laptops={laptops.map(laptop => ({
-              name: laptop.name,
-              advantages: generateAdvantagesForAll(laptop, laptops),
-            }))}
-          />
-        </div>
+        {/* Key Differences */}
+        <div className="mb-8 rounded-2xl bg-white p-8 shadow-sm">
+          <h2 className="mb-2 text-2xl font-bold text-[#1a1a1a]">تفاوت‌های کلیدی</h2>
+          <p className="mb-6 text-sm text-[#6b7280]">تفاوت‌های اصلی بین دو لپ‌تاپ</p>
 
-        {/* Case Comparison Table - جدول مقایسه بدنه */}
-        <div className="mb-8">
-          <CaseComparisonTable laptops={laptops} />
-        </div>
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+            <div>
+              <h3 className="mb-3 text-lg font-bold text-[#1a1a1a]">مزایای {laptopA.shortName}</h3>
+              <ul className="space-y-2">
+                {scoresA.performance > scoresB.performance && (
+                  <li className="flex items-start gap-2 text-sm text-[#4b5563]">
+                    <span className="text-green-600">✓</span>
+                    <span>عملکرد پردازنده قوی‌تر</span>
+                  </li>
+                )}
+                {scoresA.gaming > scoresB.gaming && (
+                  <li className="flex items-start gap-2 text-sm text-[#4b5563]">
+                    <span className="text-green-600">✓</span>
+                    <span>عملکرد گرافیکی بهتر</span>
+                  </li>
+                )}
+                {scoresA.display > scoresB.display && (
+                  <li className="flex items-start gap-2 text-sm text-[#4b5563]">
+                    <span className="text-green-600">✓</span>
+                    <span>نمایشگر بهتر</span>
+                  </li>
+                )}
+                {scoresA.battery > scoresB.battery && (
+                  <li className="flex items-start gap-2 text-sm text-[#4b5563]">
+                    <span className="text-green-600">✓</span>
+                    <span>باتری قوی‌تر</span>
+                  </li>
+                )}
+                {scoresA.portability > scoresB.portability && (
+                  <li className="flex items-start gap-2 text-sm text-[#4b5563]">
+                    <span className="text-green-600">✓</span>
+                    <span>سبک‌تر و قابل‌حمل‌تر</span>
+                  </li>
+                )}
+              </ul>
+            </div>
 
-        {/* Size Comparison - مقایسه اندازه سه‌بعدی */}
-        <div className="mb-8">
-          <SizeComparison laptops={laptops} />
-        </div>
-
-        {/* RAM & Storage Comparison - مقایسه RAM و Storage */}
-        <div className="mb-8">
-          <RamStorageComparison laptops={laptops} />
-        </div>
-
-        {/* CPU Comparison - مقایسه CPU */}
-        <div className="mb-8">
-          <CpuComparison laptops={laptops} />
-        </div>
-
-        {/* GPU Comparison - مقایسه GPU */}
-        <div className="mb-8">
-          <GpuComparison laptops={laptops} />
-        </div>
-
-        {/* Sound, Connectivity & Ports Comparison - مقایسه صدا، اتصالات و پورت‌ها */}
-        <div className="mb-8">
-          <SoundConnectivityPortsComparison laptops={laptops} />
-        </div>
-
-        {/* Battery Comparison - مقایسه باتری */}
-        <div className="mb-8">
-          <BatteryComparison laptops={laptops} />
-        </div>
-
-        {/* Cooling Solution - راه حل خنک‌کنندگی */}
-        <div className="mb-8">
-          <CoolingSolution laptops={laptops} maxLaptops={4} />
-          <Display laptops={laptops} />
-          <DisplayComparison laptops={laptops} />
-          <ProfessionalComparisonTable products={laptops} />
+            <div>
+              <h3 className="mb-3 text-lg font-bold text-[#1a1a1a]">مزایای {laptopB.shortName}</h3>
+              <ul className="space-y-2">
+                {scoresB.performance > scoresA.performance && (
+                  <li className="flex items-start gap-2 text-sm text-[#4b5563]">
+                    <span className="text-green-600">✓</span>
+                    <span>عملکرد پردازنده قوی‌تر</span>
+                  </li>
+                )}
+                {scoresB.gaming > scoresA.gaming && (
+                  <li className="flex items-start gap-2 text-sm text-[#4b5563]">
+                    <span className="text-green-600">✓</span>
+                    <span>عملکرد گرافیکی بهتر</span>
+                  </li>
+                )}
+                {scoresB.display > scoresA.display && (
+                  <li className="flex items-start gap-2 text-sm text-[#4b5563]">
+                    <span className="text-green-600">✓</span>
+                    <span>نمایشگر بهتر</span>
+                  </li>
+                )}
+                {scoresB.battery > scoresA.battery && (
+                  <li className="flex items-start gap-2 text-sm text-[#4b5563]">
+                    <span className="text-green-600">✓</span>
+                    <span>باتری قوی‌تر</span>
+                  </li>
+                )}
+                {scoresB.portability > scoresA.portability && (
+                  <li className="flex items-start gap-2 text-sm text-[#4b5563]">
+                    <span className="text-green-600">✓</span>
+                    <span>سبک‌تر و قابل‌حمل‌تر</span>
+                  </li>
+                )}
+              </ul>
+            </div>
+          </div>
         </div>
 
         {/* Technical Specifications */}
@@ -421,130 +330,272 @@ export default function ComparePage({ products, ids, onClose, onAddToCart }: Com
           <p className="mb-6 text-sm text-[#6b7280]">جدول مقایسه نتایج تست و مشخصات فنی</p>
 
           {/* Case Table */}
-          <ComparisonTable
-            title="بدنه"
-            rows={[
-              { label: "وزن", valueA: extractSpec(laptopA, "وزن و ابعاد", "وزن"), valueB: extractSpec(laptopB, "وزن و ابعاد", "وزن") },
-              { label: "طول", valueA: extractSpec(laptopA, "وزن و ابعاد", "طول"), valueB: extractSpec(laptopB, "وزن و ابعاد", "طول") },
-              { label: "عرض", valueA: extractSpec(laptopA, "وزن و ابعاد", "عرض"), valueB: extractSpec(laptopB, "وزن و ابعاد", "عرض") },
-              { label: "ضخامت", valueA: extractSpec(laptopA, "وزن و ابعاد", "ضخامت"), valueB: extractSpec(laptopB, "وزن و ابعاد", "ضخامت") },
-            ]}
-          />
+          <div className="mb-8">
+            <h3 className="mb-4 text-xl font-bold text-[#1a1a1a]">بدنه</h3>
+            <div className="overflow-x-auto">
+              <table className="w-full">
+                <thead>
+                  <tr className="border-b-2 border-[#e5e7eb] bg-[#f9fafb]">
+                    <th className="p-3 text-right text-sm font-bold text-[#1a1a1a]">مشخصه</th>
+                    <th className="p-3 text-center text-sm font-bold text-[#1a1a1a]">{laptopA.shortName}</th>
+                    <th className="p-3 text-center text-sm font-bold text-[#1a1a1a]">{laptopB.shortName}</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr className="border-b border-[#f3f4f6]">
+                    <td className="p-3 text-sm font-medium text-[#1a1a1a]">وزن</td>
+                    <td className="p-3 text-center text-sm text-[#4b5563]">{extractSpec(laptopA, "وزن و ابعاد", "وزن")}</td>
+                    <td className="p-3 text-center text-sm text-[#4b5563]">{extractSpec(laptopB, "وزن و ابعاد", "وزن")}</td>
+                  </tr>
+                  <tr className="border-b border-[#f3f4f6]">
+                    <td className="p-3 text-sm font-medium text-[#1a1a1a]">طول</td>
+                    <td className="p-3 text-center text-sm text-[#4b5563]">{extractSpec(laptopA, "وزن و ابعاد", "طول")}</td>
+                    <td className="p-3 text-center text-sm text-[#4b5563]">{extractSpec(laptopB, "وزن و ابعاد", "طول")}</td>
+                  </tr>
+                  <tr className="border-b border-[#f3f4f6]">
+                    <td className="p-3 text-sm font-medium text-[#1a1a1a]">عرض</td>
+                    <td className="p-3 text-center text-sm text-[#4b5563]">{extractSpec(laptopA, "وزن و ابعاد", "عرض")}</td>
+                    <td className="p-3 text-center text-sm text-[#4b5563]">{extractSpec(laptopB, "وزن و ابعاد", "عرض")}</td>
+                  </tr>
+                  <tr className="border-b border-[#f3f4f6]">
+                    <td className="p-3 text-sm font-medium text-[#1a1a1a]">ضخامت</td>
+                    <td className="p-3 text-center text-sm text-[#4b5563]">{extractSpec(laptopA, "وزن و ابعاد", "ضخامت")}</td>
+                    <td className="p-3 text-center text-sm text-[#4b5563]">{extractSpec(laptopB, "وزن و ابعاد", "ضخامت")}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
 
           {/* Display Table */}
-          <ComparisonTable
-            title="نمایشگر"
-            rows={[
-              { label: "اندازه صفحه نمایش", valueA: extractSpec(laptopA, "صفحه نمایش", "اندازه صفحه نمایش"), valueB: extractSpec(laptopB, "صفحه نمایش", "اندازه صفحه نمایش") },
-              { label: "رزولوشن", valueA: extractSpec(laptopA, "صفحه نمایش", "رزولوشن"), valueB: extractSpec(laptopB, "صفحه نمایش", "رزولوشن") },
-              { label: "نرخ نوسازی", valueA: extractSpec(laptopA, "صفحه نمایش", "نرخ نوسازی (Refresh Rate)"), valueB: extractSpec(laptopB, "صفحه نمایش", "نرخ نوسازی (Refresh Rate)") },
-              { label: "نوع پنل", valueA: extractSpec(laptopA, "صفحه نمایش", "فناوری و نوع صفحه"), valueB: extractSpec(laptopB, "صفحه نمایش", "فناوری و نوع صفحه") },
-              { label: "زاویه دید", valueA: extractSpec(laptopA, "صفحه نمایش", "زاویه دید"), valueB: extractSpec(laptopB, "صفحه نمایش", "زاویه دید") },
-              { label: "Color Gamut", valueA: extractSpec(laptopA, "صفحه نمایش", "Color Gamut"), valueB: extractSpec(laptopB, "صفحه نمایش", "Color Gamut") },
-            ]}
-          />
+          <div className="mb-8">
+            <h3 className="mb-4 text-xl font-bold text-[#1a1a1a]">نمایشگر</h3>
+            <div className="overflow-x-auto">
+              <table className="w-full">
+                <thead>
+                  <tr className="border-b-2 border-[#e5e7eb] bg-[#f9fafb]">
+                    <th className="p-3 text-right text-sm font-bold text-[#1a1a1a]">مشخصه</th>
+                    <th className="p-3 text-center text-sm font-bold text-[#1a1a1a]">{laptopA.shortName}</th>
+                    <th className="p-3 text-center text-sm font-bold text-[#1a1a1a]">{laptopB.shortName}</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr className="border-b border-[#f3f4f6]">
+                    <td className="p-3 text-sm font-medium text-[#1a1a1a]">اندازه صفحه نمایش</td>
+                    <td className="p-3 text-center text-sm text-[#4b5563]">{extractSpec(laptopA, "صفحه نمایش", "اندازه صفحه نمایش")}</td>
+                    <td className="p-3 text-center text-sm text-[#4b5563]">{extractSpec(laptopB, "صفحه نمایش", "اندازه صفحه نمایش")}</td>
+                  </tr>
+                  <tr className="border-b border-[#f3f4f6]">
+                    <td className="p-3 text-sm font-medium text-[#1a1a1a]">رزولوشن</td>
+                    <td className="p-3 text-center text-sm text-[#4b5563]">{extractSpec(laptopA, "صفحه نمایش", "رزولوشن")}</td>
+                    <td className="p-3 text-center text-sm text-[#4b5563]">{extractSpec(laptopB, "صفحه نمایش", "رزولوشن")}</td>
+                  </tr>
+                  <tr className="border-b border-[#f3f4f6]">
+                    <td className="p-3 text-sm font-medium text-[#1a1a1a]">نرخ نوسازی</td>
+                    <td className="p-3 text-center text-sm text-[#4b5563]">{extractSpec(laptopA, "صفحه نمایش", "نرخ نوسازی (Refresh Rate)")}</td>
+                    <td className="p-3 text-center text-sm text-[#4b5563]">{extractSpec(laptopB, "صفحه نمایش", "نرخ نوسازی (Refresh Rate)")}</td>
+                  </tr>
+                  <tr className="border-b border-[#f3f4f6]">
+                    <td className="p-3 text-sm font-medium text-[#1a1a1a]">نوع پنل</td>
+                    <td className="p-3 text-center text-sm text-[#4b5563]">{extractSpec(laptopA, "صفحه نمایش", "فناوری و نوع صفحه")}</td>
+                    <td className="p-3 text-center text-sm text-[#4b5563]">{extractSpec(laptopB, "صفحه نمایش", "فناوری و نوع صفحه")}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
 
           {/* CPU Table */}
-          <ComparisonTable
-            title="پردازنده"
-            rows={[
-              { label: "مدل پردازنده", valueA: extractSpec(laptopA, "پردازنده", "مدل پردازنده"), valueB: extractSpec(laptopB, "پردازنده", "مدل پردازنده") },
-              { label: "تعداد هسته و رشته", valueA: extractSpec(laptopA, "پردازنده", "تعداد هسته و رشته"), valueB: extractSpec(laptopB, "پردازنده", "تعداد هسته و رشته") },
-              { label: "فرکانس پایه و حداکثر", valueA: extractSpec(laptopA, "پردازنده", "فرکانس پایه و حداکثر"), valueB: extractSpec(laptopB, "پردازنده", "فرکانس پایه و حداکثر") },
-              { label: "بنچمارک تک هسته‌ای", valueA: extractSpec(laptopA, "پردازنده", "بنچمارک تک هسته‌ای"), valueB: extractSpec(laptopB, "پردازنده", "بنچمارک تک هسته‌ای") },
-              { label: "بنچمارک چند هسته‌ای", valueA: extractSpec(laptopA, "پردازنده", "بنچمارک چند هسته‌ای"), valueB: extractSpec(laptopB, "پردازنده", "بنچمارک چند هسته‌ای") },
-              { label: "واحد پردازش عصبی (NPU)", valueA: extractSpec(laptopA, "پردازنده", "واحد پردازش عصبی (NPU)"), valueB: extractSpec(laptopB, "پردازنده", "واحد پردازش عصبی (NPU)") },
-            ]}
-          />
+          <div className="mb-8">
+            <h3 className="mb-4 text-xl font-bold text-[#1a1a1a]">پردازنده</h3>
+            <div className="overflow-x-auto">
+              <table className="w-full">
+                <thead>
+                  <tr className="border-b-2 border-[#e5e7eb] bg-[#f9fafb]">
+                    <th className="p-3 text-right text-sm font-bold text-[#1a1a1a]">مشخصه</th>
+                    <th className="p-3 text-center text-sm font-bold text-[#1a1a1a]">{laptopA.shortName}</th>
+                    <th className="p-3 text-center text-sm font-bold text-[#1a1a1a]">{laptopB.shortName}</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr className="border-b border-[#f3f4f6]">
+                    <td className="p-3 text-sm font-medium text-[#1a1a1a]">مدل پردازنده</td>
+                    <td className="p-3 text-center text-sm text-[#4b5563]">{extractSpec(laptopA, "پردازنده", "مدل پردازنده")}</td>
+                    <td className="p-3 text-center text-sm text-[#4b5563]">{extractSpec(laptopB, "پردازنده", "مدل پردازنده")}</td>
+                  </tr>
+                  <tr className="border-b border-[#f3f4f6]">
+                    <td className="p-3 text-sm font-medium text-[#1a1a1a]">تعداد هسته و رشته</td>
+                    <td className="p-3 text-center text-sm text-[#4b5563]">{extractSpec(laptopA, "پردازنده", "تعداد هسته و رشته")}</td>
+                    <td className="p-3 text-center text-sm text-[#4b5563]">{extractSpec(laptopB, "پردازنده", "تعداد هسته و رشته")}</td>
+                  </tr>
+                  <tr className="border-b border-[#f3f4f6]">
+                    <td className="p-3 text-sm font-medium text-[#1a1a1a]">فرکانس پایه و حداکثر</td>
+                    <td className="p-3 text-center text-sm text-[#4b5563]">{extractSpec(laptopA, "پردازنده", "فرکانس پایه و حداکثر")}</td>
+                    <td className="p-3 text-center text-sm text-[#4b5563]">{extractSpec(laptopB, "پردازنده", "فرکانس پایه و حداکثر")}</td>
+                  </tr>
+                  <tr className="border-b border-[#f3f4f6]">
+                    <td className="p-3 text-sm font-medium text-[#1a1a1a]">بنچمارک تک هسته‌ای</td>
+                    <td className="p-3 text-center text-sm text-[#4b5563]">{extractSpec(laptopA, "پردازنده", "بنچمارک تک هسته‌ای")}</td>
+                    <td className="p-3 text-center text-sm text-[#4b5563]">{extractSpec(laptopB, "پردازنده", "بنچمارک تک هسته‌ای")}</td>
+                  </tr>
+                  <tr className="border-b border-[#f3f4f6]">
+                    <td className="p-3 text-sm font-medium text-[#1a1a1a]">بنچمارک چند هسته‌ای</td>
+                    <td className="p-3 text-center text-sm text-[#4b5563]">{extractSpec(laptopA, "پردازنده", "بنچمارک چند هسته‌ای")}</td>
+                    <td className="p-3 text-center text-sm text-[#4b5563]">{extractSpec(laptopB, "پردازنده", "بنچمارک چند هسته‌ای")}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
 
           {/* GPU Table */}
-          <ComparisonTable
-            title="کارت گرافیک"
-            rows={[
-              { label: "مدل گرافیک مجزا", valueA: extractSpec(laptopA, "گرافیک", "مدل گرافیک مجزا"), valueB: extractSpec(laptopB, "گرافیک", "مدل گرافیک مجزا") },
-              { label: "حافظه گرافیک مجزا", valueA: extractSpec(laptopA, "گرافیک", "حافظه گرافیک مجزا"), valueB: extractSpec(laptopB, "گرافیک", "حافظه گرافیک مجزا") },
-              { label: "نوع حافظه گرافیک", valueA: extractSpec(laptopA, "گرافیک", "نوع حافظه گرافیک"), valueB: extractSpec(laptopB, "گرافیک", "نوع حافظه گرافیک") },
-              { label: "توان مصرفی", valueA: extractSpec(laptopA, "گرافیک", "توان مصرفی"), valueB: extractSpec(laptopB, "گرافیک", "توان مصرفی") },
-            ]}
-          />
+          <div className="mb-8">
+            <h3 className="mb-4 text-xl font-bold text-[#1a1a1a]">کارت گرافیک</h3>
+            <div className="overflow-x-auto">
+              <table className="w-full">
+                <thead>
+                  <tr className="border-b-2 border-[#e5e7eb] bg-[#f9fafb]">
+                    <th className="p-3 text-right text-sm font-bold text-[#1a1a1a]">مشخصه</th>
+                    <th className="p-3 text-center text-sm font-bold text-[#1a1a1a]">{laptopA.shortName}</th>
+                    <th className="p-3 text-center text-sm font-bold text-[#1a1a1a]">{laptopB.shortName}</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr className="border-b border-[#f3f4f6]">
+                    <td className="p-3 text-sm font-medium text-[#1a1a1a]">مدل گرافیک مجزا</td>
+                    <td className="p-3 text-center text-sm text-[#4b5563]">{extractSpec(laptopA, "گرافیک", "مدل گرافیک مجزا")}</td>
+                    <td className="p-3 text-center text-sm text-[#4b5563]">{extractSpec(laptopB, "گرافیک", "مدل گرافیک مجزا")}</td>
+                  </tr>
+                  <tr className="border-b border-[#f3f4f6]">
+                    <td className="p-3 text-sm font-medium text-[#1a1a1a]">حافظه گرافیک مجزا</td>
+                    <td className="p-3 text-center text-sm text-[#4b5563]">{extractSpec(laptopA, "گرافیک", "حافظه گرافیک مجزا")}</td>
+                    <td className="p-3 text-center text-sm text-[#4b5563]">{extractSpec(laptopB, "گرافیک", "حافظه گرافیک مجزا")}</td>
+                  </tr>
+                  <tr className="border-b border-[#f3f4f6]">
+                    <td className="p-3 text-sm font-medium text-[#1a1a1a]">نوع حافظه گرافیک</td>
+                    <td className="p-3 text-center text-sm text-[#4b5563]">{extractSpec(laptopA, "گرافیک", "نوع حافظه گرافیک")}</td>
+                    <td className="p-3 text-center text-sm text-[#4b5563]">{extractSpec(laptopB, "گرافیک", "نوع حافظه گرافیک")}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
 
           {/* RAM Table */}
-          <ComparisonTable
-            title="حافظه رم"
-            rows={[
-              { label: "حافظه داخلی رم", valueA: extractSpec(laptopA, "حافظه رم", "حافظه داخلی رم"), valueB: extractSpec(laptopB, "حافظه رم", "حافظه داخلی رم") },
-              { label: "نوع حافظه", valueA: extractSpec(laptopA, "حافظه رم", "نوع حافظه"), valueB: extractSpec(laptopB, "حافظه رم", "نوع حافظه") },
-              { label: "CAS latency", valueA: extractSpec(laptopA, "حافظه رم", "CAS latency"), valueB: extractSpec(laptopB, "حافظه رم", "CAS latency") },
-              { label: "رابط/اینترفیس", valueA: extractSpec(laptopA, "حافظه رم", "رابط/اینترفیس"), valueB: extractSpec(laptopB, "حافظه رم", "رابط/اینترفیس") },
-            ]}
-          />
+          <div className="mb-8">
+            <h3 className="mb-4 text-xl font-bold text-[#1a1a1a]">حافظه رم</h3>
+            <div className="overflow-x-auto">
+              <table className="w-full">
+                <thead>
+                  <tr className="border-b-2 border-[#e5e7eb] bg-[#f9fafb]">
+                    <th className="p-3 text-right text-sm font-bold text-[#1a1a1a]">مشخصه</th>
+                    <th className="p-3 text-center text-sm font-bold text-[#1a1a1a]">{laptopA.shortName}</th>
+                    <th className="p-3 text-center text-sm font-bold text-[#1a1a1a]">{laptopB.shortName}</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr className="border-b border-[#f3f4f6]">
+                    <td className="p-3 text-sm font-medium text-[#1a1a1a]">حافظه داخلی رم</td>
+                    <td className="p-3 text-center text-sm text-[#4b5563]">{extractSpec(laptopA, "حافظه رم", "حافظه داخلی رم")}</td>
+                    <td className="p-3 text-center text-sm text-[#4b5563]">{extractSpec(laptopB, "حافظه رم", "حافظه داخلی رم")}</td>
+                  </tr>
+                  <tr className="border-b border-[#f3f4f6]">
+                    <td className="p-3 text-sm font-medium text-[#1a1a1a]">نوع حافظه</td>
+                    <td className="p-3 text-center text-sm text-[#4b5563]">{extractSpec(laptopA, "حافظه رم", "نوع حافظه")}</td>
+                    <td className="p-3 text-center text-sm text-[#4b5563]">{extractSpec(laptopB, "حافظه رم", "نوع حافظه")}</td>
+                  </tr>
+                  <tr className="border-b border-[#f3f4f6]">
+                    <td className="p-3 text-sm font-medium text-[#1a1a1a]">CAS latency</td>
+                    <td className="p-3 text-center text-sm text-[#4b5563]">{extractSpec(laptopA, "حافظه رم", "CAS latency")}</td>
+                    <td className="p-3 text-center text-sm text-[#4b5563]">{extractSpec(laptopB, "حافظه رم", "CAS latency")}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
 
           {/* Storage Table */}
-          <ComparisonTable
-            title="ذخیره‌سازی"
-            rows={[
-              { label: "ظرفیت کلی", valueA: extractSpec(laptopA, "ذخیره‌سازی", "ظرفیت کلی"), valueB: extractSpec(laptopB, "ذخیره‌سازی", "ظرفیت کلی") },
-              { label: "رابط SSD", valueA: extractSpec(laptopA, "ذخیره‌سازی", "رابط SSD"), valueB: extractSpec(laptopB, "ذخیره‌سازی", "رابط SSD") },
-              { label: "نسخه NVMe", valueA: extractSpec(laptopA, "ذخیره‌سازی", "نسخه NVMe"), valueB: extractSpec(laptopB, "ذخیره‌سازی", "نسخه NVMe") },
-            ]}
-          />
+          <div className="mb-8">
+            <h3 className="mb-4 text-xl font-bold text-[#1a1a1a]">ذخیره‌سازی</h3>
+            <div className="overflow-x-auto">
+              <table className="w-full">
+                <thead>
+                  <tr className="border-b-2 border-[#e5e7eb] bg-[#f9fafb]">
+                    <th className="p-3 text-right text-sm font-bold text-[#1a1a1a]">مشخصه</th>
+                    <th className="p-3 text-center text-sm font-bold text-[#1a1a1a]">{laptopA.shortName}</th>
+                    <th className="p-3 text-center text-sm font-bold text-[#1a1a1a]">{laptopB.shortName}</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr className="border-b border-[#f3f4f6]">
+                    <td className="p-3 text-sm font-medium text-[#1a1a1a]">ظرفیت کلی</td>
+                    <td className="p-3 text-center text-sm text-[#4b5563]">{extractSpec(laptopA, "ذخیره‌سازی", "ظرفیت کلی")}</td>
+                    <td className="p-3 text-center text-sm text-[#4b5563]">{extractSpec(laptopB, "ذخیره‌سازی", "ظرفیت کلی")}</td>
+                  </tr>
+                  <tr className="border-b border-[#f3f4f6]">
+                    <td className="p-3 text-sm font-medium text-[#1a1a1a]">رابط SSD</td>
+                    <td className="p-3 text-center text-sm text-[#4b5563]">{extractSpec(laptopA, "ذخیره‌سازی", "رابط SSD")}</td>
+                    <td className="p-3 text-center text-sm text-[#4b5563]">{extractSpec(laptopB, "ذخیره‌سازی", "رابط SSD")}</td>
+                  </tr>
+                  <tr className="border-b border-[#f3f4f6]">
+                    <td className="p-3 text-sm font-medium text-[#1a1a1a]">نسخه NVMe</td>
+                    <td className="p-3 text-center text-sm text-[#4b5563]">{extractSpec(laptopA, "ذخیره‌سازی", "نسخه NVMe")}</td>
+                    <td className="p-3 text-center text-sm text-[#4b5563]">{extractSpec(laptopB, "ذخیره‌سازی", "نسخه NVMe")}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
 
           {/* Battery Table */}
-          <ComparisonTable
-            title="باتری و شارژ"
-            rows={[
-              { label: "ظرفیت باتری", valueA: extractSpec(laptopA, "باتری و شارژ", "ظرفیت باتری"), valueB: extractSpec(laptopB, "باتری و شارژ", "ظرفیت باتری") },
-              { label: "عمر شارژ", valueA: extractSpec(laptopA, "باتری و شارژ", "عمر شارژ"), valueB: extractSpec(laptopB, "باتری و شارژ", "عمر شارژ") },
-              { label: "توان آداپتور", valueA: extractSpec(laptopA, "باتری و شارژ", "توان آداپتور"), valueB: extractSpec(laptopB, "باتری و شارژ", "توان آداپتور") },
-            ]}
-          />
-
-          {/* Sound Table */}
-          <ComparisonTable
-            title="صدا"
-            rows={[
-              { label: "سیستم صوتی", valueA: extractSpec(laptopA, "صدا", "سیستم صوتی"), valueB: extractSpec(laptopB, "صدا", "سیستم صوتی") },
-              { label: "تعداد بلندگوها", valueA: extractSpec(laptopA, "صدا", "تعداد بلندگوهای داخلی"), valueB: extractSpec(laptopB, "صدا", "تعداد بلندگوهای داخلی") },
-              { label: "میکروفون", valueA: extractSpec(laptopA, "صدا", "میکروفون داخلی"), valueB: extractSpec(laptopB, "صدا", "میکروفون داخلی") },
-            ]}
-          />
-
-          {/* Connectivity Table */}
-          <ComparisonTable
-            title="اتصالات"
-            rows={[
-              { label: "Wi-Fi", valueA: extractSpec(laptopA, "اتصالات و پورت‌ها", "بالاترین استاندارد Wi-Fi"), valueB: extractSpec(laptopB, "اتصالات و پورت‌ها", "بالاترین استاندارد Wi-Fi") },
-              { label: "Bluetooth", valueA: extractSpec(laptopA, "اتصالات و پورت‌ها", "بلوتوث"), valueB: extractSpec(laptopB, "اتصالات و پورت‌ها", "بلوتوث") },
-              { label: "USB-C", valueA: extractSpec(laptopA, "اتصالات و پورت‌ها", "تعداد USB-C"), valueB: extractSpec(laptopB, "اتصالات و پورت‌ها", "تعداد USB-C") },
-              { label: "USB-A", valueA: extractSpec(laptopA, "اتصالات و پورت‌ها", "تعداد USB-A"), valueB: extractSpec(laptopB, "اتصالات و پورت‌ها", "تعداد USB-A") },
-              { label: "HDMI", valueA: extractSpec(laptopA, "اتصالات و پورت‌ها", "تعداد پورت HDMI"), valueB: extractSpec(laptopB, "اتصالات و پورت‌ها", "تعداد پورت HDMI") },
-            ]}
-          />
-
-          {/* Input Table */}
-          <ComparisonTable
-            title="ورودی / کیبورد / تاچ‌پد"
-            rows={[
-              { label: "کیبورد", valueA: extractSpec(laptopA, "کیبورد", "نوع کیبورد"), valueB: extractSpec(laptopB, "کیبورد", "نوع کیبورد") },
-              { label: "نور پس‌زمینه", valueA: extractSpec(laptopA, "کیبورد", "نور پس‌زمینه"), valueB: extractSpec(laptopB, "کیبورد", "نور پس‌زمینه") },
-              { label: "تاچ‌پد", valueA: extractSpec(laptopA, "کیبورد", "تاچ‌پد"), valueB: extractSpec(laptopB, "کیبورد", "تاچ‌پد") },
-            ]}
-          />
+          <div className="mb-8">
+            <h3 className="mb-4 text-xl font-bold text-[#1a1a1a]">باتری و شارژ</h3>
+            <div className="overflow-x-auto">
+              <table className="w-full">
+                <thead>
+                  <tr className="border-b-2 border-[#e5e7eb] bg-[#f9fafb]">
+                    <th className="p-3 text-right text-sm font-bold text-[#1a1a1a]">مشخصه</th>
+                    <th className="p-3 text-center text-sm font-bold text-[#1a1a1a]">{laptopA.shortName}</th>
+                    <th className="p-3 text-center text-sm font-bold text-[#1a1a1a]">{laptopB.shortName}</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr className="border-b border-[#f3f4f6]">
+                    <td className="p-3 text-sm font-medium text-[#1a1a1a]">ظرفیت باتری</td>
+                    <td className="p-3 text-center text-sm text-[#4b5563]">{extractSpec(laptopA, "باتری و شارژ", "ظرفیت باتری")}</td>
+                    <td className="p-3 text-center text-sm text-[#4b5563]">{extractSpec(laptopB, "باتری و شارژ", "ظرفیت باتری")}</td>
+                  </tr>
+                  <tr className="border-b border-[#f3f4f6]">
+                    <td className="p-3 text-sm font-medium text-[#1a1a1a]">عمر شارژ</td>
+                    <td className="p-3 text-center text-sm text-[#4b5563]">{extractSpec(laptopA, "باتری و شارژ", "عمر شارژ")}</td>
+                    <td className="p-3 text-center text-sm text-[#4b5563]">{extractSpec(laptopB, "باتری و شارژ", "عمر شارژ")}</td>
+                  </tr>
+                  <tr className="border-b border-[#f3f4f6]">
+                    <td className="p-3 text-sm font-medium text-[#1a1a1a]">توان آداپتور</td>
+                    <td className="p-3 text-center text-sm text-[#4b5563]">{extractSpec(laptopA, "باتری و شارژ", "توان آداپتور")}</td>
+                    <td className="p-3 text-center text-sm text-[#4b5563]">{extractSpec(laptopB, "باتری و شارژ", "توان آداپتور")}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
         </div>
 
         {/* Action Buttons */}
         <div className="sticky bottom-0 border-t border-[#e5e7eb] bg-white p-6 shadow-lg">
-          <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-center gap-3">
-            {laptops.map((laptop) => (
-              <button
-                key={laptop.id}
-                onClick={() => onAddToCart(laptop.id)}
-                className="flex items-center gap-2 rounded-lg bg-[#2563eb] px-4 py-2.5 text-sm font-bold text-white transition-colors hover:bg-[#1d4ed8]"
-              >
-                <ICart size={16} />
-                افزودن {laptop.shortName} به سبد
-              </button>
-            ))}
+          <div className="mx-auto flex max-w-7xl items-center justify-between">
+            <div className="flex gap-3">
+              {laptops.map((laptop) => (
+                <button
+                  key={laptop.id}
+                  onClick={() => onAddToCart(laptop.id)}
+                  className="flex items-center gap-2 rounded-lg bg-[#2563eb] px-5 py-2.5 text-sm font-bold text-white transition-colors hover:bg-[#1d4ed8]"
+                >
+                  <ICart size={16} />
+                  افزودن {laptop.shortName} به سبد
+                </button>
+              ))}
+            </div>
           </div>
         </div>
       </div>
