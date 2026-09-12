@@ -18,7 +18,7 @@ const BRANDS = [
   { fa: "ایسوس", en: "ASUS", src: "https://cdn.simpleicons.org/asus/00539B" },
   { fa: "ایسر", en: "Acer", src: "https://cdn.simpleicons.org/acer/83B81A" },
   { fa: "دل", en: "Dell", src: "https://cdn.simpleicons.org/dell/0672CB" },
-  { fa: "مایکروسافت", en: "Microsoft", src: "https://cdn.simpleicons.org/microsoft/000000" },
+  { fa: "مایکروسافت", en: "Microsoft", src: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 23 23'%3E%3Crect width='11' height='11' fill='%23f25022'/%3E%3Crect x='12' width='11' height='11' fill='%237fba00'/%3E%3Crect y='12' width='11' height='11' fill='%2300a4ef'/%3E%3Crect x='12' y='12' width='11' height='11' fill='%23ffb900'/%3E%3C/svg%3E" },
 ];
 
 const SORT_OPTIONS = [
