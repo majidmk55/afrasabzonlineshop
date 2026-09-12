@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useMemo, useRef, useEffect } from "react";
 import { fmt, toFa, type Laptop } from "../data/laptops";
 import { IClose, ICart } from "./icons";
 
@@ -9,7 +9,7 @@ interface ComparePageProps {
   onAddToCart: (id: string) => void;
 }
 
-// استخراج مشخصات
+// استخراج مشخصات از لپ‌تاپ
 function extractSpec(laptop: Laptop, group: string, key: string): string {
   const g = laptop.specs.find(s => s.title === group);
   if (!g) return "—";
@@ -17,7 +17,7 @@ function extractSpec(laptop: Laptop, group: string, key: string): string {
   return row ? row[1] : "—";
 }
 
-// استخراج عدد
+// استخراج عدد از متن
 function extractNumber(text: string): number {
   const match = text.match(/(\d+(?:\.\d+)?)/);
   return match ? parseFloat(match[1]) : 0;
@@ -65,49 +65,86 @@ function calculateCategoryScores(laptop: Laptop) {
   };
 }
 
-// کامپوننت Score Bar
-function ScoreBar({ label, scoreA, scoreB, laptopAName, laptopBName }: {
+// رنگ‌های متمایز برای هر لپ‌تاپ
+const LAPTOP_COLORS = [
+  { color: "#6366f1", colorDark: "#4f46e5" }, // نیلی
+  { color: "#2dd4bf", colorDark: "#14b8a6" }, // فیروزه‌ای
+  { color: "#f59e0b", colorDark: "#d97706" }, // کهربایی
+  { color: "#ef4444", colorDark: "#dc2626" }, // قرمز
+];
+
+// تعیین برنده برای هر ردیف (کمتر بهتر یا بیشتر بهتر)
+function getWinnerIndex<T extends number | string>(values: T[], lowerIsBetter: boolean = false): number[] {
+  const validIndices: number[] = [];
+  const validValues: (number | string)[] = [];
+  
+  values.forEach((v, i) => {
+    if (v !== "—" && v !== "" && v !== null && v !== undefined) {
+      validIndices.push(i);
+      validValues.push(v);
+    }
+  });
+  
+  if (validValues.length < 2) return [];
+  
+  // تبدیل به عدد برای مقایسه
+  const numericValues = validValues.map(v => {
+    if (typeof v === "number") return v;
+    const num = extractNumber(String(v));
+    return num > 0 ? num : 0;
+  });
+  
+  const bestValue = lowerIsBetter 
+    ? Math.min(...numericValues.filter(v => v > 0))
+    : Math.max(...numericValues.filter(v => v > 0));
+  
+  if (bestValue === 0) return [];
+  
+  const winners: number[] = [];
+  numericValues.forEach((v, i) => {
+    if (v === bestValue) {
+      winners.push(validIndices[i]);
+    }
+  });
+  
+  return winners.length > 1 ? [] : winners; // اگر تساوی باشد، برنده‌ای نیست
+}
+
+// کامپوننت نوار امتیاز با 4 لپ‌تاپ
+function ScoreBar({ label, scores, laptopNames }: {
   label: string;
-  scoreA: number;
-  scoreB: number;
-  laptopAName: string;
-  laptopBName: string;
+  scores: number[];
+  laptopNames: string[];
 }) {
-  const winner = scoreA > scoreB ? 0 : scoreB > scoreA ? 1 : null;
+  const maxScore = Math.max(...scores);
+  
   return (
-    <div className="mb-6">
-      <div className="mb-2 flex items-center justify-between">
+    <div className="mb-5">
+      <div className="mb-3 flex items-center justify-between">
         <span className="text-sm font-bold text-[#1a1a1a]">{label}</span>
       </div>
-      <div className="space-y-2">
-        <div className="flex items-center gap-3">
-          <span className="w-24 text-xs text-[#4b5563]">{laptopAName}</span>
-          <div className="flex-1">
-            <div className="relative h-6 overflow-hidden rounded bg-[#f3f4f6]">
-              <div
-                className={`h-full rounded transition-all duration-500 ${winner === 0 ? "bg-[#10b981]" : "bg-[#6b7280]"}`}
-                style={{ width: `${scoreA}%` }}
-              />
-              <span className="absolute inset-0 flex items-center justify-center text-xs font-bold text-white">
-                {toFa(scoreA)}
-              </span>
+      <div className="space-y-2.5">
+        {scores.map((score, index) => {
+          const isWinner = score === maxScore && scores.filter(s => s === maxScore).length === 1;
+          return (
+            <div key={index} className="flex items-center gap-3">
+              <span className="w-20 shrink-0 text-xs text-[#4b5563]">{laptopNames[index]}</span>
+              <div className="flex-1">
+                <div className="relative h-6 overflow-hidden rounded bg-[#f3f4f6]">
+                  <div
+                    className={`h-full rounded transition-all duration-500 ${
+                      isWinner ? "bg-[#10b981]" : "bg-[#3b4cc0]"
+                    }`}
+                    style={{ width: `${score}%` }}
+                  />
+                  <span className="absolute inset-0 flex items-center justify-center text-xs font-bold text-white">
+                    {toFa(score)}
+                  </span>
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
-        <div className="flex items-center gap-3">
-          <span className="w-24 text-xs text-[#4b5563]">{laptopBName}</span>
-          <div className="flex-1">
-            <div className="relative h-6 overflow-hidden rounded bg-[#f3f4f6]">
-              <div
-                className={`h-full rounded transition-all duration-500 ${winner === 1 ? "bg-[#10b981]" : "bg-[#6b7280]"}`}
-                style={{ width: `${scoreB}%` }}
-              />
-              <span className="absolute inset-0 flex items-center justify-center text-xs font-bold text-white">
-                {toFa(scoreB)}
-              </span>
-            </div>
-          </div>
-        </div>
+          );
+        })}
       </div>
     </div>
   );
