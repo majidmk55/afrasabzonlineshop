@@ -1,0 +1,35 @@
+{
+  "name": "افرالینک | فروشگاه تخصصی لپ‌تاپ",
+  "short_name": "افرالینک",
+  "description": "فروشگاه تخصصی لپ‌تاپ با کارنامه آزمایشگاهی - خرید لپ‌تاپ گیمینگ، مهندسی و اداری",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#0477b3",
+  "orientation": "portrait-primary",
+  "lang": "fa",
+  "dir": "rtl",
+  "categories": ["shopping", "electronics", "business"],
+  "icons": [
+    {
+      "src": "/og-image.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ],
+
+  "related_applications": [],
+  "prefer_related_applications": false,
+  "scope": "/",
+  "share_target": {
+    "action": "/share",
+    "method": "GET",
+    "enctype": "application/x-www-form-urlencoded",
+    "params": {
+      "title": "title",
+      "text": "text",
+      "url": "url"
+    }
+  }
+}
